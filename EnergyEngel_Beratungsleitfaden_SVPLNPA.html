@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EnergyEngel – Beratungsleitfaden SVPLNPA</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  background: #f0f4f1;
+  color: #1a2e1e;
+  min-height: 100vh;
+  font-size: 16px;
+}
+
+.header {
+  background: #0d2818;
+  padding: 36px 48px 32px;
+}
+.header-eyebrow {
+  font-size: 14px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #2d8f4e;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+.header-title {
+  font-size: 32px;
+  color: #f0ead8;
+  font-weight: 400;
+  font-family: Georgia, serif;
+}
+.header-sub {
+  font-size: 15px;
+  color: #7a9a88;
+  margin-top: 8px;
+}
+.header-badge {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 6px 16px;
+  background: rgba(45,143,78,0.15);
+  border: 1px solid rgba(45,143,78,0.3);
+  border-radius: 20px;
+  font-size: 15px;
+  color: #2d8f4e;
+}
+
+.phase-nav {
+  background: #fff;
+  border-bottom: 2px solid #d8e8dc;
+  padding: 0 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.nav-btn {
+  padding: 16px 20px;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #8aaa94;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  transition: color 0.15s;
+}
+.nav-btn:hover { color: #4a6a54; background: #f7f9f6; }
+.nav-btn.active {
+  color: #1a2e1e;
+  border-bottom-color: #2d8f4e;
+}
+.nav-badge {
+  width: 26px; height: 26px;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+  font-weight: 600;
+  background: #e1f5ee;
+  color: #0f6e56;
+}
+.nav-btn.active .nav-badge {
+  background: #2d8f4e;
+  color: #fff;
+}
+
+.progress-wrap { height: 4px; background: #d8e8dc; }
+.progress-fill { height: 100%; background: #2d8f4e; transition: width 0.3s; }
+
+.main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 48px 80px;
+}
+
+.phase-section { display: none; }
+.phase-section.active { display: block; }
+
+.phase-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+.phase-icon {
+  width: 60px; height: 60px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  font-weight: 400;
+  flex-shrink: 0;
+  font-family: Georgia, serif;
+  background: #e1f5ee;
+  color: #0f6e56;
+}
+.phase-icon.warn { background: #fcebeb; color: #791f1f; }
+.phase-icon.blue { background: #e6f1fb; color: #0c447c; }
+.phase-icon.amber { background: #faeeda; color: #633806; }
+
+.phase-title {
+  font-size: 28px;
+  font-weight: 400;
+  color: #1a2e1e;
+  line-height: 1.2;
+  font-family: Georgia, serif;
+}
+.phase-subtitle {
+  font-size: 16px;
+  color: #4a6a54;
+  margin-top: 5px;
+}
+
+.goal-box {
+  border-left: 4px solid #2d8f4e;
+  padding: 16px 20px;
+  margin-bottom: 28px;
+  font-size: 16px;
+  color: #1a4a24;
+  line-height: 1.75;
+  background: #e1f5ee;
+  border-radius: 0 8px 8px 0;
+}
+.goal-box.warn {
+  border-left-color: #e24b4a;
+  background: #fcebeb;
+  color: #5c1212;
+}
+.goal-label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #ccddd2;
+  border-radius: 14px;
+  padding: 32px;
+  margin-bottom: 24px;
+}
+
+.section-label {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #1a3a22;
+  margin-bottom: 20px;
+  border-left: 5px solid #2d8f4e;
+  padding-left: 14px;
+  line-height: 1.25;
+}
+
+.intro-box {
+  background: #f4f8f5;
+  border-radius: 8px;
+  padding: 22px 24px;
+  font-size: 18px;
+  font-style: italic;
+  color: #2a4a34;
+  line-height: 1.75;
+  border: 1px solid #ccddd2;
+}
+
+.q-list { margin-top: 20px; }
+.counter-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.counter-text {
+  font-size: 15px;
+  color: #8aaa94;
+}
+.counter-num {
+  font-weight: 600;
+  color: #0f6e56;
+}
+
+.q-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 18px 20px;
+  border-radius: 10px;
+  border: 1px solid #ccddd2;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: background 0.1s;
+  user-select: none;
+  background: #fff;
+}
+.q-item:hover { background: #f4f8f5; border-color: #aac8b4; }
+.q-item.done { opacity: 0.45; background: #f0faf3; }
+
+.checkbox {
+  width: 26px; height: 26px;
+  border-radius: 6px;
+  border: 2px solid #ccddd2;
+  flex-shrink: 0;
+  margin-top: 2px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  color: #2d8f4e;
+  background: #fff;
+}
+.q-item.done .checkbox {
+  background: #e1f5ee;
+  border-color: #2d8f4e;
+}
+
+.q-text {
+  font-size: 17px;
+  color: #1a2e1e;
+  line-height: 1.65;
+  font-style: italic;
+}
+.q-note {
+  font-size: 14px;
+  color: #6a9a78;
+  margin-top: 6px;
+  font-style: normal;
+  font-weight: 500;
+}
+
+.tip-box {
+  background: #0d2818;
+  border-radius: 10px;
+  padding: 20px 22px;
+  font-size: 15px;
+  color: #9abfaa;
+  line-height: 1.75;
+  margin-top: 24px;
+}
+.tip-label { color: #4ecf7a; font-weight: 600; }
+
+.bottom-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #ccddd2;
+}
+.btn {
+  padding: 13px 28px;
+  border-radius: 8px;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid #ccddd2;
+  background: #fff;
+  color: #4a6a54;
+  transition: all 0.1s;
+}
+.btn:hover:not(:disabled) { background: #f4f8f5; border-color: #aac8b4; }
+.btn:disabled { opacity: 0.3; cursor: default; }
+.btn-primary {
+  background: #2d8f4e;
+  color: #fff;
+  border-color: #2d8f4e;
+}
+.btn-primary:hover:not(:disabled) { background: #1a5c2e; }
+
+.dots { display: flex; gap: 8px; align-items: center; }
+.dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #ccddd2;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: none;
+  padding: 0;
+}
+.dot.active { background: #2d8f4e; transform: scale(1.5); }
+
+.footer {
+  text-align: center;
+  padding: 24px;
+  font-size: 14px;
+  color: #8aaa94;
+  border-top: 1px solid #ccddd2;
+  background: #fff;
+}
+
+@media (max-width: 700px) {
+  .header { padding: 28px 20px 24px; }
+  .main { padding: 24px 20px 48px; }
+  .phase-nav { padding: 0 8px; }
+  .nav-btn { padding: 13px 12px; font-size: 14px; }
+  .card { padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-eyebrow">Vertriebsleitfaden · Erneuerbare Energien</div>
+  <div class="header-title">Beratungsgespräch nach SVPLNPA</div>
+  <div class="header-sub">Unabhängige Maklerberatung · Immobilienkunden · EnergyEngel</div>
+  <div class="header-badge">EnergyEngel</div>
+</div>
+
+<nav class="phase-nav" id="phaseNav">
+  <button class="nav-btn active" onclick="goto(0)"><span class="nav-badge">S</span>Sympathie</button>
+  <button class="nav-btn" onclick="goto(1)"><span class="nav-badge">V</span>Vertrauen</button>
+  <button class="nav-btn" onclick="goto(2)"><span class="nav-badge">P</span>Problem</button>
+  <button class="nav-btn" onclick="goto(3)"><span class="nav-badge">L</span>Lösung</button>
+  <button class="nav-btn" onclick="goto(4)"><span class="nav-badge">N</span>Nutzen</button>
+  <button class="nav-btn" onclick="goto(5)"><span class="nav-badge">P</span>Preis</button>
+  <button class="nav-btn" onclick="goto(6)"><span class="nav-badge">A</span>Abschluss</button>
+</nav>
+<div class="progress-wrap"><div class="progress-fill" id="progressFill" style="width:14%"></div></div>
+
+<div class="main">
+
+  <!-- PHASE 0: SYMPATHIE -->
+  <div class="phase-section active" id="phase-0">
+    <div class="phase-header">
+      <div class="phase-icon">S</div>
+      <div>
+        <div class="phase-title">Sympathie</div>
+        <div class="phase-subtitle">Den Menschen gewinnen – bevor man über Energie spricht</div>
+      </div>
+    </div>
+    <div class="goal-box">
+      <span class="goal-label">Ziel dieser Phase</span>
+      Der Kunde muss dich mögen, bevor er dir zuhört. Menschen kaufen von Menschen. Wer in dieser Phase über Produkte spricht, hat verloren.
+    </div>
+    <div class="card">
+      <div class="section-label">Einstieg</div>
+      <div class="intro-box">Augen offen halten beim Betreten der Immobilie. Erst beobachten, dann gezielt ansprechen – kein Produkt, kein Thema, nur der Mensch.</div>
+      <div class="q-list">
+        <div class="counter-row" style="margin-top:20px">
+          <div class="section-label" style="margin-bottom:0">Gesprächsimpulse</div>
+          <div class="counter-text"><span class="counter-num" id="c0">0</span> / 5 abgehakt</div>
+        </div>
+        <div class="q-item" id="q0-0" onclick="toggle(0,0)"><div class="checkbox" id="cb0-0"></div><div><div class="q-text">Foto, Andenken, Trophäe sichtbar? → „Ist das [Ort/Thema]? Wie lange waren Sie da?"</div><div class="q-note">→ Echtes Interesse zeigen, nicht gespielt</div></div></div>
+        <div class="q-item" id="q0-1" onclick="toggle(0,1)"><div class="checkbox" id="cb0-1"></div><div><div class="q-text">Gepflegter Garten oder Renovierung? → „Das haben Sie schön gemacht – selbst umgebaut?"</div><div class="q-note">→ Stolz des Kunden ansprechen</div></div></div>
+        <div class="q-item" id="q0-2" onclick="toggle(0,2)"><div class="checkbox" id="cb0-2"></div><div><div class="q-text">Kinder oder Familienfotos sichtbar? → nachfragen, was sie gerade machen</div><div class="q-note">→ Familie als emotionaler Anker</div></div></div>
+        <div class="q-item" id="q0-3" onclick="toggle(0,3)"><div class="checkbox" id="cb0-3"></div><div><div class="q-text">Haustier vorhanden? → direkt ansprechen, Namen fragen</div><div class="q-note">→ Sofortige Nähe erzeugen</div></div></div>
+        <div class="q-item" id="q0-4" onclick="toggle(0,4)"><div class="checkbox" id="cb0-4"></div><div><div class="q-text">Hobby erkennbar (Fahrrad, Werkzeug, Bücher)? → nachfragen, aktiv zuhören</div><div class="q-note">→ Mindestens 2–3 Minuten nur über den Kunden sprechen</div></div></div>
+      </div>
+      <div class="tip-box"><span class="tip-label">Profi-Tipp: </span>Merken, was der Kunde erzählt. Am Ende des Gesprächs darauf zurückkommen: „Sie hatten vorhin erzählt, dass Sie im Sommer nach Portugal fahren – da werden Sie die neue Anlage das erste Mal richtig genießen." Das ist der Unterschied zwischen Verkäufer und Berater.</div>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn" disabled>← Zurück</button>
+      <div class="dots">
+        <button class="dot active" onclick="goto(0)"></button>
+        <button class="dot" onclick="goto(1)"></button>
+        <button class="dot" onclick="goto(2)"></button>
+        <button class="dot" onclick="goto(3)"></button>
+        <button class="dot" onclick="goto(4)"></button>
+        <button class="dot" onclick="goto(5)"></button>
+        <button class="dot" onclick="goto(6)"></button>
+      </div>
+      <button class="btn btn-primary" onclick="goto(1)">Weiter →</button>
+    </div>
+  </div>
+
+  <!-- PHASE 1: VERTRAUEN -->
+  <div class="phase-section" id="phase-1">
+    <div class="phase-header">
+      <div class="phase-icon blue">V</div>
+      <div>
+        <div class="phase-title">Vertrauen</div>
+        <div class="phase-subtitle">Die Firma vorstellen – Unabhängigkeit als entscheidenden Vorteil positionieren</div>
+      </div>
+    </div>
+    <div class="goal-box">
+      <span class="goal-label">Ziel dieser Phase</span>
+      Der Kunde muss verstehen, warum er mit einem unabhängigen Makler besser dran ist als mit einem Direktanbieter. Das ist unser zentrales Differenzierungsmerkmal – und muss groß gemacht werden.
+    </div>
+
+    <div class="card">
+      <div class="section-label">Überleitung</div>
+      <div class="intro-box">„Bevor wir inhaltlich einsteigen – kurz ein, zwei Worte zu mir: wie wir als Firma arbeiten und warum das bisher für alle meiner Kunden einen echten Unterschied gemacht hat."</div>
+    </div>
+
+    <div class="card">
+      <div class="section-label">Firmenvorstellung – Schritt für Schritt</div>
+      <div class="q-list">
+        <div class="counter-row">
+          <div style="font-size:15px; color:#6a9a78; font-weight:600;">Punkte abhaken während du sprichst</div>
+          <div class="counter-text"><span class="counter-num" id="c1">0</span> / 4 abgehakt</div>
+        </div>
+
+        <div class="q-item" id="q1-0" onclick="toggle(1,0)">
+          <div class="checkbox" id="cb1-0"></div>
+          <div>
+            <div style="font-size:13px; font-weight:700; color:#2d8f4e; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:5px;">1 · Wer wir sind</div>
+            <div class="q-text">„EnergyEngel ist ein unabhängiger Makler im Bereich erneuerbare Energien. Wir verkaufen keine eigenen Produkte – wir beraten."</div>
+            <div class="q-note">→ Klare Positionierung von Anfang an</div>
+          </div>
+        </div>
+
+        <div class="q-item" id="q1-1" onclick="toggle(1,1)">
+          <div class="checkbox" id="cb1-1"></div>
+          <div>
+            <div style="font-size:13px; font-weight:700; color:#2d8f4e; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:5px;">2 · Was das bedeutet</div>
+            <div class="q-text">„Wenn Sie heute zu einem Solaranbieter gehen, bekommt er Sie ausschließlich seine eigene Marke empfehlen – egal ob sie zu Ihnen passt oder nicht. Wir haben keinen Hersteller im Rücken. Wir schauen uns an, was für Ihre Immobilie, Ihren Verbrauch und Ihr Budget wirklich Sinn macht – und wählen dann den passenden Partner aus einem Netzwerk geprüfter Anbieter. Wir prüfen zudem, ob die PV-Anlage wirklich die erste Investition sein sollte oder eher die Wärmepumpe."</div>
+            <div class="q-note">→ Kontrast zum Direktanbieter klar herausarbeiten – Reihenfolge der Investitionen als Alleinstellungsmerkmal</div>
+          </div>
+        </div>
+
+        <div class="q-item" id="q1-2" onclick="toggle(1,2)">
+          <div class="checkbox" id="cb1-2"></div>
+          <div>
+            <div style="font-size:13px; font-weight:700; color:#2d8f4e; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:5px;">3 · Was der Kunde davon hat</div>
+            <div class="q-text">„Das bedeutet für Sie: Sie haben eine Anlaufstelle für alles – Beratung, Angebotsvergleich, Partnerauswahl, Abwicklung. Und Sie wissen, dass die Empfehlung, die Sie bekommen, nicht von einer Provision eines einzelnen Herstellers abhängt."</div>
+            <div class="q-note">→ Komfort, Sicherheit und Vertrauen in einem Satz</div>
+          </div>
+        </div>
+
+        <div class="q-item" id="q1-3" onclick="toggle(1,3)">
+          <div class="checkbox" id="cb1-3"></div>
+          <div>
+            <div style="font-size:13px; font-weight:700; color:#2d8f4e; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:5px;">4 · Vertrauen durch Transparenz + Abschlussfrage</div>
+            <div class="q-text">„Ich werde Ihnen heute keine Anlage verkaufen. Ich werde Ihnen zeigen, was für Sie sinnvoll ist – und dann entscheiden Sie."<br><br>→ Abschlussfrage: „Macht das Sinn, wie wir arbeiten?"</div>
+            <div class="q-note">→ Erste kleine Zustimmung einholen – psychologischer Anker. Nach der Frage kurz schweigen.</div>
+          </div>
+        </div>
+
+      </div>
+      <div class="tip-box"><span class="tip-label">Profi-Tipp: </span>Diese Phase darf nicht wie eine Firmenbroschüre klingen. Frei sprechen, Blickkontakt halten, die Analogie mit Überzeugung bringen. Wer selbst nicht an die Unabhängigkeit glaubt, kann sie nicht verkaufen.</div>
+    </div>
+
+    <div class="bottom-nav">
+      <button class="btn" onclick="goto(0)">← Zurück</button>
+      <div class="dots">
+        <button class="dot" onclick="goto(0)"></button>
+        <button class="dot active" onclick="goto(1)"></button>
+        <button class="dot" onclick="goto(2)"></button>
+        <button class="dot" onclick="goto(3)"></button>
+        <button class="dot" onclick="goto(4)"></button>
+        <button class="dot" onclick="goto(5)"></button>
+        <button class="dot" onclick="goto(6)"></button>
+      </div>
+      <button class="btn btn-primary" onclick="goto(2)">Weiter →</button>
+    </div>
+  </div>
+
+  <!-- PHASE 2: PROBLEM -->
+  <div class="phase-section" id="phase-2">
+    <div class="phase-header">
+      <div class="phase-icon warn">P</div>
+      <div>
+        <div class="phase-title">Problem / Situation</div>
+        <div class="phase-subtitle">Ist-Zustand erfassen & das Problem groß machen</div>
+      </div>
+    </div>
+    <div class="goal-box warn">
+      <span class="goal-label">⚠ Kernphase – hier entscheidet sich der Abschluss</span>
+      Erst den Ist-Zustand verstehen, dann gemeinsam die Konsequenzen herausarbeiten. Der Kunde benennt das Problem selbst – nie der Berater.
+    </div>
+
+    <!-- SCHRITT 1: EINSTIEG -->
+    <div class="card">
+      <div class="section-label">Schritt 1 · Einstieg – den Kunden reden lassen</div>
+      <div class="intro-box">„Jetzt genug zu mir und uns. Erzählen Sie gerne – warum sitzen wir heute zusammen?"</div>
+      <div style="margin-top:14px; font-size:15px; color:#4a6a54; font-family:Helvetica,Arial,sans-serif; line-height:1.6;">
+        Der Kunde fängt jetzt an zu reden. Zuhören, nicht unterbrechen. Die Aussage gibt sofort das Produkt vor:
+      </div>
+      <div style="margin-top:12px; display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+        <div style="background:#f7f9f6; border:1px solid #d8e8dc; border-radius:6px; padding:10px 12px; font-size:15px; font-family:Helvetica,Arial,sans-serif;">
+          <div style="color:#8aaa94; font-size:11px; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px;">Kundenaussage</div>
+          <div style="color:#1a2e1e; font-style:italic;">"Ich habe eine alte Gasheizung und möchte diese tauschen."</div>
+          <div style="margin-top:6px; background:#e1f5ee; border-radius:4px; padding:4px 8px; display:inline-block; font-size:14px; color:#0f6e56; font-weight:500;">→ WP</div>
+        </div>
+        <div style="background:#f7f9f6; border:1px solid #d8e8dc; border-radius:6px; padding:10px 12px; font-size:15px; font-family:Helvetica,Arial,sans-serif;">
+          <div style="color:#8aaa94; font-size:11px; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px;">Kundenaussage</div>
+          <div style="color:#1a2e1e; font-style:italic;">"Ich überlege eine Photovoltaikanlage zu kaufen."</div>
+          <div style="margin-top:6px; background:#e6f1fb; border-radius:4px; padding:4px 8px; display:inline-block; font-size:14px; color:#0c447c; font-weight:500;">→ PV</div>
+        </div>
+        <div style="background:#f7f9f6; border:1px solid #d8e8dc; border-radius:6px; padding:10px 12px; font-size:15px; font-family:Helvetica,Arial,sans-serif;">
+          <div style="color:#8aaa94; font-size:11px; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px;">Kundenaussage</div>
+          <div style="color:#1a2e1e; font-style:italic;">"Ich zahle sehr viel für mein Gas."</div>
+          <div style="margin-top:6px; display:flex; gap:4px;">
+            <span style="background:#e1f5ee; border-radius:4px; padding:4px 8px; display:inline-block; font-size:14px; color:#0f6e56; font-weight:500;">→ WP</span>
+            <span style="background:#e6f1fb; border-radius:4px; padding:4px 8px; display:inline-block; font-size:14px; color:#0c447c; font-weight:500;">→ PV</span>
+          </div>
+        </div>
+        <div style="background:#f7f9f6; border:1px solid #d8e8dc; border-radius:6px; padding:10px 12px; font-size:15px; font-family:Helvetica,Arial,sans-serif;">
+          <div style="color:#8aaa94; font-size:11px; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px;">Kundenaussage</div>
+          <div style="color:#1a2e1e; font-style:italic;">"Wir haben eine PV und wollen einen Speicher nachrüsten."</div>
+          <div style="margin-top:6px; background:#e6f1fb; border-radius:4px; padding:4px 8px; display:inline-block; font-size:14px; color:#0c447c; font-weight:500;">→ PV + Speicher</div>
+        </div>
+        <div style="background:#f7f9f6; border:1px solid #d8e8dc; border-radius:6px; padding:10px 12px; font-size:15px; font-family:Helvetica,Arial,sans-serif;">
+          <div style="color:#8aaa94; font-size:11px; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px;">Kundenaussage</div>
+          <div style="color:#1a2e1e; font-style:italic;">"Wir wissen nicht was in der Zukunft mit den Preisen passiert!"</div>
+          <div style="margin-top:6px; display:flex; gap:4px;">
+            <span style="background:#e6f1fb; border-radius:4px; padding:4px 8px; display:inline-block; font-size:14px; color:#0c447c; font-weight:500;">→ PV</span>
+            <span style="background:#e1f5ee; border-radius:4px; padding:4px 8px; display:inline-block; font-size:14px; color:#0f6e56; font-weight:500;">→ WP</span>
+          </div>
+        </div>
+        <div style="background:#f7f9f6; border:1px solid #d8e8dc; border-radius:6px; padding:10px 12px; font-size:15px; font-family:Helvetica,Arial,sans-serif;">
+          <div style="color:#8aaa94; font-size:11px; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px;">Kundenaussage</div>
+          <div style="color:#1a2e1e; font-style:italic;">"Ich habe 3 Mieter, ein großes Dach und will Strom verkaufen."</div>
+          <div style="margin-top:6px; background:#e6f1fb; border-radius:4px; padding:4px 8px; display:inline-block; font-size:14px; color:#0c447c; font-weight:500;">→ PV (Gewerbe)</div>
+        </div>
+        <div style="background:#f7f9f6; border:1px solid #d8e8dc; border-radius:6px; padding:10px 12px; font-size:15px; font-family:Helvetica,Arial,sans-serif;">
+          <div style="color:#8aaa94; font-size:11px; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px;">Kundenaussage</div>
+          <div style="color:#1a2e1e; font-style:italic;">"Ich habe eine WP und will jetzt eine PV dazu."</div>
+          <div style="margin-top:6px; background:#e6f1fb; border-radius:4px; padding:4px 8px; display:inline-block; font-size:14px; color:#0c447c; font-weight:500;">→ PV</div>
+        </div>
+        <div style="background:#f7f9f6; border:1px solid #d8e8dc; border-radius:6px; padding:10px 12px; font-size:15px; font-family:Helvetica,Arial,sans-serif;">
+          <div style="color:#8aaa94; font-size:11px; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px;">Kundenaussage</div>
+          <div style="color:#1a2e1e; font-style:italic;">"Ich weiß nicht ob ich meine Gasheizung behalten kann."</div>
+          <div style="margin-top:6px; background:#e1f5ee; border-radius:4px; padding:4px 8px; display:inline-block; font-size:14px; color:#0f6e56; font-weight:500;">→ WP</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCHRITT 2: ZUSTAND ERFASSEN -->
+    <div class="card">
+      <div class="section-label">Schritt 2 · Zustand bestätigen & Grundsatzfrage klären</div>
+      <div class="intro-box">„Das kann ich gut nachvollziehen! Das heißt für Sie steht schon klar fest, dass eine WP / PV kommen soll – und es ist nur noch die Frage welche und was dazu gemacht werden muss?"</div>
+
+      <div style="display:flex; flex-direction:column; gap:12px; margin-top:16px;">
+
+        <!-- JA Akkordeon -->
+        <div style="border:2px solid #2d8f4e; border-radius:10px; overflow:hidden;">
+          <button onclick="toggleAccordion('acc-ja')" style="width:100%; background:#2d8f4e; border:none; cursor:pointer; padding:16px 20px; display:flex; align-items:center; justify-content:space-between; font-family:Helvetica,Arial,sans-serif;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span style="background:rgba(255,255,255,0.2); color:#fff; border-radius:6px; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700;">✓</span>
+              <div style="text-align:left;">
+                <div style="color:#fff; font-weight:600; font-size:17px;">Kunde sagt JA</div>
+                <div style="color:#a8ddb8; font-size:14px; margin-top:2px;">Grundsatzentscheidung ist gefallen</div>
+              </div>
+            </div>
+            <span id="acc-ja-arrow" style="color:#fff; font-size:20px; transition:transform 0.2s;">▼</span>
+          </button>
+          <div id="acc-ja" style="display:none; padding:20px; background:#f0faf3; font-family:Helvetica,Arial,sans-serif; font-size:16px; color:#1a4a24; line-height:1.7;">
+            Wir müssen nicht PV oder WP an sich verkaufen – sondern unser konkretes Angebot. Der Kunde hatte höchstwahrscheinlich bereits andere Anbieter vor Ort.<br><br>
+            <strong style="color:#0f6e56;">→ Weiter zu Schritt 2b: Anderen Anbieter-Fragenkatalog verwenden.</strong>
+          </div>
+        </div>
+
+        <!-- NEIN Akkordeon -->
+        <div style="border:2px solid #e24b4a; border-radius:10px; overflow:hidden;">
+          <button onclick="toggleAccordion('acc-nein')" style="width:100%; background:#e24b4a; border:none; cursor:pointer; padding:16px 20px; display:flex; align-items:center; justify-content:space-between; font-family:Helvetica,Arial,sans-serif;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span style="background:rgba(255,255,255,0.2); color:#fff; border-radius:6px; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700;">✗</span>
+              <div style="text-align:left;">
+                <div style="color:#fff; font-weight:600; font-size:17px;">Kunde sagt NEIN</div>
+                <div style="color:#ffc8c8; font-size:14px; margin-top:2px;">Grundsatzentscheidung noch offen</div>
+              </div>
+            </div>
+            <span id="acc-nein-arrow" style="color:#fff; font-size:20px; transition:transform 0.2s;">▼</span>
+          </button>
+          <div id="acc-nein" style="display:none; padding:20px; background:#fff8f8; font-family:Helvetica,Arial,sans-serif; font-size:16px; color:#4a1a1a; line-height:1.7;">
+            Dem Kunden geht es noch um die Grundsatzfrage: Mache ich das überhaupt?<br><br>
+            Hier müssen Einwände aktiv herausgearbeitet und mit den richtigen Kaufmotiven entkräftet werden.<br><br>
+            <strong style="color:#a32d2d;">→ Weiter zu Schritt 3: Einwände & Kaufmotive.</strong>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SCHRITT 2b: ANDERE ANBIETER (nur bei JA) -->
+    <div class="card">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+        <div style="background:#2d8f4e; color:#fff; border-radius:5px; padding:3px 10px; font-size:11px; font-weight:500; font-family:Helvetica,Arial,sans-serif; letter-spacing:0.05em; white-space:nowrap;">NUR BEI JA</div>
+        <div class="section-label" style="margin-bottom:0;">Schritt 2b · Andere Anbieter – Fragenkatalog</div>
+      </div>
+      <div class="intro-box" style="margin-bottom:16px;">„Haben Sie schon andere Anbieter bei sich gehabt?"</div>
+
+      <div style="font-size:14px; font-weight:500; color:#0f6e56; font-family:Helvetica,Arial,sans-serif; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:10px;">Wenn ja → konkret nachfragen:</div>
+      <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:18px;">
+        <div style="display:flex; gap:10px; align-items:flex-start; background:#f7f9f6; border:1px solid #d8e8dc; border-radius:6px; padding:10px 12px;">
+          <div style="background:#2d8f4e; color:#fff; border-radius:50%; min-width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:500; font-family:Helvetica,Arial,sans-serif;">1</div>
+          <div>
+            <div style="font-size:15px; font-style:italic; color:#1a2e1e; font-family:Helvetica,Arial,sans-serif;">"Wie viele Anbieter haben Sie sich schon angeschaut?"</div>
+            <div style="font-size:14px; color:#8aaa94; margin-top:3px; font-family:Helvetica,Arial,sans-serif;">→ Zeigt wie weit der Kunde im Prozess ist – je mehr Anbieter, desto entscheidungsbereiter</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:10px; align-items:flex-start; background:#f7f9f6; border:1px solid #d8e8dc; border-radius:6px; padding:10px 12px;">
+          <div style="background:#2d8f4e; color:#fff; border-radius:50%; min-width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:500; font-family:Helvetica,Arial,sans-serif;">2</div>
+          <div>
+            <div style="font-size:15px; font-style:italic; color:#1a2e1e; font-family:Helvetica,Arial,sans-serif;">"Was hat Ihnen bei den bisherigen Angeboten gut gefallen – und was hat Sie gestört?"</div>
+            <div style="font-size:14px; color:#8aaa94; margin-top:3px; font-family:Helvetica,Arial,sans-serif;">→ Goldgrube: Der Kunde nennt selbst, was er sich wünscht. Genau das liefern wir.</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:10px; align-items:flex-start; background:#f7f9f6; border:1px solid #d8e8dc; border-radius:6px; padding:10px 12px;">
+          <div style="background:#2d8f4e; color:#fff; border-radius:50%; min-width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:500; font-family:Helvetica,Arial,sans-serif;">3</div>
+          <div>
+            <div style="font-size:15px; font-style:italic; color:#1a2e1e; font-family:Helvetica,Arial,sans-serif;">"Haben Sie schon ein konkretes Angebot vorliegen – oder war das noch sehr allgemein?"</div>
+            <div style="font-size:14px; color:#8aaa94; margin-top:3px; font-family:Helvetica,Arial,sans-serif;">→ Wettbewerbsposition verstehen – liegt bereits ein Preisangebot vor?</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:10px; align-items:flex-start; background:#f7f9f6; border:1px solid #d8e8dc; border-radius:6px; padding:10px 12px;">
+          <div style="background:#2d8f4e; color:#fff; border-radius:50%; min-width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:500; font-family:Helvetica,Arial,sans-serif;">4</div>
+          <div>
+            <div style="font-size:15px; font-style:italic; color:#1a2e1e; font-family:Helvetica,Arial,sans-serif;">"Was war das für ein Anbieter – ein Hersteller direkt, oder auch ein Berater?"</div>
+            <div style="font-size:14px; color:#8aaa94; margin-top:3px; font-family:Helvetica,Arial,sans-serif;">→ Perfekte Brücke zurück zu unserem Makler-Vorteil: „Genau das ist der Unterschied zu uns."</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:10px; align-items:flex-start; background:#f7f9f6; border:1px solid #d8e8dc; border-radius:6px; padding:10px 12px;">
+          <div style="background:#2d8f4e; color:#fff; border-radius:50%; min-width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:500; font-family:Helvetica,Arial,sans-serif;">5</div>
+          <div>
+            <div style="font-size:15px; font-style:italic; color:#1a2e1e; font-family:Helvetica,Arial,sans-serif;">"Warum haben Sie bisher noch nicht unterschrieben?"</div>
+            <div style="font-size:14px; color:#8aaa94; margin-top:3px; font-family:Helvetica,Arial,sans-serif;">→ Die ehrlichste Frage im Gespräch. Die Antwort zeigt den echten Einwand – Preis, Vertrauen, Unsicherheit oder Timing.</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:10px; align-items:flex-start; background:#f7f9f6; border:1px solid #d8e8dc; border-radius:6px; padding:10px 12px;">
+          <div style="background:#2d8f4e; color:#fff; border-radius:50%; min-width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:500; font-family:Helvetica,Arial,sans-serif;">6</div>
+          <div>
+            <div style="font-size:15px; font-style:italic; color:#1a2e1e; font-family:Helvetica,Arial,sans-serif;">"Was müsste ein Angebot mitbringen, damit Sie heute noch entscheiden könnten?"</div>
+            <div style="font-size:14px; color:#8aaa94; margin-top:3px; font-family:Helvetica,Arial,sans-serif;">→ Kunde definiert selbst seine Kaufkriterien – wir liefern genau das.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="border-top:1px solid #d8e8dc; padding-top:16px;">
+        <div style="font-size:14px; font-weight:500; color:#4a6a54; font-family:Helvetica,Arial,sans-serif; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:10px;">Wenn noch kein Anbieter da war:</div>
+        <div style="background:#faeeda; border-radius:6px; padding:12px 14px; font-size:15px; color:#633806; font-family:Helvetica,Arial,sans-serif; line-height:1.65;">
+          <strong>Vorteil nutzen:</strong> „Gut, dann sind Sie bei mir an der richtigen Stelle – bevor Sie sich irgendwo festlegen, schauen wir uns gemeinsam an, was für Sie wirklich Sinn ergibt. Ohne Druck, ohne Bindung an eine Marke."<br><br>
+          Wir sind der erste Anbieter → Anker setzen bei Qualität, Unabhängigkeit und Beratung. Der Vergleich, den der Kunde danach zieht, wird immer an uns gemessen.
+        </div>
+      </div>
+    </div>
+
+    <!-- SCHRITT 3: EINWÄNDE SAMMELN -->
+    <div class="card">
+      <div class="section-label">Schritt 3 · Einwände sammeln (nur bei NEIN)</div>
+      <div style="font-size:15px; color:#4a6a54; margin-bottom:20px; line-height:1.6;">Hier nur zuhören und die Einwände des Kunden sammeln. <strong>Noch nicht antworten.</strong> Die Behandlung erfolgt in der nächsten Phase – Lösungsansatz.</div>
+
+      <!-- WP Einwände -->
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+        <span style="background:#1a5c2e; color:#fff; border-radius:6px; padding:5px 14px; font-size:15px; font-weight:700;">WP</span>
+        <span style="font-size:18px; font-weight:700; color:#1a2e1e;">Wärmepumpe – typische Einwände</span>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:24px;">
+        <div style="background:#fcebeb; border-radius:8px; padding:14px 16px; font-size:15px; color:#791f1f; font-style:italic; line-height:1.5;">"Wird meine Wohnung überhaupt warm?"</div>
+        <div style="background:#fcebeb; border-radius:8px; padding:14px 16px; font-size:15px; color:#791f1f; font-style:italic; line-height:1.5;">"Muss ich das ganze Haus umbauen?"</div>
+        <div style="background:#fcebeb; border-radius:8px; padding:14px 16px; font-size:15px; color:#791f1f; font-style:italic; line-height:1.5;">"Kostet das nicht 30.000–40.000€?"</div>
+        <div style="background:#fcebeb; border-radius:8px; padding:14px 16px; font-size:15px; color:#791f1f; font-style:italic; line-height:1.5;">"Verbrauch ich danach viel mehr Strom?"</div>
+        <div style="background:#fcebeb; border-radius:8px; padding:14px 16px; font-size:15px; color:#791f1f; font-style:italic; line-height:1.5;">"Ist die WP nicht zu laut?"</div>
+        <div style="background:#fcebeb; border-radius:8px; padding:14px 16px; font-size:15px; color:#791f1f; font-style:italic; line-height:1.5;">"Geht doch nicht ohne Fußbodenheizung…"</div>
+        <div style="background:#fcebeb; border-radius:8px; padding:14px 16px; font-size:15px; color:#791f1f; font-style:italic; line-height:1.5;">"Im Altbau geht das doch nicht."</div>
+        <div style="background:#fcebeb; border-radius:8px; padding:14px 16px; font-size:15px; color:#791f1f; font-style:italic; line-height:1.5;">"Im Winter funktioniert die WP doch nicht…"</div>
+      </div>
+
+      <!-- PV Einwände -->
+      <div style="border-top:2px solid #d8e8dc; padding-top:20px;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+          <span style="background:#185fa5; color:#fff; border-radius:6px; padding:5px 14px; font-size:15px; font-weight:700;">PV</span>
+          <span style="font-size:18px; font-weight:700; color:#1a2e1e;">Photovoltaik – typische Einwände</span>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <div style="background:#fcebeb; border-radius:8px; padding:14px 16px; font-size:15px; color:#791f1f; font-style:italic; line-height:1.5;">"Rentiert sich das überhaupt?"</div>
+          <div style="background:#fcebeb; border-radius:8px; padding:14px 16px; font-size:15px; color:#791f1f; font-style:italic; line-height:1.5;">"Das Dach geht doch kaputt."</div>
+          <div style="background:#fcebeb; border-radius:8px; padding:14px 16px; font-size:15px; color:#791f1f; font-style:italic; line-height:1.5;">"Ich hab die Enpal-Preise gesehen…"</div>
+          <div style="background:#fcebeb; border-radius:8px; padding:14px 16px; font-size:15px; color:#791f1f; font-style:italic; line-height:1.5;">"Brauche ich Umbaumaßnahmen?"</div>
+        </div>
+      </div>
+
+      <div class="tip-box" style="margin-top:24px;"><span class="tip-label">Profi-Tipp: </span>Einwände jetzt nur nicken und notieren – nicht kommentieren, nicht erklären. „Das schauen wir uns gleich genau an." Der Kunde fühlt sich gehört, ohne dass du schon in den Verkaufsmodus wechselst.</div>
+    </div>
+
+    <div class="bottom-nav">
+      <button class="btn" onclick="goto(1)">← Zurück</button>
+      <div class="dots">
+        <button class="dot" onclick="goto(0)"></button>
+        <button class="dot" onclick="goto(1)"></button>
+        <button class="dot active" onclick="goto(2)"></button>
+        <button class="dot" onclick="goto(3)"></button>
+        <button class="dot" onclick="goto(4)"></button>
+        <button class="dot" onclick="goto(5)"></button>
+        <button class="dot" onclick="goto(6)"></button>
+      </div>
+      <button class="btn btn-primary" onclick="goto(3)">Weiter →</button>
+    </div>
+  </div>
+
+  <!-- PHASE 3: LÖSUNG -->
+  <div class="phase-section" id="phase-3">
+    <div class="phase-header">
+      <div class="phase-icon">L</div>
+      <div>
+        <div class="phase-title">Lösungsansatz</div>
+        <div class="phase-subtitle">Maßgeschneiderte Lösung präsentieren – erst jetzt</div>
+      </div>
+    </div>
+    <div class="goal-box">
+      <span class="goal-label">Ziel dieser Phase</span>
+      Die Lösung ist die logische Antwort auf den erarbeiteten Schmerz – kein Produktvortrag. Wer zu früh löst, verliert.
+    </div>
+    <div class="card">
+      <div class="section-label">Überleitung</div>
+      <div class="intro-box">„Basierend auf allem, was Sie mir erzählt haben, würde ich Folgendes vorschlagen – und erklären, warum das genau zu Ihrer Situation passt."</div>
+      <div class="q-list">
+        <div class="counter-row" style="margin-top:20px">
+          <div class="section-label" style="margin-bottom:0">Gesprächsimpulse</div>
+          <div class="counter-text"><span class="counter-num" id="c3">0</span> / 5 abgehakt</div>
+        </div>
+        <div class="q-item" id="q3-0" onclick="toggle(3,0)"><div class="checkbox" id="cb3-0"></div><div><div class="q-text">„Für Ihre Dachgröße und Ihren Verbrauch empfehle ich eine PV-Anlage mit ca. [X kWp] – das deckt etwa [X%] Ihres Jahresverbrauchs."</div><div class="q-note">→ Individuell & konkret formulieren, nicht generisch</div></div></div>
+        <div class="q-item" id="q3-1" onclick="toggle(3,1)"><div class="checkbox" id="cb3-1"></div><div><div class="q-text">„Mit einem Speicher von [X kWh] nutzen Sie auch abends und nachts Ihren eigenen Strom."</div><div class="q-note">→ Autarkie-Bild stärken</div></div></div>
+        <div class="q-item" id="q3-2" onclick="toggle(3,2)"><div class="checkbox" id="cb3-2"></div><div><div class="q-text">„Wenn Sie aktuell mit Gas heizen, ist eine Wärmepumpe mittelfristig der nächste logische Schritt."</div><div class="q-note">→ Upsell vorbereiten, nicht forcieren</div></div></div>
+        <div class="q-item" id="q3-3" onclick="toggle(3,3)"><div class="checkbox" id="cb3-3"></div><div><div class="q-text">„Ich wähle aus meinem Partnernetzwerk den Anbieter, der für Ihre Situation am besten passt – nicht den teuersten, nicht den billigsten."</div><div class="q-note">→ Makler-Vorteil erneut sichtbar machen</div></div></div>
+        <div class="q-item" id="q3-4" onclick="toggle(3,4)"><div class="checkbox" id="cb3-4"></div><div><div class="q-text">„Darf ich Ihnen das kurz skizzieren?"</div><div class="q-note">→ Visuelles Commitment erzeugen</div></div></div>
+      </div>
+      <div class="tip-box"><span class="tip-label">Profi-Tipp: </span>Nicht alle Produkte auf einmal präsentieren. Immer mit der stärksten, einfachsten Lösung beginnen. Komplexität kommt später.</div>
+    </div>
+
+    <!-- EINWANDBEHANDLUNG IN PHASE L -->
+    <div class="card">
+      <div class="section-label">Einwandbehandlung – Antworten auf Kundenfragen</div>
+      <div style="font-size:15px; color:#4a6a54; margin-bottom:20px; line-height:1.6;">Einwand anklicken → Antwort erscheint. Jeden Einwand zuerst anerkennen: <em>„Das ist eine berechtigte Frage, die viele stellen."</em> – dann entkräften.</div>
+
+      <!-- WP -->
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+        <span style="background:#1a5c2e; color:#fff; border-radius:6px; padding:5px 14px; font-size:15px; font-weight:700;">WP</span>
+        <span style="font-size:18px; font-weight:700; color:#1a2e1e;">Wärmepumpe</span>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:28px;">
+
+        <div style="border:1.5px solid #e8c8c8; border-radius:8px; overflow:hidden;">
+          <button onclick="toggleAccordion('wp1')" style="width:100%; background:#fcebeb; border:none; cursor:pointer; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; font-family:Helvetica,Arial,sans-serif; text-align:left;">
+            <span style="font-size:16px; font-style:italic; color:#791f1f; font-weight:500;">"Wird meine Wohnung überhaupt warm?"</span>
+            <span id="wp1-arrow" style="color:#a32d2d; font-size:20px; flex-shrink:0; margin-left:12px; transition:transform 0.2s;">▼</span>
+          </button>
+          <div id="wp1" style="display:none; padding:16px 18px; background:#f4f8f5; font-size:15px; color:#1a2e1e; line-height:1.75; font-family:Helvetica,Arial,sans-serif; border-top:1px solid #e8c8c8;">
+            „Ja – und das ist die häufigste Frage, die ich höre. Eine moderne Wärmepumpe heizt auch bei -20°C effizient. Der entscheidende Faktor ist nicht das Wetter, sondern die richtige Auslegung der Anlage auf Ihr Haus. Genau das machen unsere Partner: eine individuelle Heizlastberechnung, bevor irgendetwas installiert wird."
+          </div>
+        </div>
+
+        <div style="border:1.5px solid #e8c8c8; border-radius:8px; overflow:hidden;">
+          <button onclick="toggleAccordion('wp2')" style="width:100%; background:#fcebeb; border:none; cursor:pointer; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; font-family:Helvetica,Arial,sans-serif; text-align:left;">
+            <span style="font-size:16px; font-style:italic; color:#791f1f; font-weight:500;">"Muss ich das ganze Haus umbauen?"</span>
+            <span id="wp2-arrow" style="color:#a32d2d; font-size:20px; flex-shrink:0; margin-left:12px; transition:transform 0.2s;">▼</span>
+          </button>
+          <div id="wp2" style="display:none; padding:16px 18px; background:#f4f8f5; font-size:15px; color:#1a2e1e; line-height:1.75; font-family:Helvetica,Arial,sans-serif; border-top:1px solid #e8c8c8;">
+            „Nein – in den meisten Fällen nicht. Eine Wärmepumpe kann auch mit bestehenden Heizkörpern betrieben werden, wenn diese richtig dimensioniert sind. Oft reicht eine Optimierung der Vorlauftemperatur. Ein Komplettumbau ist die Ausnahme, nicht die Regel."
+          </div>
+        </div>
+
+        <div style="border:1.5px solid #e8c8c8; border-radius:8px; overflow:hidden;">
+          <button onclick="toggleAccordion('wp3')" style="width:100%; background:#fcebeb; border:none; cursor:pointer; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; font-family:Helvetica,Arial,sans-serif; text-align:left;">
+            <span style="font-size:16px; font-style:italic; color:#791f1f; font-weight:500;">"Kostet das nicht 30.000–40.000€?"</span>
+            <span id="wp3-arrow" style="color:#a32d2d; font-size:20px; flex-shrink:0; margin-left:12px; transition:transform 0.2s;">▼</span>
+          </button>
+          <div id="wp3" style="display:none; padding:16px 18px; background:#f4f8f5; font-size:15px; color:#1a2e1e; line-height:1.75; font-family:Helvetica,Arial,sans-serif; border-top:1px solid #e8c8c8;">
+            „Eine WP kostet brutto ca. 20.000–30.000€ – aber nach BAFA-Förderung (bis zu 70%) liegen Sie realistisch bei 8.000–15.000€ Eigenanteil. Das ist oft weniger als eine neue Gasheizung inklusive Wartungsvertrag über 10 Jahre. Und danach haben Sie keine Gasrechnung mehr."
+          </div>
+        </div>
+
+        <div style="border:1.5px solid #e8c8c8; border-radius:8px; overflow:hidden;">
+          <button onclick="toggleAccordion('wp4')" style="width:100%; background:#fcebeb; border:none; cursor:pointer; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; font-family:Helvetica,Arial,sans-serif; text-align:left;">
+            <span style="font-size:16px; font-style:italic; color:#791f1f; font-weight:500;">"Verbrauch ich danach viel mehr Strom?"</span>
+            <span id="wp4-arrow" style="color:#a32d2d; font-size:20px; flex-shrink:0; margin-left:12px; transition:transform 0.2s;">▼</span>
+          </button>
+          <div id="wp4" style="display:none; padding:16px 18px; background:#f4f8f5; font-size:15px; color:#1a2e1e; line-height:1.75; font-family:Helvetica,Arial,sans-serif; border-top:1px solid #e8c8c8;">
+            „Die WP verbraucht Strom – aber sie erzeugt aus 1 kWh Strom 3–4 kWh Wärme. Das nennt sich COP. Im Vergleich zu Gas zahlen Sie unterm Strich weniger. Kombiniert mit einer PV-Anlage heizen Sie teilweise mit Ihrem eigenen Sonnenstrom – zu praktisch null Kosten."
+          </div>
+        </div>
+
+        <div style="border:1.5px solid #e8c8c8; border-radius:8px; overflow:hidden;">
+          <button onclick="toggleAccordion('wp5')" style="width:100%; background:#fcebeb; border:none; cursor:pointer; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; font-family:Helvetica,Arial,sans-serif; text-align:left;">
+            <span style="font-size:16px; font-style:italic; color:#791f1f; font-weight:500;">"Ist die WP nicht zu laut?"</span>
+            <span id="wp5-arrow" style="color:#a32d2d; font-size:20px; flex-shrink:0; margin-left:12px; transition:transform 0.2s;">▼</span>
+          </button>
+          <div id="wp5" style="display:none; padding:16px 18px; background:#f4f8f5; font-size:15px; color:#1a2e1e; line-height:1.75; font-family:Helvetica,Arial,sans-serif; border-top:1px solid #e8c8c8;">
+            „Moderne Luft-Wasser-Wärmepumpen liegen bei 40–50 dB – das entspricht einem Kühlschrank oder einem ruhigen Gespräch. Die Aufstellung wird bewusst geplant: Abstand zum Nachbarn, Ausrichtung, Schalldämmung. Das ist heute kein Problem mehr."
+          </div>
+        </div>
+
+        <div style="border:1.5px solid #e8c8c8; border-radius:8px; overflow:hidden;">
+          <button onclick="toggleAccordion('wp6')" style="width:100%; background:#fcebeb; border:none; cursor:pointer; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; font-family:Helvetica,Arial,sans-serif; text-align:left;">
+            <span style="font-size:16px; font-style:italic; color:#791f1f; font-weight:500;">"Geht doch nicht ohne Fußbodenheizung…"</span>
+            <span id="wp6-arrow" style="color:#a32d2d; font-size:20px; flex-shrink:0; margin-left:12px; transition:transform 0.2s;">▼</span>
+          </button>
+          <div id="wp6" style="display:none; padding:16px 18px; background:#f4f8f5; font-size:15px; color:#1a2e1e; line-height:1.75; font-family:Helvetica,Arial,sans-serif; border-top:1px solid #e8c8c8;">
+            „Das ist ein weit verbreiteter Irrtum. Fußbodenheizung ist ideal, aber nicht zwingend. Mit modernen Niedertemperatur-Heizkörpern oder Ventilatorkonvektoren funktioniert die WP genauso gut. Wir schauen uns Ihr Heizsystem an und sagen Ihnen konkret, was nötig ist – und was nicht."
+          </div>
+        </div>
+
+        <div style="border:1.5px solid #e8c8c8; border-radius:8px; overflow:hidden;">
+          <button onclick="toggleAccordion('wp7')" style="width:100%; background:#fcebeb; border:none; cursor:pointer; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; font-family:Helvetica,Arial,sans-serif; text-align:left;">
+            <span style="font-size:16px; font-style:italic; color:#791f1f; font-weight:500;">"Im Altbau geht das doch nicht."</span>
+            <span id="wp7-arrow" style="color:#a32d2d; font-size:20px; flex-shrink:0; margin-left:12px; transition:transform 0.2s;">▼</span>
+          </button>
+          <div id="wp7" style="display:none; padding:16px 18px; background:#f4f8f5; font-size:15px; color:#1a2e1e; line-height:1.75; font-family:Helvetica,Arial,sans-serif; border-top:1px solid #e8c8c8;">
+            „Das stimmt so pauschal nicht. Es kommt auf den Dämmstand an. Ein Altbau mit Kerndämmung oder gedämmtem Dach ist oft besser geeignet als man denkt. Unsere Partner machen eine genaue Energieberatung vorab – da sehen wir schwarz auf weiß, ob und wie es funktioniert."
+          </div>
+        </div>
+
+        <div style="border:1.5px solid #e8c8c8; border-radius:8px; overflow:hidden;">
+          <button onclick="toggleAccordion('wp8')" style="width:100%; background:#fcebeb; border:none; cursor:pointer; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; font-family:Helvetica,Arial,sans-serif; text-align:left;">
+            <span style="font-size:16px; font-style:italic; color:#791f1f; font-weight:500;">"Im Winter funktioniert die WP doch nicht…"</span>
+            <span id="wp8-arrow" style="color:#a32d2d; font-size:20px; flex-shrink:0; margin-left:12px; transition:transform 0.2s;">▼</span>
+          </button>
+          <div id="wp8" style="display:none; padding:16px 18px; background:#f4f8f5; font-size:15px; color:#1a2e1e; line-height:1.75; font-family:Helvetica,Arial,sans-serif; border-top:1px solid #e8c8c8;">
+            „Moderne Wärmepumpen arbeiten bis -20°C effizient – Temperaturen, die in Deutschland kaum vorkommen. Selbst bei -10°C liegt der COP noch bei 2–3. Die WP wird genau für Ihre Klimaregion ausgelegt. Das ist heute Standardtechnik, kein Experiment."
+          </div>
+        </div>
+
+      </div>
+
+      <!-- PV -->
+      <div style="border-top:2px solid #d8e8dc; padding-top:24px;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+          <span style="background:#185fa5; color:#fff; border-radius:6px; padding:5px 14px; font-size:15px; font-weight:700;">PV</span>
+          <span style="font-size:18px; font-weight:700; color:#1a2e1e;">Photovoltaik</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+
+          <div style="border:1.5px solid #e8c8c8; border-radius:8px; overflow:hidden;">
+            <button onclick="toggleAccordion('pv1')" style="width:100%; background:#fcebeb; border:none; cursor:pointer; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; font-family:Helvetica,Arial,sans-serif; text-align:left;">
+              <span style="font-size:16px; font-style:italic; color:#791f1f; font-weight:500;">"Rentiert sich das überhaupt?"</span>
+              <span id="pv1-arrow" style="color:#a32d2d; font-size:20px; flex-shrink:0; margin-left:12px; transition:transform 0.2s;">▼</span>
+            </button>
+            <div id="pv1" style="display:none; padding:16px 18px; background:#f4f8f5; font-size:15px; color:#1a2e1e; line-height:1.75; font-family:Helvetica,Arial,sans-serif; border-top:1px solid #e8c8c8;">
+              „Ja – bei einem Haushalt mit 4.000–5.000 kWh Jahresverbrauch liegt die Amortisation heute bei 8–12 Jahren. Die Anlage läuft 25–30 Jahre. Das bedeutet: 15–20 Jahre reiner Gewinn. Und dabei ist ein weiter steigender Strompreis noch gar nicht eingerechnet."
+            </div>
+          </div>
+
+          <div style="border:1.5px solid #e8c8c8; border-radius:8px; overflow:hidden;">
+            <button onclick="toggleAccordion('pv2')" style="width:100%; background:#fcebeb; border:none; cursor:pointer; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; font-family:Helvetica,Arial,sans-serif; text-align:left;">
+              <span style="font-size:16px; font-style:italic; color:#791f1f; font-weight:500;">"Das Dach geht doch kaputt."</span>
+              <span id="pv2-arrow" style="color:#a32d2d; font-size:20px; flex-shrink:0; margin-left:12px; transition:transform 0.2s;">▼</span>
+            </button>
+            <div id="pv2" style="display:none; padding:16px 18px; background:#f4f8f5; font-size:15px; color:#1a2e1e; line-height:1.75; font-family:Helvetica,Arial,sans-serif; border-top:1px solid #e8c8c8;">
+              „Das Gegenteil ist der Fall: Die Module schützen die Dachziegel vor Witterung und UV-Strahlung. Die Befestigung erfolgt mit geprüften Dachhaken, die absolut dicht sind. Unsere Partner geben darauf Garantie – und die Montage wird von einem Dachdecker abgenommen."
+            </div>
+          </div>
+
+          <div style="border:1.5px solid #e8c8c8; border-radius:8px; overflow:hidden;">
+            <button onclick="toggleAccordion('pv3')" style="width:100%; background:#fcebeb; border:none; cursor:pointer; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; font-family:Helvetica,Arial,sans-serif; text-align:left;">
+              <span style="font-size:16px; font-style:italic; color:#791f1f; font-weight:500;">"Ich hab die Enpal-Preise gesehen…"</span>
+              <span id="pv3-arrow" style="color:#a32d2d; font-size:20px; flex-shrink:0; margin-left:12px; transition:transform 0.2s;">▼</span>
+            </button>
+            <div id="pv3" style="display:none; padding:16px 18px; background:#f4f8f5; font-size:15px; color:#1a2e1e; line-height:1.75; font-family:Helvetica,Arial,sans-serif; border-top:1px solid #e8c8c8;">
+              „Enpal ist ein Direktanbieter mit eigenen Produkten und Preisaufschlägen für Vertrieb und Marketing. Genau hier liegt unser Vorteil: Wir vergleichen den Markt und wählen den besten Anbieter für Ihre Situation – oft 20–30% günstiger bei gleicher oder besserer Qualität."
+            </div>
+          </div>
+
+          <div style="border:1.5px solid #e8c8c8; border-radius:8px; overflow:hidden;">
+            <button onclick="toggleAccordion('pv4')" style="width:100%; background:#fcebeb; border:none; cursor:pointer; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; font-family:Helvetica,Arial,sans-serif; text-align:left;">
+              <span style="font-size:16px; font-style:italic; color:#791f1f; font-weight:500;">"Brauche ich Umbaumaßnahmen?"</span>
+              <span id="pv4-arrow" style="color:#a32d2d; font-size:20px; flex-shrink:0; margin-left:12px; transition:transform 0.2s;">▼</span>
+            </button>
+            <div id="pv4" style="display:none; padding:16px 18px; background:#f4f8f5; font-size:15px; color:#1a2e1e; line-height:1.75; font-family:Helvetica,Arial,sans-serif; border-top:1px solid #e8c8c8;">
+              „In den meisten Fällen nein. Der Zählerschrank muss den aktuellen Normen entsprechen – das prüfen wir vorab. Wenn eine Nachrüstung nötig ist, ist das ein überschaubarer Einmalaufwand. Alles andere – Montage, Anmeldung, Inbetriebnahme – läuft komplett über uns."
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="tip-box" style="margin-top:24px;"><span class="tip-label">Profi-Tipp: </span>Den Einwand nie wegdiskutieren – erst vollständig anerkennen: „Das ist eine berechtigte Frage, die viele stellen." Dann entkräften. Wer den Einwand klein macht, macht auch den Kunden klein.</div>
+    </div>
+      <div class="dots">
+        <button class="dot" onclick="goto(0)"></button>
+        <button class="dot" onclick="goto(1)"></button>
+        <button class="dot" onclick="goto(2)"></button>
+        <button class="dot active" onclick="goto(3)"></button>
+        <button class="dot" onclick="goto(4)"></button>
+        <button class="dot" onclick="goto(5)"></button>
+        <button class="dot" onclick="goto(6)"></button>
+      </div>
+      <button class="btn btn-primary" onclick="goto(4)">Weiter →</button>
+    </div>
+  </div>
+
+  <!-- PHASE 4: NUTZEN -->
+  <div class="phase-section" id="phase-4">
+    <div class="phase-header">
+      <div class="phase-icon">N</div>
+      <div>
+        <div class="phase-title">Nutzen</div>
+        <div class="phase-subtitle">Return on Investment & Lebensqualität verankern</div>
+      </div>
+    </div>
+    <div class="goal-box">
+      <span class="goal-label">Ziel dieser Phase</span>
+      Den emotionalen und finanziellen Mehrwert so konkret machen, dass der Preis im nächsten Schritt klein wirkt.
+    </div>
+
+    <div class="card">
+      <div class="section-label">Überleitung</div>
+      <div class="intro-box">„Lassen Sie mich Ihnen zeigen, was das konkret für Sie bedeutet – in Euro und im Alltag."</div>
+    </div>
+
+    <div class="card">
+      <div class="counter-row">
+        <div class="section-label" style="margin-bottom:0;">Gesprächsimpulse</div>
+        <div class="counter-text"><span class="counter-num" id="c4">0</span> / 5 abgehakt</div>
+      </div>
+      <div class="q-list">
+        <div class="q-item" id="q4-0" onclick="toggle(4,0)"><div class="checkbox" id="cb4-0"></div><div><div class="q-text">„Bei Ihrem Verbrauch sparen Sie ca. [X€] pro Jahr – über 20 Jahre sind das [X€]."</div><div class="q-note">→ Lebenszeit-Kalkulation macht Investition greifbar</div></div></div>
+        <div class="q-item" id="q4-1" onclick="toggle(4,1)"><div class="checkbox" id="cb4-1"></div><div><div class="q-text">„Die Anlage arbeitet 25–30 Jahre für Sie. Amortisation liegt bei ca. [X Jahren]."</div><div class="q-note">→ Risikowahrnehmung reduzieren</div></div></div>
+        <div class="q-item" id="q4-2" onclick="toggle(4,2)"><div class="checkbox" id="cb4-2"></div><div><div class="q-text">„Sie sind unabhängig von den Preiserhöhungen Ihres Versorgers."</div><div class="q-note">→ Kontrollgewinn betonen</div></div></div>
+        <div class="q-item" id="q4-3" onclick="toggle(4,3)"><div class="checkbox" id="cb4-3"></div><div><div class="q-text">„Der Wiederverkaufswert Ihrer Immobilie steigt nachweislich mit einer PV-Anlage."</div><div class="q-note">→ Asset-Gedanke verankern</div></div></div>
+        <div class="q-item" id="q4-4" onclick="toggle(4,4)"><div class="checkbox" id="cb4-4"></div><div><div class="q-text">„Sie handeln jetzt – nicht irgendwann. Wie fühlt sich das an?"</div><div class="q-note">→ Emotionale Bestätigung einholen</div></div></div>
+      </div>
+      <div class="tip-box"><span class="tip-label">Profi-Tipp: </span>Alles auf den Monat herunterbrechen: „7.200€ im Jahr klingt viel – aber das sind 600€ im Monat, die Sie sich sparen."</div>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn" onclick="goto(3)">← Zurück</button>
+      <div class="dots">
+        <button class="dot" onclick="goto(0)"></button>
+        <button class="dot" onclick="goto(1)"></button>
+        <button class="dot" onclick="goto(2)"></button>
+        <button class="dot" onclick="goto(3)"></button>
+        <button class="dot active" onclick="goto(4)"></button>
+        <button class="dot" onclick="goto(5)"></button>
+        <button class="dot" onclick="goto(6)"></button>
+      </div>
+      <button class="btn btn-primary" onclick="goto(5)">Weiter →</button>
+    </div>
+  </div>
+
+  <!-- PHASE 5: PREIS -->
+  <div class="phase-section" id="phase-5">
+    <div class="phase-header">
+      <div class="phase-icon amber">P</div>
+      <div>
+        <div class="phase-title">Preis</div>
+        <div class="phase-subtitle">Investment nennen – souverän & ohne Entschuldigung</div>
+      </div>
+    </div>
+    <div class="goal-box">
+      <span class="goal-label">Ziel dieser Phase</span>
+      Den Preis als Investition präsentieren, nicht als Kostenpunkt. Klar, direkt, ohne Zögern.
+    </div>
+
+    <div class="card">
+      <div class="section-label">Überleitung</div>
+      <div class="intro-box">„Kommen wir zum Investment. Ich zeige Ihnen das transparent – damit Sie eine fundierte Entscheidung treffen können."</div>
+    </div>
+
+    <div class="card">
+      <div class="counter-row">
+        <div class="section-label" style="margin-bottom:0;">Gesprächsimpulse</div>
+        <div class="counter-text"><span class="counter-num" id="c5">0</span> / 4 abgehakt</div>
+      </div>
+      <div class="q-list">
+        <div class="q-item" id="q5-0" onclick="toggle(5,0)"><div class="checkbox" id="cb5-0"></div><div><div class="q-text">„Die Gesamtinvestition liegt bei ca. [X€] – inklusive Installation und Inbetriebnahme."</div><div class="q-note">→ Vollständig & klar kommunizieren, keine versteckten Kosten</div></div></div>
+        <div class="q-item" id="q5-1" onclick="toggle(5,1)"><div class="checkbox" id="cb5-1"></div><div><div class="q-text">„Nach Abzug der Förderungen (BAFA/KfW) kommen wir auf ein Netto-Investment von ca. [X€]."</div><div class="q-note">→ Förderungen als Preisreduzierer einsetzen</div></div></div>
+        <div class="q-item" id="q5-2" onclick="toggle(5,2)"><div class="checkbox" id="cb5-2"></div><div><div class="q-text">„Finanziert: ca. [X€] pro Monat über [X] Jahre – weniger als Ihre aktuelle Jahresstromrechnung."</div><div class="q-note">→ Vergleich statt absoluter Zahl</div></div></div>
+        <div class="q-item" id="q5-3" onclick="toggle(5,3)"><div class="checkbox" id="cb5-3"></div><div><div class="q-text">„Haben Sie Fragen zum Investment – oder soll ich Ihnen verschiedene Varianten zeigen?"</div><div class="q-note">→ Kontrolle zurückgeben, kein Druck aufbauen</div></div></div>
+      </div>
+      <div class="tip-box"><span class="tip-label">Profi-Tipp: </span>Nie entschuldigend klingen. Kein „ich weiß, das ist viel" – das pflanzt Zweifel. Nach der Zahl: Stille. Der Nächste, der spricht, verliert.</div>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn" onclick="goto(4)">← Zurück</button>
+      <div class="dots">
+        <button class="dot" onclick="goto(0)"></button>
+        <button class="dot" onclick="goto(1)"></button>
+        <button class="dot" onclick="goto(2)"></button>
+        <button class="dot" onclick="goto(3)"></button>
+        <button class="dot" onclick="goto(4)"></button>
+        <button class="dot active" onclick="goto(5)"></button>
+        <button class="dot" onclick="goto(6)"></button>
+      </div>
+      <button class="btn btn-primary" onclick="goto(6)">Weiter →</button>
+    </div>
+  </div>
+
+  <!-- PHASE 6: ABSCHLUSS -->
+  <div class="phase-section" id="phase-6">
+    <div class="phase-header">
+      <div class="phase-icon blue">A</div>
+      <div>
+        <div class="phase-title">Abschluss</div>
+        <div class="phase-subtitle">Commitment einholen – klar und direkt</div>
+      </div>
+    </div>
+    <div class="goal-box">
+      <span class="goal-label">Ziel dieser Phase</span>
+      Den nächsten konkreten Schritt vereinbaren. Kein offenes Ende. Kein „ich melde mich."
+    </div>
+
+    <div class="card">
+      <div class="section-label">Überleitung</div>
+      <div class="intro-box">„Ich fasse kurz zusammen, was wir heute erarbeitet haben – und dann würde ich gerne wissen, wie Sie weitermachen möchten."</div>
+    </div>
+
+    <div class="card">
+      <div class="counter-row">
+        <div class="section-label" style="margin-bottom:0;">Abschlussfragen</div>
+        <div class="counter-text"><span class="counter-num" id="c6">0</span> / 4 abgehakt</div>
+      </div>
+      <div class="q-list">
+        <div class="q-item" id="q6-0" onclick="toggle(6,0)"><div class="checkbox" id="cb6-0"></div><div><div class="q-text">„Sie zahlen [X€] zu viel – jedes Jahr. Eine Lösung liegt auf dem Tisch. Was spricht aus Ihrer Sicht noch dagegen?"</div><div class="q-note">→ Letzte Einwände offen abfragen</div></div></div>
+        <div class="q-item" id="q6-1" onclick="toggle(6,1)"><div class="checkbox" id="cb6-1"></div><div><div class="q-text">„Was brauchen Sie, um heute Ja zu sagen?"</div><div class="q-note">→ Direkt, respektvoll, auf den Punkt</div></div></div>
+        <div class="q-item" id="q6-2" onclick="toggle(6,2)"><div class="checkbox" id="cb6-2"></div><div><div class="q-text">„Darf ich die Planung starten und Ihnen in [X Tagen] ein finales Angebot vorlegen?"</div><div class="q-note">→ Nächsten Schritt klar und verbindlich definieren</div></div></div>
+        <div class="q-item" id="q6-3" onclick="toggle(6,3)"><div class="checkbox" id="cb6-3"></div><div><div class="q-text">„Oder: Darf ich Sie in 2 Tagen kurz anrufen, wenn Sie geschlafen haben?"</div><div class="q-note">→ Anschlusstermin sichern, kein Abbruch zulassen</div></div></div>
+      </div>
+      <div class="tip-box"><span class="tip-label">Profi-Tipp: </span>Nach der Abschlussfrage – schweigen. Nicht reden. Nicht erklären. Warten. Wer zuerst spricht, hat verloren. Das Schweigen arbeitet für dich.</div>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn" onclick="goto(5)">← Zurück</button>
+      <div class="dots">
+        <button class="dot" onclick="goto(0)"></button>
+        <button class="dot" onclick="goto(1)"></button>
+        <button class="dot" onclick="goto(2)"></button>
+        <button class="dot" onclick="goto(3)"></button>
+        <button class="dot" onclick="goto(4)"></button>
+        <button class="dot" onclick="goto(5)"></button>
+        <button class="dot active" onclick="goto(6)"></button>
+      </div>
+      <button class="btn" disabled>Fertig ✓</button>
+    </div>
+  </div>
+
+</div><!-- end main -->
+
+<div class="footer">EnergyEngel · Unabhängig. Kompetent. Grün. &nbsp;|&nbsp; Internes Dokument – nicht zur Weitergabe</div>
+
+<script>
+const counts = [5, 4, 7, 5, 5, 4, 4];
+var checked = {};
+
+function goto(i) {
+  for (var j = 0; j < 7; j++) {
+    document.getElementById('phase-' + j).classList.remove('active');
+  }
+  document.getElementById('phase-' + i).classList.add('active');
+
+  var btns = document.querySelectorAll('.nav-btn');
+  for (var k = 0; k < btns.length; k++) {
+    btns[k].classList.remove('active');
+  }
+  btns[i].classList.add('active');
+
+  var pct = Math.round(((i + 1) / 7) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+
+  window.scrollTo(0, 0);
+}
+
+function toggle(phaseIdx, qIdx) {
+  var key = phaseIdx + '-' + qIdx;
+  checked[key] = !checked[key];
+
+  var item = document.getElementById('q' + phaseIdx + '-' + qIdx);
+  var cb = document.getElementById('cb' + phaseIdx + '-' + qIdx);
+
+  if (checked[key]) {
+    item.classList.add('done');
+    cb.textContent = '✓';
+  } else {
+    item.classList.remove('done');
+    cb.textContent = '';
+  }
+
+  var done = 0;
+  for (var i = 0; i < counts[phaseIdx]; i++) {
+    if (checked[phaseIdx + '-' + i]) done++;
+  }
+  document.getElementById('c' + phaseIdx).textContent = done;
+}
+
+function toggleAccordion(id) {
+  var content = document.getElementById(id);
+  var arrow = document.getElementById(id + '-arrow');
+  if (content.style.display === 'none' || content.style.display === '') {
+    content.style.display = 'block';
+    arrow.style.transform = 'rotate(180deg)';
+  } else {
+    content.style.display = 'none';
+    arrow.style.transform = 'rotate(0deg)';
+  }
+}
+</script>
+</body>
+</html>
