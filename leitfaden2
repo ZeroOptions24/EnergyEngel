@@ -1,0 +1,2947 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EnergyEngel – Telefonleitfaden</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      --script-bg: #edf7f0;
+      --script-bg-strong: #dff0e4;
+      --script-border: #9fc8aa;
+      --script-text: #14311d;
+      --script-shadow: 0 10px 24px rgba(22, 84, 45, 0.10);
+      --bg: #f5f7f6;
+      --surface: #ffffff;
+      --surface-soft: #f1f5f2;
+      --line: #dbe5dd;
+      --text: #18241d;
+      --text-soft: #5f6d63;
+      --brand: #1f6b3a;
+      --brand-strong: #16542d;
+      --brand-soft: #e8f3ec;
+      --warn: #a53e2f;
+      --warn-soft: #fdf0ed;
+      --amber: #8a5a10;
+      --amber-soft: #fcf4e8;
+      --shadow: 0 10px 28px rgba(19, 31, 24, 0.06);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 18px;
+      line-height: 1.65;
+    }
+    button, input, textarea { font: inherit; }
+
+    .header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+      padding: 28px 24px 22px;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      transition: transform .2s ease, opacity .2s ease, max-height .2s ease, padding .2s ease;
+    }
+    body.guide-mode .header {
+      transform: translateY(-100%);
+      opacity: 0;
+      max-height: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      overflow: hidden;
+      border-bottom: 0;
+      pointer-events: none;
+    }
+    .header-wrap { max-width: 1100px; margin: 0 auto; }
+    .eyebrow {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--brand);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .title {
+      font-size: 34px;
+      line-height: 1.05;
+      letter-spacing: -.03em;
+      font-weight: 800;
+    }
+    .subtitle {
+      margin-top: 6px;
+      font-size: 17px;
+      color: var(--text-soft);
+      font-weight: 500;
+    }
+
+    .progress-shell {
+      position: sticky;
+      top: 8px;
+      z-index: 25;
+      max-width: 1100px;
+      margin: 12px auto 0;
+      padding: 0 16px;
+      display: none;
+    }
+    body.guide-mode .progress-shell { display: block; }
+    .progress-nav {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 8px 10px;
+      display: grid;
+      grid-template-columns: repeat(9, minmax(0, 1fr));
+      align-items: stretch;
+      gap: 6px;
+      overflow: visible;
+    }
+    .progress-nav::-webkit-scrollbar { height: 0; }
+    .progress-step {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 7px 9px;
+      border: 1px solid #edf2ee;
+      border-radius: 999px;
+      background: #f8faf9;
+      min-width: 0;
+      cursor: pointer;
+      transition: .18s ease;
+      position: relative;
+      transform-origin: center;
+    }
+    .progress-step:hover {
+      background: var(--brand-soft);
+      border-color: #cfe0d3;
+    }
+    .progress-dot {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #eef2ef;
+      color: var(--text-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      flex-shrink: 0;
+      transition: .18s ease;
+    }
+    .progress-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-soft);
+      line-height: 1.15;
+      text-align: center;
+      white-space: normal;
+      transition: .18s ease;
+    }
+    .progress-step.active {
+      background: #eef7f1;
+      border-color: #b8d3c0;
+      box-shadow: 0 10px 22px rgba(22, 84, 45, 0.10);
+      transform: scale(1.08);
+      z-index: 2;
+    }
+    .progress-step.active .progress-dot {
+      width: 30px;
+      height: 30px;
+      background: var(--brand);
+      color: #fff;
+      border-color: var(--brand);
+      font-size: 12px;
+    }
+    .progress-step.active .progress-label {
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .progress-step.done {
+      background: #f4faf6;
+      border-color: #d7e6db;
+    }
+    .progress-step.done .progress-dot {
+      background: var(--brand-soft);
+      color: var(--brand-strong);
+      border-color: #cfe0d3;
+    }
+    .progress-step.done .progress-label { color: var(--brand-strong); }
+    .progress-step.is-hidden {
+      display: none;
+    }
+
+    .app {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 16px 72px;
+    }
+    .prep-screen, .guide-screen { display: none; }
+    body.prep-mode .prep-screen { display: block; }
+    body.guide-mode .guide-screen { display: block; }
+
+    .progress-back {
+      margin-left: 0;
+      white-space: normal;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 6px 8px;
+      min-height: 0;
+      border-radius: 999px;
+      background: #f8faf9;
+      border: 1px solid #edf2ee;
+      color: var(--text-soft);
+      font-size: 11px;
+      font-weight: 700;
+      box-shadow: none;
+      cursor: pointer;
+    }
+    .progress-back:hover {
+      background: var(--brand-soft);
+      border-color: #cfe0d3;
+      color: var(--brand-strong);
+      transform: none;
+    }
+    .progress-back-dot {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #eef2ef;
+      color: var(--text-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .progress-back-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: inherit;
+      line-height: 1.15;
+      text-align: center;
+    }
+
+    .section {
+      display: none;
+      padding: 22px;
+      border-radius: 24px;
+      margin-bottom: 20px;
+      border: 1px solid transparent;
+    }
+    .section.visible { display: block; }
+    .prep-screen .section {
+      background: #eef4f0;
+      border-color: #dce7df;
+    }
+    #step-1 { background: #eef4fb; border-color: #d9e4f2; }
+    #step-2 { background: #f4fbf6; border-color: #d9e7dd; }
+    #step-3 { background: #eef7f1; border-color: #d9e7dd; }
+    #step-4 { background: #eef7f1; border-color: #d9e7dd; }
+    #step-5 { background: #fff1ed; border-color: #f0d5cd; }
+    #step-6 { background: #f3f3fb; border-color: #ddddf0; }
+
+    .section-head {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 18px;
+    }
+    .section-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: var(--brand);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .section-icon.warn { background: var(--warn); }
+    .section-title {
+      font-size: 36px;
+      line-height: 1.05;
+      letter-spacing: -.03em;
+      font-weight: 800;
+    }
+    .section-sub {
+      margin-top: 8px;
+      color: var(--text-soft);
+      font-size: 18px;
+    }
+
+    .goal {
+      background: var(--brand-soft);
+      border: 2px solid #cfe0d3;
+      border-left: 8px solid var(--brand);
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin-bottom: 16px;
+      color: var(--text);
+      font-size: 18px;
+      line-height: 1.6;
+    }
+    .goal.warn {
+      background: var(--warn-soft);
+      border-left-color: var(--warn);
+      border-color: #efd5cd;
+    }
+    .goal-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--brand-strong);
+      font-weight: 800;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+    }
+    .badge {
+      display: block;
+      padding: 0;
+      border-radius: 0;
+      background: transparent;
+      border: 0;
+      color: var(--text);
+      font-size: 22px;
+      letter-spacing: -.02em;
+      text-transform: none;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .card-title::before {
+      content: '';
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: var(--brand);
+      flex-shrink: 0;
+    }
+    .card-help {
+      color: var(--text);
+      font-size: 17px;
+      line-height: 1.55;
+      margin-bottom: 16px;
+      padding: 14px 16px;
+      background: var(--brand-soft);
+      border: 2px solid #cfe0d3;
+      border-left: 8px solid var(--brand);
+      border-radius: 14px;
+    }
+
+    .grid-1 { display: grid; gap: 12px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .full { grid-column: 1 / -1; }
+    .field { display: flex; flex-direction: column; gap: 8px; }
+    .label {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-soft);
+      font-weight: 800;
+    }
+    .input,
+    .textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      color: var(--text);
+      padding: 14px 16px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }
+    .textarea { min-height: 120px; resize: vertical; }
+    .input:focus,
+    .textarea:focus {
+      border-color: #9fc8aa;
+      box-shadow: 0 0 0 4px rgba(31,107,58,.08);
+    }
+
+    .choice {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: 48px 1fr auto;
+      gap: 14px;
+      align-items: center;
+      text-align: left;
+      cursor: pointer;
+      transition: .16s ease;
+      box-shadow: 0 4px 14px rgba(24,36,29,.04);
+    }
+    .choice:hover {
+      transform: translateY(-1px);
+      border-color: #b9c8bd;
+      box-shadow: 0 8px 18px rgba(24,36,29,.07);
+    }
+    .choice.active {
+      border-color: var(--brand);
+      background: var(--brand-soft);
+      box-shadow: 0 0 0 3px rgba(31,107,58,.10);
+    }
+    .choice-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--surface-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+    .choice-title {
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1.25;
+      color: var(--text);
+    }
+    .choice-text {
+      font-size: 14px;
+      line-height: 1.45;
+      color: var(--text-soft);
+      margin-top: 4px;
+    }
+    .choice-tag {
+      display: none;
+    }
+
+    .spoken-block {
+      background: var(--script-bg);
+      border: 2px solid var(--script-border);
+      border-radius: 22px;
+      box-shadow: var(--script-shadow);
+      padding: 26px;
+      margin-top: 16px;
+      display: none;
+      position: relative;
+    }
+    .spoken-block::before {
+      content: 'Sagen';
+      position: absolute;
+      top: -18px;
+      right: 20px;
+      background: var(--script-bg-strong);
+      color: var(--script-text);
+      border: 3px solid var(--script-border);
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      box-shadow: 0 10px 24px rgba(22, 84, 45, 0.16);
+      z-index: 2;
+    }
+    .spoken-block.active { display: block; }
+    .spoken-label {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--script-text);
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+    .spoken-item {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 16px;
+      padding: 18px;
+      margin-bottom: 14px;
+      border: 1px solid rgba(159, 200, 170, 0.95);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.45);
+    }
+    .spoken-item.hidden { display: none; }
+    .spoken-item:last-child { margin-bottom: 0; }
+    .spoken-num {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: var(--script-text);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+    .spoken-text {
+      font-size: 28px;
+      line-height: 1.55;
+      font-weight: 800;
+      color: var(--script-text);
+      letter-spacing: -0.01em;
+    }
+    .spoken-note { display: none; }
+
+    .response-actions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      align-items: center;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+    .response-actions .btn-primary,
+    .response-actions .btn-secondary {
+      min-width: 220px;
+      min-height: 64px;
+      padding: 18px 28px;
+      font-size: 18px;
+      font-weight: 800;
+    }
+    .response-actions.hidden { display: none; }
+
+    .quote-box {
+      background: var(--script-bg);
+      border: 2px solid var(--script-border);
+      border-left: 10px solid var(--brand);
+      border-radius: 18px;
+      box-shadow: var(--script-shadow);
+      padding: 24px 24px 22px;
+      font-size: 30px;
+      line-height: 1.5;
+      font-weight: 800;
+      color: var(--script-text);
+      letter-spacing: -0.01em;
+      position: relative;
+    }
+    .quote-box::before {
+      content: 'Sagen';
+      position: absolute;
+      top: -18px;
+      right: 20px;
+      background: var(--script-bg-strong);
+      color: var(--script-text);
+      border: 3px solid var(--script-border);
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      box-shadow: 0 10px 24px rgba(22, 84, 45, 0.16);
+      z-index: 2;
+    }
+    .quote-box.hidden { display: none; }
+    .quote-box.warn-state {
+      background: var(--warn-soft);
+      border-color: #e3b6ad;
+      border-left-color: var(--warn);
+      color: #4a1f18;
+      box-shadow: 0 10px 24px rgba(165, 62, 47, 0.12);
+    }
+    .quote-box.warn-state::before {
+      background: #f6ddd8;
+      border-color: #e3b6ad;
+      color: #4a1f18;
+    }
+    .followup-quote { display: none; margin-top: 16px; }
+    .followup-quote.visible { display: block; }
+    .say-focus {
+      box-shadow: 0 0 0 4px rgba(31,107,58,.14), var(--script-shadow) !important;
+      transform: scale(1.01);
+      transition: box-shadow .2s ease, transform .2s ease;
+    }
+    .say-change {
+      animation: sayPulse .38s ease;
+    }
+    @keyframes sayPulse {
+      0% { transform: scale(1); }
+      45% { transform: scale(1.04); }
+      100% { transform: scale(1); }
+    }
+
+    .say-stack {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .compact-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: var(--shadow);
+    }
+    .motive-grid-compact {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .choice.compact {
+      padding: 16px;
+      grid-template-columns: 38px 1fr;
+      gap: 10px;
+      min-height: 0;
+      border-radius: 16px;
+    }
+    .choice.compact .choice-icon {
+      width: 38px;
+      height: 38px;
+      font-size: 20px;
+      border-radius: 10px;
+    }
+    .choice.compact .choice-title {
+      font-size: 15px;
+      line-height: 1.25;
+    }
+    .choice.compact .choice-text {
+      font-size: 12px;
+      margin-top: 2px;
+      line-height: 1.35;
+    }
+    .stage-lock {
+      position: relative;
+    }
+    .stage-lock.is-locked {
+      pointer-events: none;
+      user-select: none;
+    }
+    .stage-lock.is-locked .stage-lock-body {
+      filter: blur(9px);
+      opacity: 0.14;
+    }
+    .stage-lock .lock-overlay {
+      display: none;
+    }
+    .stage-lock.is-locked .lock-overlay {
+      display: flex;
+      position: absolute;
+      inset: 0;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 16px;
+      z-index: 3;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text);
+      background: transparent;
+      border-radius: 14px;
+      text-shadow: 0 1px 2px rgba(255,255,255,0.85);
+    }
+    .section.is-locked {
+      position: relative;
+      overflow: hidden;
+    }
+    .section.is-locked > *:not(.lock-overlay) {
+      filter: blur(8px);
+      opacity: 0.22;
+      pointer-events: none;
+      user-select: none;
+    }
+    .section .lock-overlay {
+      display: none;
+    }
+    .section.is-locked .lock-overlay {
+      display: flex;
+      position: absolute;
+      inset: 0;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+      z-index: 4;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text);
+      background: transparent;
+      text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+    }
+
+    .tech-sections {
+      display: grid;
+      gap: 8px;
+      align-items: start;
+    }
+    .tech-select-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      align-items: start;
+    }
+    .tech-slider-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      align-items: start;
+    }
+    .tech-card {
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      display: grid;
+      grid-template-rows: auto auto;
+      gap: 8px;
+      background: #ffffff;
+      box-shadow: 0 4px 12px rgba(24, 36, 29, 0.04);
+      align-content: start;
+      min-height: 100%;
+      transition: box-shadow .18s ease, border-color .18s ease;
+    }
+    .tech-card-body {
+      display: grid;
+      gap: 8px;
+    }
+    .tech-summary {
+      display: none;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #ffffff;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--brand-strong);
+      line-height: 1.35;
+    }
+    .tech-card.is-idle {
+      position: relative;
+      background: #eef7f1;
+      border-color: #cfe0d3;
+      box-shadow: 0 8px 18px rgba(22, 84, 45, 0.10);
+      opacity: 1;
+      overflow: hidden;
+    }
+    .tech-card.is-idle .tech-card-body {
+      filter: blur(8px);
+      opacity: 0.12;
+      pointer-events: none;
+      user-select: none;
+    }
+    .tech-card.is-idle .tech-summary {
+      display: none;
+    }
+    .tech-card.is-idle .tech-card-title {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 14px;
+      z-index: 2;
+      margin: 0;
+      background: transparent;
+      pointer-events: none;
+    }
+    .tech-card.is-idle .tech-card-num {
+      display: none;
+    }
+    .tech-card.is-idle .tech-card-head {
+      color: var(--brand-strong);
+      font-size: 18px;
+      line-height: 1.2;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      max-width: 100%;
+      text-wrap: balance;
+    }
+    .tech-card.tech-question-card {
+      cursor: pointer;
+    }
+    .tech-card.tech-question-card:hover {
+      border-color: #b9c8bd;
+      box-shadow: 0 8px 18px rgba(24,36,29,.08);
+    }
+    .tech-card.tech-question-card.is-active {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(31,107,58,.10), 0 8px 18px rgba(24,36,29,.08);
+    }
+    .tech-card.tech-question-card.is-idle {
+      transition: box-shadow .22s ease, background .22s ease, border-color .22s ease;
+    }
+    .tech-card.wide {
+      grid-column: 1 / -1;
+      grid-template-rows: auto auto;
+    }
+    .tech-card-title {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 2px;
+    }
+    .tech-card-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      background: var(--brand);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 0;
+    }
+    .tech-card-head {
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1.18;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .tech-card-sub { display: none; }
+
+    .tech-detail {
+      margin-top: 0;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface-soft);
+      align-self: end;
+    }
+    .tech-detail.is-disabled {
+      opacity: 0.72;
+    }
+    .tech-detail-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .range-wrap {
+      display: grid;
+      gap: 10px;
+    }
+    .range-input {
+      width: 100%;
+      accent-color: var(--brand);
+      cursor: pointer;
+    }
+    .range-input:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+    .range-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+    .range-value {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--brand-strong);
+      white-space: nowrap;
+    }
+    .tech-note { display: none; }
+    .building-meta {
+      display: grid;
+      gap: 6px;
+      margin-top: 6px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #ffffff;
+    }
+    .building-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+    .building-meta-value {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--brand-strong);
+      text-align: right;
+    }
+    .choice-row-2,
+    .choice-row-3,
+    .choice-row-4 {
+      display: grid;
+      gap: 8px;
+      align-content: start;
+      min-height: 0;
+    }
+    .choice-row-2 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .choice-row-4 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .answer-btn.tight {
+      min-height: 38px;
+      padding: 8px 10px;
+      font-size: 12px;
+    }
+    .size-meta {
+      margin-top: 6px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+    .size-meta-value {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--brand-strong);
+    }
+
+    .answer-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 7px;
+    }
+    .answer-btn {
+      width: 100%;
+      text-align: left;
+      border: 1.5px solid var(--line);
+      border-left-width: 5px;
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: #f9fbfa;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 700;
+      min-height: 42px;
+      cursor: pointer;
+      transition: .15s ease;
+      line-height: 1.28;
+    }
+    .answer-btn:hover {
+      background: #ffffff;
+      border-color: #b9c8bd;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(24,36,29,.06);
+    }
+    .answer-btn.selected {
+      border-color: var(--brand);
+      background: var(--brand-soft);
+      box-shadow: 0 0 0 3px rgba(31,107,58,.10);
+    }
+    .answer-btn.good { border-left-color: var(--brand); }
+    .answer-btn.maybe { border-left-color: var(--amber); }
+    .answer-btn.bad { border-left-color: var(--warn); }
+
+    .hint-box { display: none; }
+    .tip { display: none; }
+
+    @media (min-width: 900px) {
+      .quali-grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+    }
+    @media (max-width: 980px) {
+      .tech-select-grid,
+      .tech-slider-grid {
+        grid-template-columns: 1fr;
+      }
+      .motive-grid-compact {
+        grid-template-columns: 1fr;
+      }
+      .progress-nav {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+    @media (max-width: 720px) {
+      .title { font-size: 28px; }
+      .app { padding: 18px 14px 40px; }
+      .grid-2,
+      .summary-grid,
+      .motive-grid-compact,
+      .tech-card-grid { grid-template-columns: 1fr; }
+      .choice { grid-template-columns: 42px 1fr; }
+      .spoken-text,
+      .quote-box,
+      .interest-text,
+      .closing-text,
+      .term-text,
+      .accordion-body { font-size: 21px; }
+      .section-title { font-size: 30px; }
+      .actions .btn-primary,
+      .actions .btn-secondary,
+      .response-actions .btn-primary,
+      .response-actions .btn-secondary { width: 100%; min-width: 0; }
+      .progress-nav {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 4px;
+        padding: 8px;
+      }
+      .progress-step,
+      .progress-back { padding: 6px 7px; }
+      .progress-label,
+      .progress-back-label { font-size: 10px; }
+    }
+
+    .accordion {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--surface);
+      margin-bottom: 10px;
+    }
+    .accordion-btn {
+      width: 100%;
+      background: var(--surface);
+      border: 0;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      text-align: left;
+      cursor: pointer;
+      transition: .15s ease;
+    }
+    .accordion-btn:hover {
+      background: #fbfcfb;
+    }
+    .accordion-body {
+      display: none;
+      color: var(--script-text);
+      font-size: 23px;
+      line-height: 1.6;
+      font-weight: 700;
+    }
+
+    .interest-card,
+    .closing-card,
+    .term-line,
+    .accordion-body {
+      background: var(--script-bg);
+      border: 2px solid var(--script-border);
+      border-left: 10px solid var(--brand);
+      border-radius: 18px;
+      padding: 18px 20px;
+      box-shadow: var(--script-shadow);
+    }
+    .interest-card { margin-bottom: 10px; display: none; }
+    .interest-card.visible { display: block; }
+    .interest-text,
+    .closing-text,
+    .term-text {
+      font-size: 25px;
+      line-height: 1.55;
+      font-weight: 800;
+      color: var(--script-text);
+      letter-spacing: -0.01em;
+    }
+    .interest-note,
+    .term-note {
+      display: none;
+    }
+
+    .term-step {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 10px;
+      position: relative;
+      cursor: pointer;
+      transition: .15s ease;
+    }
+    .term-step::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      border-radius: 16px 0 0 16px;
+      background: var(--brand);
+      opacity: 0;
+      transition: opacity .15s ease;
+    }
+    .term-step:hover,
+    .term-step.done {
+      background: #fbfcfb;
+      border-color: var(--brand);
+    }
+    .term-step:hover::before,
+    .term-step.done::before { opacity: 1; }
+    .term-num {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: var(--brand);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .term-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+    .term-check {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--brand);
+      font-size: 12px;
+      margin-top: 4px;
+      flex-shrink: 0;
+      background: #fff;
+    }
+
+    .summary {
+      background: #ffffff;
+      border: 2px solid var(--line);
+      border-radius: 18px;
+      padding: 20px;
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 18px;
+    }
+    .summary-item { display: flex; flex-direction: column; gap: 4px; }
+    .summary-key {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-soft);
+    }
+    .summary-value {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+      justify-content: flex-end;
+    }
+    .btn-primary,
+    .btn-secondary {
+      border: 0;
+      border-radius: 999px;
+      padding: 15px 24px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: .18s ease;
+    }
+    .btn-primary {
+      background: var(--brand);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--brand-strong); transform: translateY(-1px); }
+    .btn-secondary {
+      background: #eef4f0;
+      color: var(--brand-strong);
+      border: 1px solid #d5e3d8;
+    }
+    .btn-secondary:hover { background: #e6efe8; }
+
+    .footer {
+      text-align: center;
+      color: var(--text-soft);
+      font-size: 12px;
+      letter-spacing: .04em;
+      padding: 22px;
+      border-top: 1px solid var(--line);
+      margin-top: 32px;
+    }
+
+    @media (min-width: 900px) {
+      .quali-grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+    }
+    @media (max-width: 720px) {
+      .title { font-size: 28px; }
+      .app { padding: 18px 14px 40px; }
+      .grid-2,
+      .summary-grid { grid-template-columns: 1fr; }
+      .choice { grid-template-columns: 42px 1fr; }
+      .choice-tag { display: none; }
+      .spoken-text,
+      .quote-box,
+      .interest-text,
+      .closing-text,
+      .term-text,
+      .accordion-body { font-size: 21px; }
+      .section-title { font-size: 30px; }
+      .actions .btn-primary,
+      .actions .btn-secondary { width: 100%; }
+      .progress-nav {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 4px;
+        padding: 8px;
+      }
+      .progress-step,
+      .progress-back {
+        padding: 6px 7px;
+      }
+      .progress-label,
+      .progress-back-label {
+        font-size: 10px;
+      }
+      .response-actions .btn-primary,
+      .response-actions .btn-secondary {
+        width: 100%;
+        min-width: 0;
+      }
+    }
+  </style>
+</head>
+<body class="prep-mode">
+  <header class="header">
+    <div class="header-wrap">
+      <div class="eyebrow">Telefonleitfaden · Erneuerbare Energien</div>
+      <div class="title">Kundengespräch am Telefon</div>
+      <div class="subtitle">Vorbereitung → Gesprächseinstieg → Qualifizierung → Interesse → Einwände → Termin</div>
+    </div>
+  </header>
+
+  <div class="progress-shell">
+    <div class="progress-nav" id="progressNav">
+      <div class="progress-step" data-progress="0"><div class="progress-dot">V</div><div class="progress-label">Vorbereitung</div></div>
+      <div class="progress-step" data-progress="1"><div class="progress-dot">1</div><div class="progress-label">Einstieg</div></div>
+      <div class="progress-step" data-progress="2"><div class="progress-dot">2</div><div class="progress-label">Motive</div></div>
+      <div class="progress-step" data-progress="3"><div class="progress-dot">3</div><div class="progress-label">Technik</div></div>
+      <div class="progress-step" data-progress="4"><div class="progress-dot">4</div><div class="progress-label">Wirtschaft</div></div>
+      <div class="progress-step" data-progress="5"><div class="progress-dot">5</div><div class="progress-label">Interesse</div></div>
+      <div class="progress-step" data-progress="6"><div class="progress-dot">6</div><div class="progress-label">Einwände</div></div>
+      <div class="progress-step" data-progress="7"><div class="progress-dot">7</div><div class="progress-label">Termin</div></div>
+      <button class="progress-back" type="button" id="backBtn"><span class="progress-back-dot">←</span><span class="progress-back-label">Zurück</span></button>
+    </div>
+  </div>
+
+  <main class="app">
+    <section class="prep-screen">
+      <div class="section visible">
+        <div class="section-head">
+          <div class="section-icon">V</div>
+          <div>
+            <div class="section-title">Vor dem Anruf</div>
+            
+          </div>
+        </div>
+        <div class="goal"><span class="goal-label">Vorbereitung</span>Hier legst du Kundendaten, Kontaktart und Thema fest. Diese Angaben steuern den Leitfaden und stehen später auch im PDF / Gesprächsprotokoll.</div>
+
+        <div class="card">
+          <div class="badge">Kundendaten</div>
+          
+          <div class="grid-2">
+            <div class="field"><label class="label" for="kunde-name">Name</label><input class="input" id="kunde-name" placeholder="Max Mustermann" /></div>
+            <div class="field"><label class="label" for="kunde-telefon">Telefon</label><input class="input" id="kunde-telefon" placeholder="0151 23456789" /></div>
+            <div class="field"><label class="label" for="kunde-email">E-Mail</label><input class="input" id="kunde-email" placeholder="max@beispiel.de" /></div>
+            <div class="field"><label class="label" for="kunde-ort">Ort / Adresse</label><input class="input" id="kunde-ort" placeholder="Musterstraße 12, 50667 Köln" /></div>
+            <div class="field"><label class="label" for="kunde-termin">Geplanter Termin</label><input class="input" id="kunde-termin" placeholder="z. B. Dienstag, 14:30 Uhr" /></div>
+            <div class="field"><label class="label" for="kunde-berater">Berater</label><input class="input" id="kunde-berater" placeholder="Dein Name" /></div>
+            <div class="field full"><label class="label" for="kunde-notizen">Kurznotizen vor dem Gespräch</label><textarea class="textarea" id="kunde-notizen" placeholder="z. B. Rückruf nach Formularanfrage, Altbau, hat bereits Angebote eingeholt"></textarea></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="badge">Vorbereitung</div>
+          <div class="card-title">Wie ist der Kontakt entstanden?</div>
+          <div class="grid-2">
+            <button class="choice" type="button" id="pfad-lead">
+              <div class="choice-icon">📋</div>
+              <div>
+                <div class="choice-title">Warmer Lead</div>
+                <div class="choice-text">Kunde hat Interesse signalisiert – über Formular, Webseite oder Kampagne.</div>
+              </div>
+              <div class="choice-tag">Vorbereiten</div>
+            </button>
+            <button class="choice" type="button" id="pfad-empfehlung">
+              <div class="choice-icon">🤝</div>
+              <div>
+                <div class="choice-title">Empfehlung</div>
+                <div class="choice-text">Jemand hat den Kunden weiterempfohlen – Vertrauensvorschuss ist bereits vorhanden.</div>
+              </div>
+              <div class="choice-tag">Vorbereiten</div>
+            </button>
+          </div>
+        </div>
+
+        <div class="card" id="themeCard" style="display:none;">
+          <div class="badge">Thema</div>
+          <div class="card-title">Worum geht es im Gespräch?</div>
+          <div class="card-help">Auch das ist Vorbereitung: Erst wenn das Thema feststeht, beginnt der eigentliche Gesprächsablauf.</div>
+          <div class="grid-1">
+            <button class="choice topic-btn" type="button" data-topic="pv" id="topic-pv">
+              <div class="choice-icon">☀️</div>
+              <div>
+                <div class="choice-title">Photovoltaik</div>
+                <div class="choice-text">Interesse an PV-Anlage oder Speicher.</div>
+              </div>
+              <div class="choice-tag">Thema wählen</div>
+            </button>
+            <button class="choice topic-btn" type="button" data-topic="wp" id="topic-wp">
+              <div class="choice-icon">🔥</div>
+              <div>
+                <div class="choice-title">Wärmepumpe</div>
+                <div class="choice-text">Interesse an Wärmepumpe oder Heizungstausch.</div>
+              </div>
+              <div class="choice-tag">Thema wählen</div>
+            </button>
+            <button class="choice topic-btn" type="button" data-topic="sg" id="topic-sg">
+              <div class="choice-icon">⚡</div>
+              <div>
+                <div class="choice-title">Strom &amp; Gas</div>
+                <div class="choice-text">Strom- oder Gasvertrag optimieren.</div>
+              </div>
+              <div class="choice-tag">Thema wählen</div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="guide-screen"><section class="section" id="step-1">
+        <div class="section-head">
+          <div class="section-icon">1</div>
+          <div>
+            <div class="section-title">Gesprächseinstieg</div>
+          </div>
+        </div>
+        <div class="goal"><span class="goal-label">Ziel</span><span id="step1Goal">In 15 Sekunden: Wer bin ich, was mache ich, warum bin ich anders – und worum geht es heute. Klar, kurz, selbstsicher.</span></div>
+
+        <div class="card" id="rulesCard" style="cursor:pointer;">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:16px;">
+            <div class="card-title" style="margin-bottom:0;">Vor dem ersten Satz – die 5 Regeln am Telefon</div>
+            <span id="rulesArrow" style="font-size:16px; color:var(--brand); transition:transform .2s ease;">▼</span>
+          </div>
+          <div id="rulesBody" style="display:none; margin-top:16px;">
+            <div class="tip"><strong>1.</strong> Lächeln beim Sprechen – der Kunde sieht dich nicht, aber er hört ob du lächelst.</div>
+            <div class="tip"><strong>2.</strong> Tempo anpassen – spricht der Kunde langsam, sprichst du ebenfalls ruhiger.</div>
+            <div class="tip"><strong>3.</strong> Namen benutzen – 2–3 Mal natürlich einsetzen, nicht übertreiben.</div>
+            <div class="tip"><strong>4.</strong> Aktiv zuhören – kurze Signale wie „Ja“, „Verstehe“, „Okay“ hörbar machen.</div>
+            <div class="tip"><strong>5.</strong> Kurz und klar bleiben – maximal 3 Sätze, dann eine Frage stellen.</div>
+          </div>
+        </div>
+
+        <div class="spoken-block active" id="spoken-wp">
+          <div class="spoken-label">Wärmepumpe · Gesprächseinstieg</div>
+          <div class="spoken-item"><div class="spoken-num">1</div><div><div class="spoken-text">„Guten Tag, mein Name ist [Name] von EnergyEngel, dem unabhängigen Makler für erneuerbare Energie. Ich rufe an, um einen Termin mit Ihnen zu vereinbaren – haben Sie 5 Minuten für mich?“</div></div></div>
+          <div class="response-actions"><button class="btn-primary first-response-btn" type="button" data-response="yes">Kunde sagt Ja</button><button class="btn-secondary first-response-btn" type="button" data-response="no">Kunde sagt Nein</button></div>
+          <div class="spoken-item hidden"><div class="spoken-num">2</div><div><div class="spoken-text">„Kurz zu uns: EnergyEngel ist ein unabhängiger Makler – wir haben keinen Hersteller im Rücken und keine eigenen Produkte. Wir schauen, was für Ihre Immobilie, Ihren Verbrauch und Ihr Budget wirklich Sinn macht – und wählen dann den besten Partner aus unserem Netzwerk. Damit ich gleich das Richtige für Sie heraussuchen kann – darf ich Ihnen kurz ein paar Fragen stellen?“</div></div></div>
+          <div class="response-actions hidden second-response-actions"><button class="btn-primary second-response-btn" type="button" data-response="yes">Kunde sagt Ja</button><button class="btn-secondary second-response-btn" type="button" data-response="no">Kunde sagt Nein</button></div>
+        </div>
+
+        <div class="spoken-block" id="spoken-pv">
+          <div class="spoken-label">Photovoltaik · Gesprächseinstieg</div>
+          <div class="spoken-item"><div class="spoken-num">1</div><div><div class="spoken-text">„Guten Tag, mein Name ist [Name] von EnergyEngel, dem unabhängigen Makler für erneuerbare Energie. Ich rufe an, um einen Termin mit Ihnen zu vereinbaren – haben Sie 5 Minuten für mich?“</div></div></div>
+          <div class="response-actions"><button class="btn-primary first-response-btn" type="button" data-response="yes">Kunde sagt Ja</button><button class="btn-secondary first-response-btn" type="button" data-response="no">Kunde sagt Nein</button></div>
+          <div class="spoken-item hidden"><div class="spoken-num">2</div><div><div class="spoken-text">„Wir schauen unabhängig, welche Lösung technisch und wirtschaftlich wirklich zu Ihrem Dach, Ihrem Verbrauch und Ihrem Ziel passt.“</div></div></div>
+          <div class="response-actions hidden second-response-actions"><button class="btn-primary second-response-btn" type="button" data-response="yes">Kunde sagt Ja</button><button class="btn-secondary second-response-btn" type="button" data-response="no">Kunde sagt Nein</button></div>
+        </div>
+
+        <div class="spoken-block" id="spoken-sg">
+          <div class="spoken-label">Strom &amp; Gas · Gesprächseinstieg</div>
+          <div class="spoken-item"><div class="spoken-num">1</div><div><div class="spoken-text">„Guten Tag, mein Name ist [Name] von EnergyEngel, dem unabhängigen Makler für erneuerbare Energie. Ich rufe an, um einen Termin mit Ihnen zu vereinbaren – haben Sie 5 Minuten für mich?“</div></div></div>
+          <div class="response-actions"><button class="btn-primary first-response-btn" type="button" data-response="yes">Kunde sagt Ja</button><button class="btn-secondary first-response-btn" type="button" data-response="no">Kunde sagt Nein</button></div>
+          <div class="spoken-item hidden"><div class="spoken-num">2</div><div><div class="spoken-text">„Wir schauen unabhängig, wie Ihre aktuelle Tarif- und Energiesituation aussieht und was für Sie wirtschaftlich Sinn macht.“</div></div></div>
+          <div class="response-actions hidden second-response-actions"><button class="btn-primary second-response-btn" type="button" data-response="yes">Kunde sagt Ja</button><button class="btn-secondary second-response-btn" type="button" data-response="no">Kunde sagt Nein</button></div>
+        </div>
+
+        <div class="spoken-block" id="spoken-empfehlung">
+          <div class="spoken-label">Empfehlung · Gesprächseinstieg</div>
+          <div class="spoken-item"><div class="spoken-num">1</div><div><div class="spoken-text">„Guten Tag, mein Name ist [Name] von EnergyEngel, dem unabhängigen Makler für erneuerbare Energie. [Vorname] hat mir Ihre Nummer gegeben und gemeint, ich sollte mich melden – ich rufe an, um einen Termin zu vereinbaren. Haben Sie kurz 5 Minuten?“</div></div></div>
+          <div class="response-actions"><button class="btn-primary first-response-btn" type="button" data-response="yes">Kunde sagt Ja</button><button class="btn-secondary first-response-btn" type="button" data-response="no">Kunde sagt Nein</button></div>
+        </div>
+      </section>
+
+      <section class="section" id="step-2">
+        <div class="section-head">
+          <div class="section-icon warn">2</div>
+          <div>
+            <div class="section-title">Qualifizierung</div>
+            
+          </div>
+        </div>
+
+        <div class="say-stack">
+          <div class="quote-box" id="openingQuestion">„Kurz gefragt: Wie kommen Sie gerade zu dem Thema Wärmepumpe?“</div>
+        </div>
+
+        <div class="compact-card">
+          
+          <div class="motive-grid-compact" id="motiveGrid">
+            <button class="choice compact motive-btn" type="button" data-motive="gaskosten"><div class="choice-icon">💸</div><div><div class="choice-title">Hohe Energiekosten / Gas</div><div class="choice-text">„Ich zahle so viel für Gas...“</div></div></button>
+            <button class="choice compact motive-btn" type="button" data-motive="unabhaengig"><div class="choice-icon">🛡️</div><div><div class="choice-title">Unabhängigkeit</div><div class="choice-text">„Ich will nicht mehr abhängig sein...“</div></div></button>
+            <button class="choice compact motive-btn" type="button" data-motive="zukunft"><div class="choice-icon">⚖️</div><div><div class="choice-title">GEG / Zukunft</div><div class="choice-text">„Ich habe gehört, dass sich gesetzlich etwas ändert...“</div></div></button>
+            <button class="choice compact motive-btn" type="button" data-motive="heizung-alt"><div class="choice-icon">🔧</div><div><div class="choice-title">Alte Heizung / Defekt</div><div class="choice-text">„Meine Heizung ist alt / kaputt...“</div></div></button>
+            <button class="choice compact motive-btn" type="button" data-motive="pv"><div class="choice-icon">☀️</div><div><div class="choice-title">Hat PV / will kombinieren</div><div class="choice-text">„Ich habe schon eine PV-Anlage...“</div></div></button>
+            <button class="choice compact motive-btn" type="button" data-motive="machbarkeit"><div class="choice-icon">🏠</div><div><div class="choice-title">Machbarkeit</div><div class="choice-text">„Ich will erstmal wissen, ob das bei meinem Haus überhaupt geht...“</div></div></button>
+            <button class="choice compact motive-btn" type="button" data-motive="foerderung"><div class="choice-icon">💶</div><div><div class="choice-title">Förderung</div><div class="choice-text">„Mich interessiert, welche Förderung ich bekommen kann...“</div></div></button>
+            <button class="choice compact motive-btn" type="button" data-motive="neubau"><div class="choice-icon">🏗️</div><div><div class="choice-title">Neubau / Sanierung</div><div class="choice-text">„Wir bauen / sanieren gerade...“</div></div></button>
+          </div>
+          <div class="quote-box followup-quote" id="motiveFollowupQuote">„Das verstehe ich natürlich, gibt es weitere Themen, die für Sie wichtig sind?“</div>
+          <div class="say-stack" id="motiveCloseWrap" style="display:none; margin-top:14px;">
+            <div class="quote-box" id="motiveCloseQuestion">„Wenn Sie [Motiv 1] und [Motiv 2], dann steht einer Umsetzung eigentlich nichts im Weg, oder?“</div>
+            <div class="response-actions" id="motiveCloseActions">
+              <button class="btn-primary" type="button" id="motiveCloseYes">Kunde sagt Ja</button>
+              <button class="btn-secondary" type="button" id="motiveCloseNo">Kunde sagt Nein</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="stage-lock is-locked" id="techIntroLock" style="margin-top:14px;">
+          <div class="stage-lock-body">
+            <div class="say-stack" style="margin-top:14px; margin-bottom:0;">
+              <div class="quote-box" id="technicalIntro">„Wann wurde Ihr Haus gebaut?“</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="compact-card stage-lock is-locked" id="technicalStage">
+          <div class="stage-lock-body">
+            <div class="compact-card" id="technicalCheckPanel">
+          <div class="tech-sections">
+            <div class="tech-select-grid" id="techSelectGrid">
+              <div class="tech-card tech-question-card" data-tech-question="heatSelect">
+                <div class="tech-card-title"><div class="tech-card-num">1</div><div><div class="tech-card-head">Heizsystem</div></div></div>
+                <div class="tech-card-body">
+                  <div class="choice-row-4">
+                    <button class="answer-btn good tight heat-source-btn" type="button" data-source="gas">🔥 Gas</button>
+                    <button class="answer-btn good tight heat-source-btn" type="button" data-source="oil">🛢️ Öl</button>
+                    <button class="answer-btn maybe tight heat-source-btn" type="button" data-source="other">🌿 Anderes</button>
+                  </div>
+                </div>
+                <div class="tech-summary" id="heatSelectSummary">Gas</div>
+              </div>
+
+              <div class="tech-card tech-question-card pv-card" data-tech-question="pv">
+                <div class="tech-card-title"><div class="tech-card-num">2</div><div><div class="tech-card-head">PV Anlage</div></div></div>
+                <div class="tech-card-body">
+                  <div class="choice-row-2">
+                    <button class="answer-btn good tight pv-btn" type="button" data-pv="yes">☀️ Ja</button>
+                    <button class="answer-btn maybe tight pv-btn" type="button" data-pv="no">— Nein</button>
+                    <button class="answer-btn maybe tight pv-btn" type="button" data-pv="planned">🗓️ In Planung</button>
+                  </div>
+                </div>
+                <div class="tech-summary" id="pvSummary">—</div>
+              </div>
+            </div>
+
+            <div class="tech-slider-grid" id="techSliderGrid">
+              <div class="tech-card tech-question-card" data-tech-question="building">
+                <div class="tech-card-title"><div class="tech-card-num">3</div><div><div class="tech-card-head">Baujahr</div></div></div>
+                <div class="tech-card-body">
+                  <div class="tech-detail">
+                    <div class="range-wrap">
+                      <input class="range-input" id="buildingYearSlider" type="range" min="1800" max="2026" step="1" value="1995" />
+                      <div class="range-meta"><span>1800</span><span class="range-value" id="buildingYearValue">1995</span><span>2026</span></div>
+                    </div>
+                    <div class="building-meta">
+                      <div class="building-meta-row"><span>Gebäudetyp</span><span class="building-meta-value" id="buildingSubtypeValue">Nach 3. WSchVO</span></div>
+                      </div>
+                  </div>
+                </div>
+                <div class="tech-summary" id="buildingSummary">1995 · Nach 3. WSchVO</div>
+              </div>
+
+              <div class="tech-card tech-question-card" data-tech-question="size">
+                <div class="tech-card-title"><div class="tech-card-num">4</div><div><div class="tech-card-head">Wohnfläche</div></div></div>
+                <div class="tech-card-body">
+                  <div class="tech-detail">
+                    <div class="range-wrap">
+                      <input class="range-input" id="sizeSlider" type="range" min="0" max="400" step="5" value="140" />
+                      <div class="range-meta"><span>0 qm</span><span class="range-value" id="sizeValue">140 qm</span><span>400 qm</span></div>
+                    </div>
+                    <div class="size-meta"><span>Kategorie</span><span class="size-meta-value" id="sizeCategoryValue">🏡 Mittel</span></div>
+                  </div>
+                </div>
+                <div class="tech-summary" id="sizeSummary">140 qm · 🏡 Mittel</div>
+              </div>
+
+              <div class="tech-card tech-question-card" data-tech-question="heat">
+                <div class="tech-card-title"><div class="tech-card-num">5</div><div><div class="tech-card-head">Heizung Verbrauch</div></div></div>
+                <div class="tech-card-body">
+                  <div class="tech-detail" id="heatUsageDetail">
+                    <div class="range-wrap">
+                      <input class="range-input" id="heatUsageSlider" type="range" min="0" max="45000" step="500" value="14000" />
+                      <div class="range-meta"><span id="heatUsageMin">0 kWh</span><span class="range-value" id="heatUsageValue">14.000 kWh / Jahr</span><span id="heatUsageMax">45.000 kWh</span></div>
+                    </div>
+                    <div class="tech-note" id="heatUsageNote">Gasverbrauch pro Jahr.</div>
+                  </div>
+                </div>
+                <div class="tech-summary" id="heatSummary">Gas · 14.000 kWh / Jahr</div>
+              </div>
+
+              <div class="tech-card tech-question-card" data-tech-question="power">
+                <div class="tech-card-title"><div class="tech-card-num">6</div><div><div class="tech-card-head">Stromverbrauch</div></div></div>
+                <div class="tech-card-body">
+                  <div class="tech-detail">
+                    <div class="range-wrap">
+                      <input class="range-input" id="powerUsageSlider" type="range" min="0" max="20000" step="100" value="3500" />
+                      <div class="range-meta"><span>0 kWh</span><span class="range-value" id="powerUsageValue">3.500 kWh / Jahr</span><span>20.000 kWh</span></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="tech-summary" id="powerSummary">3.500 kWh / Jahr</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hint-box" id="infoBox" style="display:none;"></div>
+        </div>
+          </div>
+          <div class="lock-overlay">Technik wird frei, sobald der Vorabschluss beantwortet ist.</div>
+        </div>
+
+        <div class="stage-lock is-locked" id="economicIntroLock" style="margin-top:14px;">
+          <div class="stage-lock-body">
+            <div class="say-stack" style="margin-top:14px; margin-bottom:0;">
+              <div class="quote-box" id="economicIntro">„Wir erstellen für unsere Kunden eine Wirtschaftlichkeitsberechnung. Verraten Sie mir, was Sie momentan für Ihre Heizung im Jahr bezahlen?“</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="compact-card stage-lock is-locked" id="economicStage">
+          <div class="stage-lock-body">
+            <div class="compact-card">
+          <div class="tech-slider-grid" id="economicSliderGrid">
+            <div class="tech-card">
+              <div class="tech-card-title"><div class="tech-card-num">1</div><div><div class="tech-card-head">Baujahr</div></div></div>
+              <div class="tech-card-body">
+                <div class="tech-detail">
+                  <div class="range-wrap">
+                    <input class="range-input" id="econBuildingYearSlider" type="range" min="1800" max="2026" step="1" value="1995" />
+                    <div class="range-meta"><span>1800</span><span class="range-value" id="econBuildingYearValue">1995</span><span>2026</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tech-card">
+              <div class="tech-card-title"><div class="tech-card-num">2</div><div><div class="tech-card-head">Wohnfläche</div></div></div>
+              <div class="tech-card-body">
+                <div class="tech-detail">
+                  <div class="range-wrap">
+                    <input class="range-input" id="econSizeSlider" type="range" min="0" max="400" step="5" value="140" />
+                    <div class="range-meta"><span>0 qm</span><span class="range-value" id="econSizeValue">140 qm</span><span>400 qm</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tech-card">
+              <div class="tech-card-title"><div class="tech-card-num">3</div><div><div class="tech-card-head">Heizung Verbrauch</div></div></div>
+              <div class="tech-card-body">
+                <div class="tech-detail">
+                  <div class="range-wrap">
+                    <input class="range-input" id="econHeatUsageSlider" type="range" min="0" max="45000" step="500" value="14000" />
+                    <div class="range-meta"><span id="econHeatUsageMin">0 kWh</span><span class="range-value" id="econHeatUsageValue">14.000 kWh / Jahr</span><span id="econHeatUsageMax">45.000 kWh</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tech-card">
+              <div class="tech-card-title"><div class="tech-card-num">4</div><div><div class="tech-card-head">Stromverbrauch</div></div></div>
+              <div class="tech-card-body">
+                <div class="tech-detail">
+                  <div class="range-wrap">
+                    <input class="range-input" id="econPowerUsageSlider" type="range" min="0" max="20000" step="100" value="3500" />
+                    <div class="range-meta"><span>0 kWh</span><span class="range-value" id="econPowerUsageValue">3.500 kWh / Jahr</span><span>20.000 kWh</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+          </div>
+          <div class="lock-overlay">Wirtschaft wird frei, sobald der technische Check beantwortet ist.</div>
+        </div>
+
+        <div class="actions"><button class="btn-primary" type="button" data-next="5">Weiter zu Interesse</button></div>
+      </section>
+
+      <section class="section is-locked" id="step-6">
+        <div class="lock-overlay">Interesse wird frei, sobald der wirtschaftliche Check beantwortet ist.</div>
+        <div class="section-head">
+          <div class="section-icon">7</div>
+          <div>
+            <div class="section-title">Interesse wecken</div>
+            <div class="section-sub" id="step3Sub">Nur die Argumente zeigen, die zur Situation des Kunden passen.</div>
+          </div>
+        </div>
+        <div class="goal"><span class="goal-label">Ziel</span>Nicht alles erklären – nur das, was den Kunden wirklich trifft. Maximal 2–3 Argumente, dann Pause und Gegenfrage.</div>
+
+        <div class="card">
+          <div class="card-title">Überleitung</div>
+          <div class="quote-box" id="interestIntro">„Lassen Sie mich kurz sagen, was Kunden in einer ähnlichen Situation bei uns am Ende gesagt haben.“</div>
+        </div>
+
+        <div class="card">
+          <div class="badge">Stufe 3</div>
+          <div class="card-title">Passende Argumente</div>
+          <div class="card-help">Hier liest du nur die Argumente, die durch die vorherigen Antworten relevant geworden sind.</div>
+          <div class="hint-box" id="interestHint">← Erst Kundensituation in der Qualifizierung anklicken – dann erscheinen hier die passenden Argumente.</div>
+
+          <div class="interest-card" id="interest-gaskosten"><div class="interest-text">„Ein Kunde von mir hat letztes Jahr noch 2.800€ Gasrechnung gezahlt. Nach der WP-Installation: null Euro Gas – und sein Haus ist genauso warm.“</div><div class="interest-note">→ Kostenersparnis vs. Gas.</div></div>
+          <div class="interest-card" id="interest-pv"><div class="interest-text">„Sie haben ja bereits eine PV-Anlage – das ist perfekt. Eine Wärmepumpe dazu ist der nächste logische Schritt: Sie heizen dann mit Ihrem eigenen Strom vom Dach.“</div><div class="interest-note">→ PV vorhanden → logische Ergänzung.</div></div>
+          <div class="interest-card" id="interest-unabhaengig"><div class="interest-text">„Was meine Kunden am häufigsten sagen: Ich schaue nicht mehr nervös auf die Gaspreisnachrichten. Die Lösung macht Sie deutlich unabhängiger.“</div><div class="interest-note">→ Unabhängigkeit als emotionaler Anker.</div></div>
+          <div class="interest-card" id="interest-foerderung"><div class="interest-text">„Viele denken zuerst an 30–40.000€, aber das ist brutto. Nach Förderung sind wir oft in einer Größenordnung, die deutlich entspannter aussieht.“</div><div class="interest-note">→ Preisangst entkräften.</div></div>
+          <div class="interest-card" id="interest-geg"><div class="interest-text">„Was viele Eigentümer sagen: Lieber jetzt in Ruhe planen und Förderung sichern, als später unter Druck reagieren zu müssen.“</div><div class="interest-note">→ Zukunftsdruck in Planbarkeit übersetzen.</div></div>
+          <div class="interest-card" id="interest-neubau"><div class="interest-text">„Gerade im Neubau oder in der Sanierung ist das oft die logischste Lösung – effizient, zukunftssicher und technisch passend.“</div><div class="interest-note">→ Neubau / Sanierung als klares Signal.</div></div>
+
+          <div class="tip"><strong>Profi-Tipp:</strong> Wähle nur 2–3 Themen, die du vorher sauber abgehakt hast. Der Kunde soll sich verstanden fühlen – nicht beschossen.</div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Vorwegabschluss</div>
+          <div class="closing-card"><div class="closing-text" id="closingText">„Sie haben ja selbst gesagt, dass [Grund 1], [Grund 2] und [Grund 3] für Sie wichtig sind. Und genau deshalb macht es Sinn, dass wir uns das einmal sauber bei Ihnen anschauen.“</div></div>
+        </div>
+
+        <div class="actions"><button class="btn-primary" type="button" data-next="6">Weiter zu Einwänden</button></div>
+      </section>
+
+      <section class="section is-locked" id="step-4">
+        <div class="lock-overlay">Einwände werden frei, sobald die vorherigen Antworten beantwortet sind.</div>
+        <div class="section-head">
+          <div class="section-icon warn">6</div>
+          <div>
+            <div class="section-title">Einwände behandeln</div>
+            <div class="section-sub">Nur das öffnen, was der Kunde wirklich anspricht.</div>
+          </div>
+        </div>
+        <div class="goal warn"><span class="goal-label">Ziel</span>Einwände nicht wegdiskutieren – anerkennen, einordnen, beantworten und dann sauber weiterführen.</div>
+
+        <div class="card">
+          <div class="badge">Stufe 4</div>
+          <div class="card-title">Einwände nach Thema</div>
+          <div class="card-help">Erst Themenbereich wählen, dann den konkreten Einwand öffnen.</div>
+
+          <div class="grid-1" style="margin-bottom:14px;">
+            <button class="choice objection-tab" type="button" data-group="wp"><div class="choice-icon">🔥</div><div><div class="choice-title">Wärmepumpe</div><div class="choice-text">Technik, Wärme, Umbau, Kosten</div></div><div class="choice-tag">Öffnen</div></button>
+            <button class="choice objection-tab" type="button" data-group="pv"><div class="choice-icon">☀️</div><div><div class="choice-title">Photovoltaik</div><div class="choice-text">Rentabilität, Dach, Preise, Umbau</div></div><div class="choice-tag">Öffnen</div></button>
+            <button class="choice objection-tab" type="button" data-group="allg"><div class="choice-icon">💬</div><div><div class="choice-title">Allgemein</div><div class="choice-text">„Zu teuer“, „keine Zeit“, „muss überlegen“</div></div><div class="choice-tag">Öffnen</div></button>
+          </div>
+
+          <div id="obj-wp" style="display:none;">
+            <div class="accordion"><button class="accordion-btn" type="button" data-acc="ewp1"><span>„Wird meine Wohnung überhaupt warm?“</span><span id="ewp1-arrow">▼</span></button><div class="accordion-body" id="ewp1">„Ja – und das ist die häufigste Frage. Moderne Wärmepumpen heizen auch bei Minusgraden zuverlässig. Entscheidend ist die richtige Auslegung für Ihr Haus.“</div></div>
+            <div class="accordion"><button class="accordion-btn" type="button" data-acc="ewp2"><span>„Muss ich das ganze Haus umbauen?“</span><span id="ewp2-arrow">▼</span></button><div class="accordion-body" id="ewp2">„Nein – in den meisten Fällen nicht. Oft reichen bestehende Heizkörper oder kleinere Optimierungen. Ein Komplettumbau ist die Ausnahme.“</div></div>
+            <div class="accordion"><button class="accordion-btn" type="button" data-acc="ewp3"><span>„Kostet das nicht 30–40.000€?“</span><span id="ewp3-arrow">▼</span></button><div class="accordion-body" id="ewp3">„Brutto liegt man oft in diesem Bereich – aber nach Förderung ist der reale Eigenanteil meist deutlich niedriger. Genau das schauen wir objektbezogen an.“</div></div>
+          </div>
+
+          <div id="obj-pv" style="display:none;">
+            <div class="accordion"><button class="accordion-btn" type="button" data-acc="epv1"><span>„Rentiert sich das überhaupt?“</span><span id="epv1-arrow">▼</span></button><div class="accordion-body" id="epv1">„In vielen Fällen ja – durch niedrigere Stromkosten, mehr Unabhängigkeit und eine aufgewertete Immobilie. Wie stark, hängt von Dach, Verbrauch und Eigenverbrauch ab.“</div></div>
+            <div class="accordion"><button class="accordion-btn" type="button" data-acc="epv2"><span>„Das Dach geht doch kaputt.“</span><span id="epv2-arrow">▼</span></button><div class="accordion-body" id="epv2">„Nein – bei sauberer Montage nicht. Im Gegenteil: Die Module schützen die Dachfläche sogar zusätzlich. Wenn ein Dach nicht geeignet wäre, würden wir das offen sagen.“</div></div>
+            <div class="accordion"><button class="accordion-btn" type="button" data-acc="epv3"><span>„Ich habe die Preise von Enpal gesehen...“</span><span id="epv3-arrow">▼</span></button><div class="accordion-body" id="epv3">„Genau deshalb ist unser Maklermodell so wichtig. Wir sind nicht an eine Marke gebunden, sondern vergleichen, was technisch und wirtschaftlich zu Ihrer Immobilie passt.“</div></div>
+          </div>
+
+          <div id="obj-allg" style="display:none;">
+            <div class="accordion"><button class="accordion-btn" type="button" data-acc="eallg1"><span>„Das ist mir zu teuer.“</span><span id="eallg1-arrow">▼</span></button><div class="accordion-body" id="eallg1">„Verstehe ich. Genau deshalb schauen wir nicht auf den Preis isoliert, sondern darauf, was Sie damit an laufenden Kosten ersetzen und welche Förderung realistisch greift.“</div></div>
+            <div class="accordion"><button class="accordion-btn" type="button" data-acc="eallg2"><span>„Ich habe gerade keine Zeit.“</span><span id="eallg2-arrow">▼</span></button><div class="accordion-body" id="eallg2">„Völlig in Ordnung. Genau deshalb ist ein kurzer Termin sinnvoll – um strukturiert draufzuschauen und danach zu entscheiden, statt das Thema weiter mitzuschleppen.“</div></div>
+            <div class="accordion"><button class="accordion-btn" type="button" data-acc="eallg3"><span>„Ich muss darüber nachdenken.“</span><span id="eallg3-arrow">▼</span></button><div class="accordion-body" id="eallg3">„Absolut fair. Darf ich fragen: Was genau brauchen Sie noch, damit Sie ein gutes Gefühl für den nächsten Schritt haben?“</div></div>
+          </div>
+        </div>
+
+        <div class="actions"><button class="btn-primary" type="button" data-next="7">Weiter zu Termin</button></div>
+      </section>
+
+      <section class="section is-locked" id="step-5">
+        <div class="lock-overlay">Termin wird frei, sobald die vorherigen Antworten beantwortet sind.</div>
+        <div class="section-head">
+          <div class="section-icon">5</div>
+          <div>
+            <div class="section-title">Termin vereinbaren</div>
+            <div class="section-sub">Leicht, klar, ohne Druck – aber verbindlich.</div>
+          </div>
+        </div>
+        <div class="goal"><span class="goal-label">Ziel</span>Der Termin ist nicht der Verkauf – sondern der logische nächste Schritt. Kein Bitten, kein Drücken, sondern führen.</div>
+
+        <div class="card">
+          <div class="card-title">Terminleitfaden – Schritt für Schritt</div>
+          <div class="term-step" data-term="1"><div class="term-num">1</div><div><div class="term-title">Terminvorschlag</div><div class="term-line"><div class="term-text">„Der sinnvollste nächste Schritt wäre, dass wir uns das einmal sauber bei Ihnen anschauen – dann wissen Sie konkret, was möglich ist und was nicht.“</div></div><div class="term-note">→ Termin als logische Konsequenz setzen, nicht als Bittstellung.</div></div><div class="term-check" id="term-check-1"></div></div>
+          <div class="term-step" data-term="2"><div class="term-num">2</div><div><div class="term-title">Alternative geben statt offene Frage</div><div class="term-line"><div class="term-text">„Passt es bei Ihnen eher am Dienstag oder Donnerstag?“</div></div><div class="term-note">→ Immer Alternative A oder B, nie komplett offen.</div></div><div class="term-check" id="term-check-2"></div></div>
+          <div class="term-step" data-term="3"><div class="term-num">3</div><div><div class="term-title">Partner / Entscheider absichern</div><div class="term-line"><div class="term-text">„Wichtig wäre, dass alle Entscheider dabei sind – ist Ihr Partner dann auch mit vor Ort?“</div></div><div class="term-note">→ Sonst ist es kein echter Abschlusstermin.</div></div><div class="term-check" id="term-check-3"></div></div>
+          <div class="term-step" data-term="4"><div class="term-num">4</div><div><div class="term-title">Verbindlichkeit herstellen</div><div class="term-line"><div class="term-text">„Perfekt, dann notiere ich Ihnen [Tag] um [Uhrzeit]. Sie bekommen dazu noch eine kurze Bestätigung.“</div></div><div class="term-note">→ Termin festhalten, nicht erneut offen fragen.</div></div><div class="term-check" id="term-check-4"></div></div>
+          <div class="term-step" data-term="5"><div class="term-num">5</div><div><div class="term-title">Sauber abschließen</div><div class="term-line"><div class="term-text">„Super, dann freue ich mich auf den Termin. Danach haben Sie eine klare Grundlage für Ihre Entscheidung.“</div></div><div class="term-note">→ Sicherheit geben, kein Verkaufsdruck am Ende.</div></div><div class="term-check" id="term-check-5"></div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">PDF / Gesprächsprotokoll</div>
+          <div class="summary">
+            <div class="summary-grid">
+              <div class="summary-item"><div class="summary-key">Kunde</div><div class="summary-value" id="summary-name">—</div></div>
+              <div class="summary-item"><div class="summary-key">Telefon</div><div class="summary-value" id="summary-telefon">—</div></div>
+              <div class="summary-item"><div class="summary-key">E-Mail</div><div class="summary-value" id="summary-email">—</div></div>
+              <div class="summary-item"><div class="summary-key">Ort / Adresse</div><div class="summary-value" id="summary-ort">—</div></div>
+              <div class="summary-item"><div class="summary-key">Kontaktart</div><div class="summary-value" id="summary-pfad">—</div></div>
+              <div class="summary-item"><div class="summary-key">Thema</div><div class="summary-value" id="summary-thema">—</div></div>
+              <div class="summary-item"><div class="summary-key">Geplanter Termin</div><div class="summary-value" id="summary-termin">—</div></div>
+              <div class="summary-item"><div class="summary-key">Berater</div><div class="summary-value" id="summary-berater">—</div></div>
+              <div class="summary-item" style="grid-column:1 / -1;"><div class="summary-key">Notizen</div><div class="summary-value" id="summary-notizen">—</div></div>
+            </div>
+            <div class="actions">
+              <button class="btn-primary" type="button" id="exportBtn">PDF / Druckansicht öffnen</button>
+              <button class="btn-secondary" type="button" id="refreshBtn">Zusammenfassung aktualisieren</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <div class="footer">EnergyEngel Telefonleitfaden · Interne Live-Version</div>
+
+  <script>
+    const state = {
+      mode: 'prep',
+      pfad: null,
+      thema: null,
+      currentStep: 0,
+      tags: new Set(),
+      motive: new Set(),
+      termSteps: new Set(),
+      lastMotive: null,
+      entryDone: false,
+      motiveConfirm: null,
+      techDone: { heatSelect: false, pv: false, building: false, size: false, heat: false, power: false },
+      econDone: { building: false, size: false, heat: false, power: false },
+      buildingType: 'altbau',
+      buildingSubtype: 'Nach 3. WSchVO',
+      buildingKwhPerSqm: 100,
+      buildingYear: 1995,
+      houseSize: 140,
+      heatSource: 'gas',
+      heatUsage: 14000,
+      heatUsageManual: false,
+      powerUsage: 3500,
+      pvAnlage: null,
+      kundenDaten: { name: '', telefon: '', email: '', ort: '', termin: '', berater: '', notizen: '' }
+    };
+
+    const techIdleTimers = { building: null, size: null, heat: null, power: null, heatSelect: null, pv: null };
+    const techIdleEnabled = { building: false, size: false, heat: false, power: false, heatSelect: false, pv: false };
+    let isSnappingQuestion = false;
+    let technicalQuestionLockUntil = 0;
+
+    const guideText = {
+      wp: {
+        step1Goal: 'Du eröffnest das Gespräch klar auf das Thema Wärmepumpe und führst dann direkt in die Bedarfsermittlung.',
+        openingQuestion: '„Kurz gefragt: Wie kommen Sie gerade zu dem Thema Wärmepumpe?“',
+        step3Sub: 'Nur Wärmepumpen-Argumente zeigen, die zur Situation des Kunden passen.',
+        interestIntro: '„Lassen Sie mich kurz sagen, was Kunden in einer ähnlichen Wärmepumpen-Situation bei uns am Ende gesagt haben.“',
+        defaultObjection: 'wp'
+      },
+      pv: {
+        step1Goal: 'Du eröffnest das Gespräch klar auf das Thema Photovoltaik und führst dann direkt in die Bedarfsermittlung.',
+        openingQuestion: '„Kurz gefragt: Wie kommen Sie gerade zu dem Thema Photovoltaik?“',
+        step3Sub: 'Nur Photovoltaik-Argumente zeigen, die zur Situation des Kunden passen.',
+        interestIntro: '„Lassen Sie mich kurz sagen, was Kunden in einer ähnlichen Photovoltaik-Situation bei uns am Ende gesagt haben.“',
+        defaultObjection: 'pv'
+      },
+      sg: {
+        step1Goal: 'Du eröffnest das Gespräch klar auf Strom & Gas und führst dann direkt in die Bedarfsermittlung.',
+        openingQuestion: '„Kurz gefragt: Wie kommen Sie gerade zu dem Thema Strom & Gas?“',
+        step3Sub: 'Nur passende Kosten- und Nutzenargumente zeigen.',
+        interestIntro: '„Lassen Sie mich kurz sagen, was Kunden in einer ähnlichen Strom-&-Gas-Situation bei uns am Ende gesagt haben.“',
+        defaultObjection: 'allg'
+      },
+      empfehlung: {
+        step1Goal: 'Du nutzt den Vertrauensvorschuss der Empfehlung und gehst danach sauber ins Thema.',
+        openingQuestion: '„Kurz gefragt: Was war für Sie der Anlass, dass wir heute miteinander sprechen?“',
+        step3Sub: 'Nur die Argumente zeigen, die zur Situation des empfohlenen Kontakts passen.',
+        interestIntro: '„Lassen Sie mich kurz sagen, was Kunden in einer ähnlichen Situation bei uns am Ende gesagt haben.“',
+        defaultObjection: 'allg'
+      }
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+    const setText = (id, value) => {
+      const el = $(id);
+      if (el) el.textContent = value;
+    };
+
+    function valueOrDash(v) { return String(v || '').trim() || '—'; }
+    function getPfadLabel() { return state.pfad === 'lead' ? 'Warmer Lead' : state.pfad === 'empfehlung' ? 'Empfehlung' : '—'; }
+    function getThemaLabel() {
+      if (state.thema === 'wp') return 'Wärmepumpe';
+      if (state.thema === 'pv') return 'Photovoltaik';
+      if (state.thema === 'sg') return 'Strom & Gas';
+      if (state.pfad === 'empfehlung') return 'Empfehlungsfall / offen';
+      return '—';
+    }
+    function currentGuide() {
+      if (state.pfad === 'empfehlung') return guideText.empfehlung;
+      return guideText[state.thema] || guideText.wp;
+    }
+
+    function setMode(mode) {
+      state.mode = mode;
+      document.body.classList.remove('prep-mode', 'guide-mode');
+      document.body.classList.add(mode === 'guide' ? 'guide-mode' : 'prep-mode');
+    }
+
+    function updateProgress(step) {
+      state.currentStep = step;
+      $$('.progress-step').forEach((el) => {
+        const n = Number(el.dataset.progress);
+        el.classList.remove('active', 'done');
+        if (n < step) el.classList.add('done');
+        if (n === step) el.classList.add('active');
+      });
+      updateProgressVisibility();
+    }
+
+    function updateProgressVisibility() {
+      $$('.progress-step').forEach((el) => el.classList.remove('is-hidden'));
+    }
+
+    function isMotiveUnlocked() {
+      return state.entryDone;
+    }
+
+    function isTechnicalUnlocked() {
+      return state.motive.size >= 2 && state.motiveConfirm !== null;
+    }
+
+    function isTechnicalComplete() {
+      return Object.values(state.techDone).every(Boolean);
+    }
+
+    function isEconomicComplete() {
+      return Object.values(state.econDone).every(Boolean);
+    }
+
+    function updateStageLocks() {
+      const technicalUnlocked = isTechnicalUnlocked();
+      const technicalComplete = isTechnicalComplete();
+      const economicComplete = isEconomicComplete();
+
+      $('techIntroLock')?.classList.toggle('is-locked', !technicalUnlocked);
+      $('technicalStage')?.classList.toggle('is-locked', !technicalUnlocked);
+      $('economicIntroLock')?.classList.toggle('is-locked', !technicalComplete);
+      $('economicStage')?.classList.toggle('is-locked', !technicalComplete);
+      $('step-6')?.classList.toggle('is-locked', !economicComplete);
+      $('step-4')?.classList.toggle('is-locked', !economicComplete);
+      $('step-5')?.classList.toggle('is-locked', !economicComplete);
+    }
+
+    function getPrimarySayTarget(step) {
+      if (step === 1) return document.querySelector('.spoken-block.active');
+      if (step === 2) return $('openingQuestion');
+      if (step === 3) return $('technicalIntro');
+      if (step === 4) return $('economicIntro');
+      if (step === 5) return $('interestIntro');
+      if (step === 6) return document.querySelector('#step-4 .accordion-body[style*="block"]') || document.querySelector('#step-4 .card');
+      if (step === 7) return document.querySelector('#step-5 .term-line');
+      return null;
+    }
+
+    function getQuestionTopOffset() {
+      const progressShell = document.querySelector('.progress-shell');
+      const progressHeight = document.body.classList.contains('guide-mode') && progressShell
+        ? progressShell.getBoundingClientRect().height
+        : 0;
+      return progressHeight + 18;
+    }
+
+    function scrollSayIntoView(target) {
+      if (!target) return;
+      target.classList.add('say-focus');
+      window.setTimeout(() => {
+        target.classList.remove('say-focus');
+      }, 420);
+    }
+
+    function scrollToStepStart(step) {
+      const anchor = getPrimarySayTarget(step) || $(getSectionIdForStep(step));
+      if (!anchor) return;
+      const absoluteTop = window.pageYOffset + anchor.getBoundingClientRect().top;
+      const offset = Math.max(absoluteTop - getQuestionTopOffset(), 0);
+      window.scrollTo({ top: offset, behavior: 'smooth' });
+    }
+
+    function getSectionIdForStep(step) {
+      if (step === 3) return 'step-2';
+      if (step === 4) return 'step-2';
+      if (step === 5) return 'step-6';
+      if (step === 6) return 'step-4';
+      if (step === 7) return 'step-5';
+      return 'step-' + step;
+    }
+
+    function handleGuideScroll() {
+      syncProgressForInlineSections();
+    }
+
+    function syncProgressForInlineSections() {
+      if (state.mode !== 'guide') return;
+      const step2Visible = $('step-2')?.classList.contains('visible');
+      if (!step2Visible) return;
+      const technical = $('technicalIntro');
+      const economic = $('economicIntro');
+      if (!technical || !economic) return;
+      const technicalTop = technical.getBoundingClientRect().top;
+      const economicTop = economic.getBoundingClientRect().top;
+      let nextProgress = 2;
+      if (economicTop <= 150) nextProgress = 4;
+      else if (technicalTop <= 150) nextProgress = 3;
+      if (state.currentStep !== nextProgress) {
+        updateProgress(nextProgress);
+      }
+    }
+
+    function showStep(step) {
+      $$('.guide-screen .section').forEach((section) => section.classList.remove('visible'));
+      const target = $(getSectionIdForStep(step));
+      if (target) target.classList.add('visible');
+      updateProgress(step);
+      requestAnimationFrame(() => {
+        scrollToStepStart(step);
+        scrollSayIntoView(getPrimarySayTarget(step) || target);
+      });
+      requestAnimationFrame(syncProgressForInlineSections);
+    }
+
+    function syncKundenDaten() {
+      state.kundenDaten.name = $('kunde-name').value;
+      state.kundenDaten.telefon = $('kunde-telefon').value;
+      state.kundenDaten.email = $('kunde-email').value;
+      state.kundenDaten.ort = $('kunde-ort').value;
+      state.kundenDaten.termin = $('kunde-termin').value;
+      state.kundenDaten.berater = $('kunde-berater').value;
+      state.kundenDaten.notizen = $('kunde-notizen').value;
+    }
+
+    function updateSummary() {
+      syncKundenDaten();
+      $('summary-name').textContent = valueOrDash(state.kundenDaten.name);
+      $('summary-telefon').textContent = valueOrDash(state.kundenDaten.telefon);
+      $('summary-email').textContent = valueOrDash(state.kundenDaten.email);
+      $('summary-ort').textContent = valueOrDash(state.kundenDaten.ort);
+      $('summary-termin').textContent = valueOrDash(state.kundenDaten.termin);
+      $('summary-berater').textContent = valueOrDash(state.kundenDaten.berater);
+      $('summary-notizen').textContent = valueOrDash(state.kundenDaten.notizen);
+      $('summary-pfad').textContent = getPfadLabel();
+      $('summary-thema').textContent = getThemaLabel();
+    }
+
+    function sortTechCards() {
+      return;
+    }
+
+    function updateSelectPairSummary() {
+      const heatSelect = $('heatSelectSummary');
+      if (heatSelect) {
+        const sourceMap = { gas: 'Gas', oil: 'Öl', other: 'Anderes' };
+        heatSelect.textContent = sourceMap[state.heatSource] || '—';
+      }
+      const pv = $('pvSummary');
+      if (pv) {
+        const pvMap = { yes: 'Ja', no: 'Nein', planned: 'In Planung' };
+        pv.textContent = pvMap[state.pvAnlage] || '—';
+      }
+    }
+
+    function clearSelectPairIdle() {
+      return;
+    }
+
+    function armSelectPairIdle() {
+      return;
+    }
+
+    function updateTechSummaries() {
+      updateSelectPairSummary();
+      const building = $('buildingSummary');
+      if (building) building.textContent = `${state.buildingYear} · ${state.buildingSubtype}`;
+      const size = $('sizeSummary');
+      if (size) size.textContent = `${formatNumberDE(state.houseSize)} qm · ${$('sizeCategoryValue')?.textContent || ''}`;
+      const heat = $('heatSummary');
+      if (heat) {
+        const sourceMap = { gas: 'Gas', oil: 'Öl', other: 'Anderes' };
+        let usage = 'nicht relevant';
+        if (state.heatSource === 'gas') usage = `${formatNumberDE(state.heatUsage)} kWh / Jahr`;
+        if (state.heatSource === 'oil') usage = `${formatNumberDE(state.heatUsage)} l / Jahr`;
+        heat.textContent = `${sourceMap[state.heatSource] || '—'} · ${usage}`;
+      }
+      const power = $('powerSummary');
+      if (power) power.textContent = `${formatNumberDE(state.powerUsage)} kWh / Jahr`;
+    }
+
+    function lockTechCardHeight(sectionKey) {
+      const card = document.querySelector(`.tech-question-card[data-tech-question="${sectionKey}"]`);
+      if (!card) return null;
+      card.style.height = `${card.offsetHeight}px`;
+      return card;
+    }
+
+    function unlockTechCardHeight(sectionKey) {
+      const card = document.querySelector(`.tech-question-card[data-tech-question="${sectionKey}"]`);
+      if (!card) return;
+      card.style.height = '';
+    }
+
+    function clearTechIdle(sectionKey) {
+      if (techIdleTimers[sectionKey]) {
+        window.clearTimeout(techIdleTimers[sectionKey]);
+        techIdleTimers[sectionKey] = null;
+      }
+      const card = document.querySelector(`.tech-question-card[data-tech-question="${sectionKey}"]`);
+      if (card) {
+        card.classList.remove('is-idle');
+      }
+      unlockTechCardHeight(sectionKey);
+    }
+
+    function armTechIdle(sectionKey) {
+      if (!['building', 'size', 'heat', 'power', 'heatSelect', 'pv'].includes(sectionKey)) return;
+      if (!techIdleEnabled[sectionKey]) return;
+      clearTechIdle(sectionKey);
+      techIdleTimers[sectionKey] = window.setTimeout(() => {
+        updateTechSummaries();
+        const card = lockTechCardHeight(sectionKey);
+        if (card) {
+          card.classList.add('is-idle');
+        }
+      }, 2000);
+    }
+
+    function registerTechActivity(sectionKey) {
+      clearTechIdle(sectionKey);
+      setTechnicalQuestion(sectionKey);
+      armTechIdle(sectionKey);
+    }
+
+    function enableTechIdle(sectionKey) {
+      techIdleEnabled[sectionKey] = true;
+      registerTechActivity(sectionKey);
+    }
+
+    function animateSayBox(el) {
+      if (!el) return;
+      el.classList.remove('say-change');
+      void el.offsetWidth;
+      el.classList.add('say-change');
+    }
+
+    function updateSayBoxText(el, text, animate = true) {
+      if (!el) return;
+      if (el.textContent !== text) {
+        el.textContent = text;
+        if (animate) animateSayBox(el);
+      }
+    }
+
+    function isTechnicalQuestionLocked() {
+      return Date.now() < technicalQuestionLockUntil;
+    }
+
+    function lockTechnicalQuestion(ms = 5000) {
+      technicalQuestionLockUntil = Date.now() + ms;
+    }
+
+    function getTechnicalQuestionText(key) {
+      if (key === 'heat') {
+        if (state.heatSource === 'oil') return '„Wie viel Öl verbrauchen Sie im Jahr?“';
+        if (state.heatSource === 'gas') return '„Wie viel Gas verbrauchen Sie im Jahr?“';
+        return '„Wie viel verbrauchen Sie im Jahr?“';
+      }
+      const map = {
+        default: '„Herr/Frau [Name], ich habe noch ein, zwei technische Fragen.“',
+        heatSelect: '„Herr / Frau [Name], für den Technischen Check habe ich noch ein zwei Fragen – wie heizen Sie bisher?“',
+        pv: '„Nutzen Sie schon die Sonnen Energie ?“',
+        building: '„Wann wurde Ihr Haus gebaut?“',
+        size: '„Und wie viel Wohnfläche haben Sie?“',
+        power: '„Wie viel Strom verbrauchen Sie im Jahr?“'
+      };
+      return map[key] || map.default;
+    }
+
+    function isTechnicalStepComplete(key) {
+      if (key === 'heat') {
+        if (state.heatSource === 'other') return true;
+        return state.techDone.heat;
+      }
+      return Boolean(state.techDone[key]);
+    }
+
+    function getNextTechnicalQuestion() {
+      const order = ['heatSelect', 'heat', 'building', 'size', 'pv', 'power'];
+      return order.find((key) => !isTechnicalStepComplete(key)) || null;
+    }
+
+    function advanceTechnicalQuestion(force = true) {
+      const next = getNextTechnicalQuestion();
+      if (next) {
+        setTechnicalQuestion(next, true, force);
+      }
+    }
+
+    function setTechnicalQuestion(key = 'building', animate = true, force = false) {
+      const intro = $('technicalIntro');
+      if (!intro) return;
+      updateSayBoxText(intro, getTechnicalQuestionText(key), animate);
+      $$('.tech-question-card').forEach((card) => card.classList.remove('is-active'));
+      if (key !== 'default') {
+        document.querySelector(`.tech-question-card[data-tech-question="${key}"]`)?.classList.add('is-active');
+      }
+    }
+
+    function applyGuide() {
+      const cfg = currentGuide();
+      $('step1Goal').textContent = cfg.step1Goal;
+      updateSayBoxText($('openingQuestion'), cfg.openingQuestion);
+      $('openingQuestion').classList.remove('hidden');
+      $('step3Sub').textContent = cfg.step3Sub;
+      updateSayBoxText($('interestIntro'), cfg.interestIntro);
+      showSpoken();
+      resetTechnicalCheck();
+      setTechnicalQuestion('building', false);
+      updateMotiveFollowup();
+      showObjectionGroup(cfg.defaultObjection);
+    }
+
+    function resetSpokenProgress() {
+      $$('.spoken-block').forEach((block) => {
+        const items = block.querySelectorAll('.spoken-item');
+        items.forEach((item, index) => {
+          item.classList.toggle('hidden', index > 0);
+        });
+        const firstResponse = block.querySelector('.response-actions');
+        if (firstResponse) firstResponse.classList.remove('hidden');
+        const secondResponse = block.querySelector('.second-response-actions');
+        if (secondResponse) secondResponse.classList.add('hidden');
+      });
+    }
+
+    function handleFirstResponse(btn) {
+      const block = btn.closest('.spoken-block');
+      if (!block) return;
+      const response = btn.dataset.response;
+      if (response === 'no') {
+        state.entryDone = false;
+        setMode('prep');
+        updateProgress(0);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      const actions = btn.closest('.response-actions');
+      if (actions) actions.classList.add('hidden');
+
+      const items = Array.from(block.querySelectorAll('.spoken-item'));
+      const currentIndex = items.findIndex((item) => !item.classList.contains('hidden'));
+
+      if (currentIndex >= 0) {
+        items[currentIndex].classList.add('hidden');
+      }
+
+      const nextItem = currentIndex >= 0 ? items[currentIndex + 1] : null;
+      if (nextItem) {
+        nextItem.classList.remove('hidden');
+        const secondResponse = block.querySelector('.second-response-actions');
+        if (secondResponse) secondResponse.classList.remove('hidden');
+        requestAnimationFrame(() => scrollSayIntoView(nextItem));
+      } else {
+        state.entryDone = true;
+        updateStageLocks();
+        showStep(2);
+      }
+    }
+
+    function handleSecondResponse(btn) {
+      const response = btn.dataset.response;
+      if (response === 'no') {
+        state.entryDone = false;
+        setMode('prep');
+        updateProgress(0);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+      state.entryDone = true;
+      updateStageLocks();
+      showStep(2);
+    }
+
+    function showSpoken() {
+      $$('.spoken-block').forEach((el) => el.classList.remove('active'));
+      if (state.pfad === 'empfehlung') $('spoken-empfehlung').classList.add('active');
+      else if (state.thema) $('spoken-' + state.thema).classList.add('active');
+      resetSpokenProgress();
+    }
+
+    function scrollPrepTarget(target) {
+      if (!target) return;
+      const rect = target.getBoundingClientRect();
+      const absoluteTop = window.pageYOffset + rect.top;
+      const offset = Math.max(absoluteTop - 120, 0);
+      window.scrollTo({ top: offset, behavior: 'smooth' });
+    }
+
+    function setPfad(pfad) {
+      state.pfad = pfad;
+      state.thema = null;
+      $('pfad-lead').classList.remove('active');
+      $('pfad-empfehlung').classList.remove('active');
+      $('pfad-' + pfad).classList.add('active');
+      $$('.topic-btn').forEach((btn) => btn.classList.remove('active'));
+      if (pfad === 'lead') {
+        $('themeCard').style.display = 'block';
+        requestAnimationFrame(() => scrollPrepTarget($('themeCard')));
+      } else {
+        $('themeCard').style.display = 'none';
+        updateSummary();
+        startGuide();
+        return;
+      }
+      updateSummary();
+      updateStageLocks();
+    }
+
+    function setTopic(topic) {
+      state.thema = topic;
+      $$('.topic-btn').forEach((btn) => btn.classList.remove('active'));
+      $('topic-' + topic).classList.add('active');
+      updateSummary();
+      startGuide();
+    }
+
+    function startGuide() {
+      updateSummary();
+      if (!state.pfad) {
+        alert('Bitte zuerst die Kontaktart auswählen.');
+        return;
+      }
+      if (state.pfad === 'lead' && !state.thema) {
+        alert('Bitte zusätzlich das Thema auswählen.');
+        return;
+      }
+      applyGuide();
+      setMode('guide');
+      showStep(1);
+    }
+
+    function toggleRules() {
+      const body = $('rulesBody');
+      const open = body.style.display === 'block';
+      body.style.display = open ? 'none' : 'block';
+      $('rulesArrow').style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
+    }
+
+    const motiveQuestionLabels = {
+      gaskosten: 'hohe Energiekosten / Gas für Sie wichtig sind',
+      unabhaengig: 'Unabhängigkeit für Sie wichtig ist',
+      zukunft: 'das Thema Zukunft / Gesetzeslage für Sie wichtig ist',
+      'heizung-alt': 'der Zustand Ihrer aktuellen Heizung für Sie wichtig ist',
+      pv: 'die Kombination mit einer PV-Anlage für Sie wichtig ist',
+      machbarkeit: 'die Machbarkeit bei Ihrem Haus für Sie wichtig ist',
+      foerderung: 'das Thema Förderung für Sie wichtig ist',
+      neubau: 'Ihre Neubau- / Sanierungssituation für Sie wichtig ist'
+    };
+
+    const motiveCloseLabels = {
+      gaskosten: 'Ihre Energiekosten senken',
+      unabhaengig: 'mehr Unabhängigkeit schaffen',
+      zukunft: 'für die Zukunft sauber aufgestellt sein',
+      'heizung-alt': 'die alte Heizung sinnvoll ersetzen',
+      pv: 'die PV sinnvoll mit der Wärmepumpe kombinieren',
+      machbarkeit: 'die Machbarkeit bei Ihrem Haus sauber klären',
+      foerderung: 'die passende Förderung für Sie nutzen',
+      neubau: 'Ihre Neubau- / Sanierungssituation optimal nutzen'
+    };
+
+    function updateMotiveCloseBox() {
+      const wrap = $('motiveCloseWrap');
+      const question = $('motiveCloseQuestion');
+      if (!wrap || !question) return;
+
+      if (state.motive.size >= 2) {
+        const labels = Array.from(state.motive).map((key) => motiveCloseLabels[key]).filter(Boolean);
+        const joined = labels.length === 2
+          ? `${labels[0]} und ${labels[1]}`
+          : `${labels.slice(0, -1).join(', ')} und ${labels[labels.length - 1]}`;
+        updateSayBoxText(question, `„Wenn Sie ${joined}, dann steht einer Umsetzung eigentlich nichts im Weg, oder?“`);
+        wrap.style.display = 'grid';
+        $('motiveCloseYes')?.classList.toggle('selected', state.motiveConfirm === 'yes');
+        $('motiveCloseNo')?.classList.toggle('selected', state.motiveConfirm === 'no');
+      } else {
+        wrap.style.display = 'none';
+        state.motiveConfirm = null;
+      }
+    }
+
+    function answerMotiveClose(answer) {
+      state.motiveConfirm = answer;
+      updateMotiveCloseBox();
+      updateStageLocks();
+      if (answer === 'yes') {
+        lockTechnicalQuestion(5000);
+        setTechnicalQuestion('heatSelect', true, true);
+        showStep(3);
+      }
+    }
+
+    function updateMotiveFollowup() {
+      const opening = $('openingQuestion');
+      const followup = $('motiveFollowupQuote');
+      if (!opening) return;
+
+      if (followup) {
+        followup.classList.remove('visible');
+      }
+
+      opening.classList.remove('hidden');
+      opening.classList.toggle('warn-state', state.motive.size > 0);
+
+      if (state.motive.size > 0) {
+        const activeKey = state.lastMotive && state.motive.has(state.lastMotive)
+          ? state.lastMotive
+          : Array.from(state.motive)[0];
+        const motiveText = motiveQuestionLabels[activeKey] || 'dieser Punkt für Sie wichtig ist';
+        updateSayBoxText(opening, `„Ich verstehe, dass ${motiveText}. Gibt es denn weitere Gründe, die für die Wärmepumpe bei Ihnen sprechen?“`);
+      } else {
+        updateSayBoxText(opening, currentGuide().openingQuestion);
+      }
+      updateMotiveCloseBox();
+      updateStageLocks();
+    }
+
+    function toggleMotive(key, btn) {
+      if (state.motive.has(key)) {
+        state.motive.delete(key);
+        btn.classList.remove('active');
+        if (state.lastMotive === key) {
+          state.lastMotive = state.motive.size ? Array.from(state.motive)[state.motive.size - 1] : null;
+        }
+      } else {
+        state.motive.add(key);
+        state.lastMotive = key;
+        btn.classList.add('active');
+      }
+      if (state.motive.size < 2) state.motiveConfirm = null;
+      updateProgressVisibility();
+      updateMotiveFollowup();
+      updateClosing();
+      updateInterest();
+      updateSummary();
+      updateStageLocks();
+    }
+
+    function formatNumberDE(value) {
+      return new Intl.NumberFormat('de-DE').format(value);
+    }
+
+    const BUILDING_YEAR_TABLE = [
+      { min: 1800, max: 1918, category: 'altbau', label: 'Gründerzeit/Altbau', kwh: 300 },
+      { min: 1919, max: 1948, category: 'altbau', label: 'Vorkrieg', kwh: 280 },
+      { min: 1949, max: 1957, category: 'altbau', label: 'Nachkrieg', kwh: 260 },
+      { min: 1958, max: 1968, category: 'altbau', label: 'Wirtschaftswunder', kwh: 230 },
+      { min: 1969, max: 1978, category: 'altbau', label: 'Vor 1. WSchVO', kwh: 200 },
+      { min: 1979, max: 1983, category: 'altbau', label: 'Nach 1. WSchVO', kwh: 160 },
+      { min: 1984, max: 1994, category: 'altbau', label: 'Nach 2. WSchVO', kwh: 130 },
+      { min: 1995, max: 2001, category: 'altbau', label: 'Nach 3. WSchVO', kwh: 100 },
+      { min: 2002, max: 2008, category: 'neubau', label: 'Nach EnEV 2002', kwh: 80 },
+      { min: 2009, max: 2015, category: 'neubau', label: 'Nach EnEV 2009', kwh: 65 },
+      { min: 2016, max: 2020, category: 'neubau', label: 'Nach EnEV 2016', kwh: 50 },
+      { min: 2021, max: 2023, category: 'neubau', label: 'GEG 2020', kwh: 40 },
+      { min: 2024, max: 2026, category: 'neubau', label: 'GEG 2023 / KfW 40', kwh: 30 }
+    ];
+
+    function getBuildingMeta(year) {
+      return BUILDING_YEAR_TABLE.find((entry) => year >= entry.min && year <= entry.max) || BUILDING_YEAR_TABLE[0];
+    }
+
+    function syncBuildingButtons() {
+      const buildingTypeValue = $('buildingTypeValue');
+      if (buildingTypeValue) {
+        buildingTypeValue.textContent = state.buildingType === 'neubau' ? 'Neubau' : 'Altbau';
+      }
+      if (state.buildingType === 'neubau') state.tags.add('neubau');
+      else state.tags.delete('neubau');
+    }
+
+    function updateBuildingYear() {
+      state.techDone.building = true;
+      enableTechIdle('building');
+      state.buildingYear = Number($('buildingYearSlider').value);
+      const meta = getBuildingMeta(state.buildingYear);
+      state.buildingType = meta.category;
+      state.buildingSubtype = meta.label;
+      state.buildingKwhPerSqm = meta.kwh;
+      setText('buildingYearValue', String(state.buildingYear));
+      setText('buildingSubtypeValue', state.buildingSubtype);
+      setText('buildingKwhValue', `${state.buildingKwhPerSqm} kWh/m²·a`);
+      syncBuildingButtons();
+      syncAutoHeatUsage();
+      updateTechSummaries();
+      updateInterest();
+      updateSummary();
+      updateStageLocks();
+      advanceTechnicalQuestion(true);
+    }
+
+    function selectBuildingType(type, btn) {
+      if (techIdleEnabled.building) registerTechActivity('building');
+      else setTechnicalQuestion('building');
+      const target = type === 'neubau' ? 2016 : 1984;
+      $('buildingYearSlider').value = target;
+      updateBuildingYear();
+      btn.classList.add('selected');
+    }
+
+    function syncSizeButtons() {
+      const size = state.houseSize;
+      let label = '🏡 Mittel';
+      if (size < 120) label = '🏠 Klein';
+      else if (size > 220) label = '🏢 Groß';
+      const valueEl = $('sizeCategoryValue');
+      if (valueEl) valueEl.textContent = label;
+    }
+
+    function getAutoGasUsage() {
+      const raw = state.houseSize * state.buildingKwhPerSqm;
+      const rounded = Math.round(raw / 500) * 500;
+      return Math.max(0, Math.min(45000, rounded));
+    }
+
+    function syncAutoHeatUsage() {
+      if (!state.heatUsageManual && state.heatSource === 'gas') {
+        state.heatUsage = getAutoGasUsage();
+      }
+      updateHeatUsageUI();
+    }
+
+    function updateSizeSlider() {
+      state.techDone.size = true;
+      enableTechIdle('size');
+      state.houseSize = Number($('sizeSlider').value);
+      $('sizeValue').textContent = `${formatNumberDE(state.houseSize)} qm`;
+      syncSizeButtons();
+      syncAutoHeatUsage();
+      updateTechSummaries();
+      updateSummary();
+      updateStageLocks();
+      advanceTechnicalQuestion(true);
+    }
+
+    function selectSizeBucket(bucket, btn) {
+      if (techIdleEnabled.size) registerTechActivity('size');
+      else setTechnicalQuestion('size');
+      const map = { small: 90, medium: 160, large: 280 };
+      $('sizeSlider').value = map[bucket];
+      updateSizeSlider();
+      btn.classList.add('selected');
+    }
+
+    function syncHeatSourceButtons() {
+      $$('.heat-source-btn').forEach((item) => item.classList.remove('selected'));
+      if (state.heatSource) {
+        document.querySelector(`.heat-source-btn[data-source="${state.heatSource}"]`)?.classList.add('selected');
+      }
+    }
+
+    function updateEconomicHeatUsageUI() {
+      const slider = $('econHeatUsageSlider');
+      if (!slider) return;
+      if (state.heatSource === 'oil') {
+        slider.min = '0';
+        slider.max = '8000';
+        slider.step = '100';
+        if (Number(slider.value) > 8000) slider.value = '2000';
+        setText('econHeatUsageMin', '0 l');
+        setText('econHeatUsageMax', '8.000 l');
+        setText('econHeatUsageValue', `${formatNumberDE(Number(slider.value))} l / Jahr`);
+      } else if (state.heatSource === 'gas') {
+        slider.min = '0';
+        slider.max = '45000';
+        slider.step = '500';
+        setText('econHeatUsageMin', '0 kWh');
+        setText('econHeatUsageMax', '45.000 kWh');
+        setText('econHeatUsageValue', `${formatNumberDE(Number(slider.value))} kWh / Jahr`);
+      } else {
+        slider.min = '0';
+        slider.max = '45000';
+        slider.step = '500';
+        setText('econHeatUsageMin', '0');
+        setText('econHeatUsageMax', '—');
+        setText('econHeatUsageValue', 'Nicht relevant');
+      }
+    }
+
+    function updateHeatUsageUI() {
+      const slider = $('heatUsageSlider');
+      const min = $('heatUsageMin');
+      const max = $('heatUsageMax');
+      const value = $('heatUsageValue');
+      const note = $('heatUsageNote');
+      const detail = $('heatUsageDetail');
+      if (!slider || !min || !max || !value || !note || !detail) return;
+
+      detail.classList.remove('is-disabled');
+      slider.disabled = false;
+
+      if (state.heatSource === 'oil') {
+        slider.min = '0';
+        slider.max = '8000';
+        slider.step = '100';
+        if (state.heatUsage > 8000) state.heatUsage = 2000;
+        slider.value = String(state.heatUsage || 2000);
+        min.textContent = '0 l';
+        max.textContent = '8.000 l';
+        note.textContent = 'Ölverbrauch pro Jahr.';
+        value.textContent = `${formatNumberDE(Number(slider.value))} l / Jahr`;
+      } else if (state.heatSource === 'gas') {
+        if (!state.heatUsageManual) {
+          state.heatUsage = getAutoGasUsage();
+        }
+        slider.min = '0';
+        slider.max = '45000';
+        slider.step = '500';
+        slider.value = String(state.heatUsage || getAutoGasUsage());
+        min.textContent = '0 kWh';
+        max.textContent = '45.000 kWh';
+        note.textContent = 'Automatisch aus Wohnfläche × Kennwert berechnet.';
+        value.textContent = `${formatNumberDE(Number(slider.value))} kWh / Jahr`;
+      } else {
+        slider.min = '0';
+        slider.max = '45000';
+        slider.step = '500';
+        slider.value = '0';
+        slider.disabled = true;
+        min.textContent = '0';
+        max.textContent = '—';
+        note.textContent = 'Für andere Heizsysteme ist hier kein Verbrauchs-Schieber nötig.';
+        value.textContent = 'Nicht relevant';
+        detail.classList.add('is-disabled');
+      }
+      syncHeatSourceButtons();
+      updateTechSummaries();
+      updateEconomicHeatUsageUI();
+    }
+
+    function updateHeatUsageSlider() {
+      state.techDone.heat = true;
+      enableTechIdle('heat');
+      const slider = $('heatUsageSlider');
+      if (!slider || slider.disabled) return;
+      state.heatUsageManual = true;
+      state.heatUsage = Number(slider.value);
+      updateHeatUsageUI();
+      updateSummary();
+      updateStageLocks();
+      advanceTechnicalQuestion(true);
+    }
+
+    function resetTechnicalCheck() {
+      state.techDone = { heatSelect: false, pv: false, building: false, size: false, heat: false, power: false };
+      state.econDone = { building: false, size: false, heat: false, power: false };
+      state.buildingType = 'altbau';
+      state.buildingSubtype = 'Nach 3. WSchVO';
+      state.buildingKwhPerSqm = 100;
+      state.buildingYear = 1995;
+      state.houseSize = 140;
+      state.heatSource = 'gas';
+      state.heatUsage = 14000;
+      state.heatUsageManual = false;
+      state.powerUsage = 3500;
+      state.pvAnlage = null;
+      $$('.building-type-btn, .size-btn, .heat-source-btn, .pv-btn').forEach((btn) => btn.classList.remove('selected'));
+      $$('.tech-question-card').forEach((card) => card.classList.remove('is-idle'));
+      techIdleEnabled.building = false;
+      techIdleEnabled.size = false;
+      techIdleEnabled.heat = false;
+      techIdleEnabled.power = false;
+      techIdleEnabled.heatSelect = false;
+      techIdleEnabled.pv = false;
+      clearTechIdle('building');
+      clearTechIdle('size');
+      clearTechIdle('heat');
+      clearTechIdle('power');
+      clearTechIdle('heatSelect');
+      clearTechIdle('pv');
+      if (state.tags.has('pv-vorhanden')) state.tags.delete('pv-vorhanden');
+      if (state.tags.has('neubau')) state.tags.delete('neubau');
+
+      if ($('buildingYearSlider')) $('buildingYearSlider').value = state.buildingYear;
+      if ($('sizeSlider')) $('sizeSlider').value = state.houseSize;
+      if ($('heatUsageSlider')) $('heatUsageSlider').value = state.heatUsage;
+      if ($('powerUsageSlider')) $('powerUsageSlider').value = state.powerUsage;
+      if ($('econBuildingYearSlider')) $('econBuildingYearSlider').value = state.buildingYear;
+      if ($('econSizeSlider')) $('econSizeSlider').value = state.houseSize;
+      if ($('econHeatUsageSlider')) $('econHeatUsageSlider').value = state.heatUsage;
+      if ($('econPowerUsageSlider')) $('econPowerUsageSlider').value = state.powerUsage;
+
+      setText('buildingYearValue', String(state.buildingYear));
+      setText('buildingSubtypeValue', state.buildingSubtype);
+      setText('buildingKwhValue', `${state.buildingKwhPerSqm} kWh/m²·a`);
+      setText('sizeValue', `${formatNumberDE(state.houseSize)} qm`);
+
+      syncBuildingButtons();
+      syncSizeButtons();
+      updateHeatUsageUI();
+      updatePowerUsage();
+      setText('econBuildingYearValue', String(state.buildingYear));
+      setText('econSizeValue', `${formatNumberDE(state.houseSize)} qm`);
+      setText('econPowerUsageValue', `${formatNumberDE(state.powerUsage)} kWh / Jahr`);
+      updateEconomicHeatUsageUI();
+      updateTechSummaries();
+      sortTechCards();
+      updateInterest();
+      updateSummary();
+      updateStageLocks();
+    }
+
+    function selectHeatSource(source, btn) {
+      state.techDone.heatSelect = true;
+      state.techDone.heat = source === 'other' ? true : false;
+      enableTechIdle('heatSelect');
+      state.heatSource = source;
+      if (source === 'gas' && !state.heatUsageManual) {
+        state.heatUsage = getAutoGasUsage();
+      }
+      if (source === 'oil' && state.heatUsage > 8000) state.heatUsage = 2000;
+      updateHeatUsageUI();
+      updateTechSummaries();
+      updateSummary();
+      advanceTechnicalQuestion(true);
+      requestAnimationFrame(() => scrollSayIntoView($('heatUsageDetail')));
+    }
+
+    function selectPv(value, btn) {
+      state.techDone.pv = true;
+      enableTechIdle('pv');
+      state.pvAnlage = value;
+      $$('.pv-btn').forEach((item) => item.classList.remove('selected'));
+      btn.classList.add('selected');
+      if (value === 'yes') state.tags.add('pv-vorhanden');
+      else state.tags.delete('pv-vorhanden');
+      updateTechSummaries();
+      updateInterest();
+      updateSummary();
+      updateStageLocks();
+      advanceTechnicalQuestion(true);
+    }
+
+    function updatePowerUsage() {
+      const slider = $('powerUsageSlider');
+      const value = $('powerUsageValue');
+      if (!slider || !value) return;
+      state.powerUsage = Number(slider.value);
+      value.textContent = `${formatNumberDE(state.powerUsage)} kWh / Jahr`;
+      updateTechSummaries();
+      updateSummary();
+      updateStageLocks();
+      advanceTechnicalQuestion(true);
+    }
+
+    function toggleTag(tag, btn) {
+      if (state.tags.has(tag)) {
+        state.tags.delete(tag);
+        btn.classList.remove('selected');
+      } else {
+        state.tags.add(tag);
+        btn.classList.add('selected');
+      }
+      updateInterest();
+      updateSummary();
+      updateStageLocks();
+    }
+
+    function showInfo(text, btn) {
+      btn.classList.toggle('selected');
+      $('infoBox').style.display = 'block';
+      $('infoBox').textContent = text;
+    }
+
+    function updateInterest() {
+      const map = {
+        gaskosten: state.tags.has('hohe-gaskosten') || state.motive.has('gaskosten'),
+        pv: state.motive.has('pv') || state.tags.has('pv-vorhanden'),
+        unabhaengig: state.motive.has('unabhaengig'),
+        foerderung: true,
+        geg: state.tags.has('geg') || state.motive.has('zukunft'),
+        neubau: state.tags.has('neubau') || state.motive.has('neubau')
+      };
+      let shown = 0;
+      Object.entries(map).forEach(([key, visible]) => {
+        const el = $('interest-' + key);
+        if (!el) return;
+        el.classList.toggle('visible', visible);
+        if (visible) shown += 1;
+      });
+      $('interestHint').textContent = shown > 0
+        ? 'Es werden jetzt nur die Argumente angezeigt, die zur Situation des Kunden passen.'
+        : '← Erst Kundensituation in der Qualifizierung anklicken – dann erscheinen hier die passenden Argumente.';
+    }
+
+    function updateClosing() {
+      const labels = {
+        gaskosten: 'dass Sie Ihre hohen Energiekosten in den Griff bekommen wollen',
+        unabhaengig: 'dass Sie unabhängiger von Energiepreisen werden möchten',
+        zukunft: 'dass Sie beim Thema Zukunft und Gesetzeslage Klarheit wollen',
+        'heizung-alt': 'dass Ihre Heizung alt ist oder das Thema ohnehin ansteht',
+        pv: 'dass Sie Ihre bestehende PV sinnvoll ergänzen möchten',
+        machbarkeit: 'dass Sie zuerst wissen möchten, ob die Wärmepumpe bei Ihrem Haus technisch sinnvoll machbar ist',
+        foerderung: 'dass die mögliche Förderung für Ihre Entscheidung wichtig ist',
+        neubau: 'dass Sie ohnehin im Neubau oder in der Sanierung sind'
+      };
+      const motives = Array.from(state.motive).map((m) => labels[m]).filter(Boolean);
+      if (!motives.length) {
+        $('closingText').textContent = '„Sie haben ja selbst gesagt, dass [Grund 1], [Grund 2] und [Grund 3] für Sie wichtig sind. Und genau deshalb macht es Sinn, dass wir uns das einmal sauber bei Ihnen anschauen.“';
+        return;
+      }
+      const joined = motives.length === 1 ? motives[0] : motives.length === 2 ? motives[0] + ' und ' + motives[1] : motives.slice(0, -1).join(', ') + ' und ' + motives[motives.length - 1];
+      $('closingText').textContent = `„Sie haben ja selbst gesagt, ${joined}. Und genau deshalb macht es Sinn, dass wir uns das einmal sauber bei Ihnen anschauen.“`;
+    }
+
+    function showObjectionGroup(group) {
+      ['wp', 'pv', 'allg'].forEach((g) => {
+        const panel = $('obj-' + g);
+        if (panel) panel.style.display = 'none';
+      });
+      $$('.objection-tab').forEach((btn) => btn.classList.remove('active'));
+      $('obj-' + group).style.display = 'block';
+      document.querySelector(`.objection-tab[data-group="${group}"]`)?.classList.add('active');
+    }
+
+    function toggleAccordion(id) {
+      const body = $(id);
+      const arrow = $(id + '-arrow');
+      const open = body.style.display === 'block';
+      body.style.display = open ? 'none' : 'block';
+      if (arrow) arrow.style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
+      if (!open) {
+        requestAnimationFrame(() => scrollSayIntoView(body));
+      }
+    }
+
+    function toggleTermStep(n, el) {
+      if (state.termSteps.has(n)) {
+        state.termSteps.delete(n);
+        el.classList.remove('done');
+        $('term-check-' + n).textContent = '';
+      } else {
+        state.termSteps.add(n);
+        el.classList.add('done');
+        $('term-check-' + n).textContent = '✓';
+      }
+      updateSummary();
+      updateStageLocks();
+    }
+
+    function buildExportHtml() {
+      updateSummary();
+      return `<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><title>EnergyEngel Gesprächsprotokoll</title><style>body{font-family:Arial,sans-serif;padding:32px;color:#1b1f1c;line-height:1.5}h1{font-size:28px;margin:0 0 8px}h2{font-size:16px;margin:28px 0 10px;text-transform:uppercase;letter-spacing:.08em;color:#295c3b}.meta{color:#5d6b62;margin-bottom:24px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px}.item{padding:10px 12px;border:1px solid #d9e2dc;border-radius:8px}.label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#5d6b62;margin-bottom:4px}.value{font-size:15px}.full{grid-column:1 / -1}.note{padding:14px 16px;background:#f4f7f5;border-left:4px solid #295c3b;border-radius:8px}</style></head><body><h1>EnergyEngel Gesprächsprotokoll</h1><div class="meta">Erstellt aus dem Telefonleitfaden</div><h2>Kundendaten</h2><div class="grid"><div class="item"><div class="label">Name</div><div class="value">${valueOrDash(state.kundenDaten.name)}</div></div><div class="item"><div class="label">Telefon</div><div class="value">${valueOrDash(state.kundenDaten.telefon)}</div></div><div class="item"><div class="label">E-Mail</div><div class="value">${valueOrDash(state.kundenDaten.email)}</div></div><div class="item"><div class="label">Ort / Adresse</div><div class="value">${valueOrDash(state.kundenDaten.ort)}</div></div><div class="item"><div class="label">Kontaktart</div><div class="value">${getPfadLabel()}</div></div><div class="item"><div class="label">Thema</div><div class="value">${getThemaLabel()}</div></div><div class="item"><div class="label">Geplanter Termin</div><div class="value">${valueOrDash(state.kundenDaten.termin)}</div></div><div class="item"><div class="label">Berater</div><div class="value">${valueOrDash(state.kundenDaten.berater)}</div></div><div class="item full"><div class="label">Notizen</div><div class="value">${valueOrDash(state.kundenDaten.notizen)}</div></div></div><h2>Vorwegabschluss</h2><div class="note">${$('closingText').textContent}</div></body></html>`;
+    }
+
+    function exportPdf() {
+      const win = window.open('', '_blank');
+      if (!win) return;
+      win.document.open();
+      win.document.write(buildExportHtml());
+      win.document.close();
+      win.focus();
+      setTimeout(() => { try { win.print(); } catch (e) { console.error(e); } }, 300);
+    }
+
+    function goToProgressStep(step) {
+      const numeric = Number(step);
+      if (numeric === 0) {
+        setMode('prep');
+        updateProgress(0);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+      if (state.mode !== 'guide') return;
+      showStep(numeric);
+    }
+
+    function bind() {
+      $('pfad-lead').addEventListener('click', () => setPfad('lead'));
+      $('pfad-empfehlung').addEventListener('click', () => setPfad('empfehlung'));
+      $$('.topic-btn').forEach((btn) => btn.addEventListener('click', () => setTopic(btn.dataset.topic)));
+
+      $('backBtn').addEventListener('click', () => {
+        if (state.currentStep === 1) {
+          const block = document.querySelector('.spoken-block.active');
+          if (block) {
+            const items = Array.from(block.querySelectorAll('.spoken-item'));
+            const hasFollowupVisible = items.some((item, index) => index > 0 && !item.classList.contains('hidden'));
+            if (hasFollowupVisible) {
+              items.forEach((item, index) => item.classList.toggle('hidden', index > 0));
+              const firstActions = block.querySelector('.response-actions');
+              if (firstActions) firstActions.classList.remove('hidden');
+              const secondActions = block.querySelector('.second-response-actions');
+              if (secondActions) secondActions.classList.add('hidden');
+              requestAnimationFrame(() => scrollSayIntoView(block));
+              return;
+            }
+          }
+          setMode('prep');
+          updateProgress(0);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          return;
+        }
+
+        if (state.currentStep === 2 && (state.motive.size > 0 || state.heatSource || state.pvAnlage || state.buildingYear !== 1995 || state.houseSize !== 140)) {
+          state.motive.clear();
+          $$('.motive-btn').forEach((btn) => btn.classList.remove('active'));
+          resetTechnicalCheck();
+          updateMotiveFollowup();
+          updateClosing();
+          updateInterest();
+          updateSummary();
+          requestAnimationFrame(() => scrollSayIntoView($('openingQuestion')));
+          return;
+        }
+
+        if (state.currentStep > 1) {
+          showStep(state.currentStep - 1);
+        } else {
+          setMode('prep');
+          updateProgress(0);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+
+      $$('.progress-step').forEach((btn) => btn.addEventListener('click', () => goToProgressStep(btn.dataset.progress)));
+      $('rulesCard').addEventListener('click', toggleRules);
+      $$('[data-next]').forEach((btn) => btn.addEventListener('click', () => showStep(Number(btn.dataset.next))));
+      $$('.first-response-btn').forEach((btn) => btn.addEventListener('click', () => handleFirstResponse(btn)));
+      $$('.second-response-btn').forEach((btn) => btn.addEventListener('click', () => handleSecondResponse(btn)));
+      $$('.motive-btn').forEach((btn) => btn.addEventListener('click', () => toggleMotive(btn.dataset.motive, btn)));
+      $$('.tech-question-card').forEach((card) => {
+        card.addEventListener('mouseenter', () => {
+          if (card.classList.contains('is-idle')) return;
+          if (isTechnicalQuestionLocked()) return;
+          setTechnicalQuestion(card.dataset.techQuestion);
+        });
+        card.addEventListener('click', (event) => {
+          const interactive = event.target.closest('button, input, textarea, select, label');
+          if (interactive) return;
+          const key = card.dataset.techQuestion;
+          clearTechIdle(key);
+          if (!isTechnicalQuestionLocked()) {
+            setTechnicalQuestion(key);
+          }
+        });
+      });
+      $('technicalCheckPanel')?.addEventListener('mouseleave', () => {
+        if (isTechnicalQuestionLocked()) return;
+        setTechnicalQuestion('default');
+      });
+      $$('.building-type-btn').forEach((btn) => btn.addEventListener('click', () => selectBuildingType(btn.dataset.building, btn)));
+      $$('.size-btn').forEach((btn) => btn.addEventListener('click', () => selectSizeBucket(btn.dataset.size, btn)));
+      $$('.heat-source-btn').forEach((btn) => btn.addEventListener('click', () => selectHeatSource(btn.dataset.source, btn)));
+      $$('.pv-btn').forEach((btn) => btn.addEventListener('click', () => selectPv(btn.dataset.pv, btn)));
+      $('buildingYearSlider')?.addEventListener('input', updateBuildingYear);
+      $('sizeSlider')?.addEventListener('input', updateSizeSlider);
+      $('heatUsageSlider')?.addEventListener('input', updateHeatUsageSlider);
+      $('powerUsageSlider')?.addEventListener('input', () => {
+        state.techDone.power = true;
+        enableTechIdle('power');
+        setTechnicalQuestion('power');
+        updatePowerUsage();
+      });
+      $('econBuildingYearSlider')?.addEventListener('input', () => {
+        state.econDone.building = true;
+        setText('econBuildingYearValue', $('econBuildingYearSlider').value);
+        updateStageLocks();
+      });
+      $('econSizeSlider')?.addEventListener('input', () => {
+        state.econDone.size = true;
+        setText('econSizeValue', `${formatNumberDE(Number($('econSizeSlider').value))} qm`);
+        updateStageLocks();
+      });
+      $('econHeatUsageSlider')?.addEventListener('input', () => {
+        state.econDone.heat = true;
+        updateEconomicHeatUsageUI();
+        updateStageLocks();
+      });
+      $('econPowerUsageSlider')?.addEventListener('input', () => {
+        state.econDone.power = true;
+        setText('econPowerUsageValue', `${formatNumberDE(Number($('econPowerUsageSlider').value))} kWh / Jahr`);
+        updateStageLocks();
+      });
+      $$('.tag-btn').forEach((btn) => btn.addEventListener('click', () => toggleTag(btn.dataset.tag, btn)));
+      $$('.info-btn').forEach((btn) => btn.addEventListener('click', () => showInfo(btn.dataset.info, btn)));
+      $$('.objection-tab').forEach((btn) => btn.addEventListener('click', () => showObjectionGroup(btn.dataset.group)));
+      $$('[data-acc]').forEach((btn) => btn.addEventListener('click', () => toggleAccordion(btn.dataset.acc)));
+      $$('.term-step').forEach((el) => el.addEventListener('click', () => toggleTermStep(Number(el.dataset.term), el)));
+      ['kunde-name','kunde-telefon','kunde-email','kunde-ort','kunde-termin','kunde-berater','kunde-notizen'].forEach((id) => $(id).addEventListener('input', updateSummary));
+      $('refreshBtn').addEventListener('click', updateSummary);
+      $('motiveCloseYes')?.addEventListener('click', () => answerMotiveClose('yes'));
+      $('motiveCloseNo')?.addEventListener('click', () => answerMotiveClose('no'));
+      $('exportBtn').addEventListener('click', exportPdf);
+    }
+
+    bind();
+    window.addEventListener('scroll', handleGuideScroll, { passive: true });
+    updateProgress(0);
+    updateProgressVisibility();
+    updateStageLocks();
+    updateSummary();
+  </script>
+</body>
+</html>
