@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>EnergyEngel | Dein unabhängiger Energiemakler in Leipzig</title>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --green-dark:  #004312;
+            --green-mid:   #1e7b1f;
+            --green-main:  #44a125;
+            --green-light: #d4edbb;
+        }
+
+        /* No scrolling — single fixed screen */
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            overscroll-behavior: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* ── Full-screen stage — pointer-events: none so buttons behind it still work ── */
+        #stage {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: background 0.65s ease;
+            pointer-events: none;
+        }
+
+        /* ── Centered content block ── */
+        #scene-content {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            /* Top: logo bar. Bottom: none — bubble is inside */
+            padding: 70px 44px 32px;
+            pointer-events: none;
+            z-index: 20;
+            transition: opacity 0.22s ease, transform 0.28s cubic-bezier(0.22,1,0.36,1);
+        }
+
+        #scene-step {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            opacity: 0;
+        }
+
+        #scene-headline {
+            font-size: clamp(2.6rem, 5.5vw, 5.2rem);
+            font-weight: 900;
+            text-align: center;
+            line-height: 1.05;
+            max-width: 700px;
+            letter-spacing: -0.025em;
+            white-space: pre-line;
+        }
+
+        #scene-sub {
+            margin-top: 16px;
+            font-size: clamp(1rem, 1.8vw, 1.25rem);
+            font-weight: 400;
+            text-align: center;
+            max-width: 520px;
+            line-height: 1.6;
+            opacity: 0.82;
+        }
+
+        /* Speech bubble inside content */
+        #scene-speech {
+            margin-top: 24px;
+            background: #ffffff;
+            color: #1a1a1a;
+            border-radius: 18px;
+            padding: 14px 22px;
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1.5;
+            text-align: center;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 6px 28px rgba(0,0,0,0.16);
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        /* Icons */
+        #scene-icons {
+            display: none;
+            gap: 24px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .icon-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .icon-card .icon-circle {
+            width: 68px; height: 68px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            border: 2px solid rgba(255,255,255,0.3);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem;
+            backdrop-filter: blur(4px);
+        }
+        .icon-card span { font-size: 0.82rem; font-weight: 600; text-align: center; }
+
+        /* Contact form */
+        #contact-form-wrap {
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-width: 390px;
+            pointer-events: auto;
+            margin-top: 20px;
+        }
+        #contact-form-wrap input,
+        #contact-form-wrap textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 12px;
+            border: 2px solid rgba(255,255,255,0.25);
+            background: rgba(255,255,255,0.12);
+            color: inherit;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            outline: none;
+            backdrop-filter: blur(6px);
+        }
+        #contact-form-wrap input::placeholder,
+        #contact-form-wrap textarea::placeholder { opacity: 0.5; }
+        #contact-form-wrap textarea { height: 90px; resize: none; }
+        /* Re-enable pointer events for interactive children inside stage */
+        #contact-form-wrap,
+        #contact-form-wrap input,
+        #contact-form-wrap textarea,
+        #contact-form-wrap button { pointer-events: auto; }
+
+        #contact-form-wrap button {
+            padding: 16px;
+            border-radius: 12px;
+            border: none;
+            background: var(--green-main);
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Logo */
+        #top-logo {
+            position: fixed;
+            top: 18px;
+            left: 20px;
+            z-index: 300;
+        }
+        #top-logo span {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        /* Step counter */
+        #step-counter {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 300;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: rgba(255,255,255,0.65);
+            letter-spacing: 0.05em;
+        }
+
+        /* Progress dots — desktop */
+        #progress-dots {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 200;
+        }
+        .dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            border: 1.5px solid rgba(255,255,255,0.5);
+            transition: background 0.3s, transform 0.3s;
+            cursor: pointer;
+        }
+        .dot.active { background: white; transform: scale(1.4); }
+
+        /* ── Angel ── */
+        #engel-wrap {
+            position: fixed;
+            top: 0; left: 0;
+            pointer-events: none;
+            will-change: transform;
+            z-index: 80;
+        }
+        model-viewer {
+            width: 150px;
+            height: 180px;
+            background: transparent !important;
+            --poster-color: transparent;
+        }
+
+        /* ── Nav buttons — large tap targets ── */
+        #nav-prev, #nav-next {
+            position: fixed;
+            left: 0; right: 0;
+            height: 88px;
+            z-index: 500;
+            cursor: pointer;
+            pointer-events: auto;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            background: transparent;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: rgba(255,255,255,0.75);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+        #nav-prev {
+            top: 0;
+            padding-top: 52px; /* below logo bar */
+        }
+        #nav-next {
+            bottom: 0;
+            padding-bottom: 20px;
+        }
+        #nav-prev .arrow { font-size: 1rem; }
+        #nav-next .arrow { font-size: 1rem; }
+
+        /* Subtle visual hint */
+        #nav-prev::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.06), transparent);
+            pointer-events: none;
+        }
+        #nav-next::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.06), transparent);
+            pointer-events: none;
+        }
+
+        /* Hide prev on first scene, next on last */
+        #nav-prev[disabled] { opacity: 0; pointer-events: none; }
+        #nav-next[disabled] { opacity: 0; pointer-events: none; }
+
+        /* ═══════════════════════════════
+           MOBILE
+           ═══════════════════════════════ */
+        @media (max-width: 600px) {
+            model-viewer { width: 90px; height: 110px; }
+
+            #scene-content {
+                padding: 56px 26px 28px;
+                justify-content: center;
+            }
+
+            #scene-headline {
+                font-size: clamp(2.4rem, 11vw, 3.4rem);
+                line-height: 1.02;
+                letter-spacing: -0.03em;
+            }
+            #scene-sub {
+                font-size: 0.9rem;
+                margin-top: 10px;
+                max-width: 280px;
+            }
+            #scene-step { font-size: 0.65rem; margin-bottom: 6px; }
+
+            #scene-speech {
+                margin-top: 20px;
+                font-size: 0.88rem;
+                padding: 12px 18px;
+                max-width: 300px;
+                border-radius: 14px;
+            }
+
+            #scene-icons { gap: 10px; margin-top: 14px; }
+            .icon-card .icon-circle { width: 50px; height: 50px; font-size: 1.25rem; }
+            .icon-card span { font-size: 0.65rem; }
+
+            #contact-form-wrap { max-width: 100%; margin-top: 12px; gap: 8px; }
+            #contact-form-wrap input { padding: 12px 14px; font-size: 0.9rem; }
+            #contact-form-wrap textarea { display: none; }
+            #contact-form-wrap button { padding: 13px; font-size: 0.9rem; }
+
+            /* Nav buttons larger on mobile */
+            #nav-prev, #nav-next { height: 72px; }
+            #nav-prev { padding-top: 46px; }
+            #nav-next { padding-bottom: 16px; }
+
+            #progress-dots { display: none; }
+            #top-logo span { font-size: 0.95rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="top-logo"><span>⚡ EnergyEngel</span></div>
+<div id="step-counter">1 / 11</div>
+<div id="progress-dots"></div>
+
+<!-- Full-width tap zones for navigation -->
+<button id="nav-prev" aria-label="Zurück">
+    <span class="arrow">▲</span>
+    <span>Zurück</span>
+</button>
+<button id="nav-next" aria-label="Weiter">
+    <span class="arrow">▼</span>
+    <span>Weiter</span>
+</button>
+
+<div id="stage">
+    <div id="scene-content">
+        <div id="scene-step"></div>
+        <h1 id="scene-headline"></h1>
+        <p id="scene-sub"></p>
+        <div id="scene-icons"></div>
+        <div id="scene-speech"></div>
+        <div id="contact-form-wrap">
+            <input type="text" placeholder="Dein Name">
+            <input type="email" placeholder="Deine E-Mail-Adresse">
+            <input type="tel" placeholder="Telefonnummer (optional)">
+            <textarea placeholder="Was beschäftigt dich? (optional)"></textarea>
+            <button type="button">Jetzt kostenlos beraten lassen ⚡</button>
+        </div>
+    </div>
+</div>
+
+<div id="engel-wrap">
+    <model-viewer
+        id="engel-viewer"
+        src="Meshy_AI_Electric_Sprite_0129232136_texture.glb"
+        camera-orbit="0deg 75deg 3.8m"
+        field-of-view="55deg"
+        min-field-of-view="55deg"
+        max-field-of-view="55deg"
+        shadow-intensity="0"
+        environment-image="neutral"
+        exposure="1.2"
+        style="background-color: transparent;"
+        autoplay
+    ></model-viewer>
+</div>
+
+<script>
+// ── Scenes ───────────────────────────────────────────────────────
+// Angel always in corners → center is always free for text
+const SCENES = [
+    {
+        bg: 'linear-gradient(135deg, #1e7b1f 0%, #004312 100%)',
+        txtColor: '#fff', step: '',
+        headline: 'Willkommen.',
+        sub: 'Dein persönlicher Energiemakler — kostenlos, unabhängig & aus Leipzig.',
+        speech: '👋 Hallo! Ich bin dein EnergyEngel — ich führe dich durch alles!',
+        angelX: 78, angelY: 8, depth: 'front',    // TOP-RIGHT
+    },
+    {
+        bg: 'linear-gradient(135deg, #004312 0%, #1e7b1f 100%)',
+        txtColor: '#fff', step: '',
+        headline: 'Erneuerbare\nEnergie.\nOhne Stress.',
+        sub: 'Ich bringe dich in die Energie von morgen — ehrlich & entspannt.',
+        speech: '⚡ Erneuerbarer Strom muss nicht kompliziert sein!',
+        angelX: 4, angelY: 8, depth: 'back',      // TOP-LEFT (kleiner)
+    },
+    {
+        bg: 'linear-gradient(135deg, #f3f8f0 0%, #d4edbb 100%)',
+        txtColor: '#004312', step: 'Das Problem',
+        headline: 'Zu\nviele\nOptionen?',
+        sub: 'Solar, Wärmepumpe, Speicher, Wallbox — wo fängst du überhaupt an?',
+        speech: '😵 Ich kenne das Gefühl. Deshalb bin ich hier!',
+        angelX: 4, angelY: 72, depth: 'front',    // BOTTOM-LEFT
+    },
+    {
+        bg: 'linear-gradient(135deg, #d4edbb 0%, #f3f8f0 100%)',
+        txtColor: '#004312', step: 'Das Problem',
+        headline: 'Förder-\ndschungel?',
+        sub: 'KfW, BAFA, Bundesländer — jeder hat andere Regeln. Wer blickt da noch durch?',
+        speech: '🌿 Ich kenne jeden Förderweg — und hole alles raus, was dir zusteht.',
+        angelX: 78, angelY: 72, depth: 'front',   // BOTTOM-RIGHT
+    },
+    {
+        bg: 'linear-gradient(135deg, #f3f8f0 0%, #e8f5e0 100%)',
+        txtColor: '#004312', step: 'Das Problem',
+        headline: 'Wem kannst\ndu\nvertrauen?',
+        sub: 'Hersteller wollen verkaufen. Ich nicht. Ich gehöre keinem — nur dir.',
+        speech: '🤝 Meine einzige Motivation: Das Beste für dich zu finden.',
+        angelX: 78, angelY: 8, depth: 'front',    // TOP-RIGHT
+    },
+    {
+        bg: 'linear-gradient(135deg, #0a5616 0%, #004312 100%)',
+        txtColor: '#fff', step: 'Die Lösung',
+        headline: 'Ich kümmere\nmich um\nalles.',
+        sub: 'Kostenlos. Herstellerunabhängig. Persönlich — in Leipzig & Umgebung.',
+        speech: '✅ Du lehnst dich zurück. Ich erledige den Rest.',
+        angelX: 47, angelY: 74, depth: 'front',   // BOTTOM-CENTER
+    },
+    {
+        bg: 'linear-gradient(135deg, #004312 0%, #0a5616 100%)',
+        txtColor: '#fff', step: 'Schritt 1',
+        headline: 'Du erzählst.\nIch\nhöre zu.',
+        sub: 'Wir sprechen über deine Situation, deine Wünsche, dein Zuhause.',
+        speech: '💬 Kein Fachkauderwelsch. Ich frage, ich höre zu — ganz einfach.',
+        angelX: 4, angelY: 72, depth: 'front',    // BOTTOM-LEFT
+    },
+    {
+        bg: 'linear-gradient(135deg, #0a5616 0%, #1e7b1f 100%)',
+        txtColor: '#fff', step: 'Schritt 2',
+        headline: 'Ich vergleiche\nalles\nfür dich.',
+        sub: 'Anbieter, Technologien, Preise — ich finde das beste Paket für dich.',
+        speech: '🔍 Hunderte Optionen — ich filtere auf die eine, die wirklich zu dir passt.',
+        angelX: 78, angelY: 8, depth: 'back',     // TOP-RIGHT (kleiner)
+    },
+    {
+        bg: 'linear-gradient(135deg, #1e7b1f 0%, #44a125 100%)',
+        txtColor: '#fff', step: 'Schritt 3',
+        headline: 'Ich kümmere\nmich um\nden Rest.',
+        sub: 'Förderanträge, Handwerker, Inbetriebnahme — alles aus einer Hand.',
+        speech: '🚀 Von der Planung bis zum grünen Strom — ich bin dabei!',
+        angelX: 4, angelY: 72, depth: 'front',    // BOTTOM-LEFT
+    },
+    {
+        bg: 'linear-gradient(135deg, #f3f8f0 0%, #d4edbb 100%)',
+        txtColor: '#004312', step: 'Leistungen',
+        headline: 'Alles aus\neiner\nHand.',
+        sub: '',
+        speech: '☀️ Solar, Wärme, Speicher, Wallbox — ich berate dich bei allem.',
+        angelX: 78, angelY: 8, depth: 'back',     // TOP-RIGHT (kleiner)
+        showIcons: true,
+    },
+    {
+        bg: 'linear-gradient(135deg, #004312 0%, #1e7b1f 50%, #004312 100%)',
+        txtColor: '#fff', step: '',
+        headline: 'Ich bin\nfür\ndich da.',
+        sub: '',
+        speech: '📞 Kostenlos anfragen — ich melde mich persönlich bei dir!',
+        angelX: 76, angelY: 70, depth: 'front',   // BOTTOM-RIGHT
+        showContact: true,
+    },
+];
+
+const ICONS = [
+    { emoji: '☀️', label: 'Photovoltaik' },
+    { emoji: '🌡️', label: 'Wärmepumpe' },
+    { emoji: '🔋', label: 'Stromspeicher' },
+    { emoji: '🚗', label: 'Wallbox' },
+];
+
+const N = SCENES.length;
+
+// Build progress dots (desktop)
+const dotsWrap = document.getElementById('progress-dots');
+for (let i = 0; i < N; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot';
+    d.addEventListener('click', () => goToScene(i));
+    dotsWrap.appendChild(d);
+}
+
+// ── Navigation ────────────────────────────────────────────────────
+let activeScene = 0;
+let isTransitioning = false;
+
+function goToScene(idx) {
+    idx = Math.max(0, Math.min(N - 1, idx));
+    if (idx === activeScene || isTransitioning) return;
+    isTransitioning = true;
+    activeScene = idx;
+    showScene(idx);
+    setTimeout(() => { isTransitioning = false; }, 320);
+}
+
+// Buttons — use pointerdown for instant response on mobile
+function onPrev(e) { e.preventDefault(); goToScene(activeScene - 1); }
+function onNext(e) { e.preventDefault(); goToScene(activeScene + 1); }
+
+document.getElementById('nav-prev').addEventListener('pointerdown', onPrev);
+document.getElementById('nav-next').addEventListener('pointerdown', onNext);
+
+// Keyboard
+document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') goToScene(activeScene + 1);
+    if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft')  goToScene(activeScene - 1);
+});
+
+// Swipe
+let touchStartY = 0, touchStartX = 0;
+document.addEventListener('touchstart', e => {
+    touchStartY = e.touches[0].clientY;
+    touchStartX = e.touches[0].clientX;
+}, { passive: true });
+document.addEventListener('touchend', e => {
+    const dy = touchStartY - e.changedTouches[0].clientY;
+    const dx = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 45) {
+        goToScene(activeScene + (dy > 0 ? 1 : -1));
+    }
+}, { passive: true });
+
+// ── DOM refs ─────────────────────────────────────────────────────
+const engelWrap    = document.getElementById('engel-wrap');
+const stage        = document.getElementById('stage');
+const headline     = document.getElementById('scene-headline');
+const sub          = document.getElementById('scene-sub');
+const iconsEl      = document.getElementById('scene-icons');
+const contactWrap  = document.getElementById('contact-form-wrap');
+const stepEl       = document.getElementById('scene-step');
+const sceneSpeech  = document.getElementById('scene-speech');
+const sceneContent = document.getElementById('scene-content');
+const stepCounter  = document.getElementById('step-counter');
+const navPrev      = document.getElementById('nav-prev');
+const navNext      = document.getElementById('nav-next');
+
+// ── Angel ─────────────────────────────────────────────────────────
+const isMobile = () => window.innerWidth <= 600;
+const engelW   = () => isMobile() ? 90 : 150;
+const engelH   = () => isMobile() ? 110 : 180;
+
+let wobbleT     = 0;
+let currentX    = window.innerWidth * 0.78;
+let currentY    = window.innerHeight * 0.06;
+let currentScale = 1.0;
+let currentOpacity = 1.0;
+let lerpBoost   = 0;
+let prevScene   = -1;
+
+function lerp(a, b, t) { return a + (b - a) * t; }
+
+// ── Scene transition ──────────────────────────────────────────────
+let sceneTimer = null;
+
+function showScene(idx) {
+    const sc = SCENES[idx];
+
+    stage.style.background = sc.bg;
+
+    // Fade out content
+    sceneContent.style.opacity   = '0';
+    sceneContent.style.transform = 'translateY(12px)';
+
+    if (sceneTimer) clearTimeout(sceneTimer);
+    sceneTimer = setTimeout(() => {
+        applyScene(sc, idx);
+        requestAnimationFrame(() => {
+            sceneContent.style.opacity   = '1';
+            sceneContent.style.transform = 'translateY(0)';
+        });
+    }, 55);
+}
+
+function applyScene(sc, idx) {
+    // Step label
+    stepEl.textContent  = sc.step || '';
+    stepEl.style.color  = sc.txtColor;
+    stepEl.style.opacity = sc.step ? '0.65' : '0';
+
+    // Headline
+    headline.style.color   = sc.txtColor;
+    headline.textContent   = sc.headline;
+
+    // Sub text
+    sub.style.color   = sc.txtColor;
+    sub.textContent   = sc.sub || '';
+    sub.style.display = sc.sub ? 'block' : 'none';
+
+    // Icons
+    iconsEl.innerHTML = '';
+    if (sc.showIcons) {
+        ICONS.forEach(ic => {
+            const card = document.createElement('div');
+            card.className = 'icon-card';
+            card.innerHTML = `<div class="icon-circle">${ic.emoji}</div><span style="color:${sc.txtColor}">${ic.label}</span>`;
+            iconsEl.appendChild(card);
+        });
+        iconsEl.style.display = 'flex';
+    } else {
+        iconsEl.style.display = 'none';
+    }
+
+    // Contact form
+    if (sc.showContact) {
+        contactWrap.style.display = 'flex';
+        contactWrap.querySelectorAll('input,textarea').forEach(el => { el.style.color = '#fff'; });
+    } else {
+        contactWrap.style.display = 'none';
+    }
+
+    // Speech bubble — always visible, fades in with content
+    sceneSpeech.textContent = sc.speech;
+
+    // Progress dots
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+
+    // Step counter
+    stepCounter.textContent = `${idx + 1} / ${N}`;
+
+    // Nav button states
+    navPrev.disabled = idx === 0;
+    navNext.disabled = idx === N - 1;
+
+    // Logo + counter color
+    const isLight = sc.txtColor !== '#fff';
+    document.querySelector('#top-logo span').style.color = isLight ? '#004312' : '#ffffff';
+    stepCounter.style.color = isLight ? 'rgba(0,67,18,0.55)' : 'rgba(255,255,255,0.65)';
+    navPrev.style.color = isLight ? 'rgba(0,67,18,0.5)' : 'rgba(255,255,255,0.7)';
+    navNext.style.color = isLight ? 'rgba(0,67,18,0.5)' : 'rgba(255,255,255,0.7)';
+}
+
+// ── RAF: smooth angel movement ─────────────────────────────────────
+function raf() {
+    const sc = SCENES[activeScene];
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const ew = engelW();
+    const eh = engelH();
+
+    // Scene changed → boost lerp
+    if (activeScene !== prevScene) {
+        prevScene = activeScene;
+        lerpBoost = 1;
+    }
+    lerpBoost *= 0.76;
+
+    const targetX = Math.max(4, Math.min(vw - ew - 4, (sc.angelX / 100) * vw - ew / 2));
+    const targetY = Math.max(4, Math.min(vh - eh - 4, (sc.angelY / 100) * vh - eh / 2));
+
+    // Wobble — big burst when changing scenes
+    wobbleT += 0.022;
+    const wobBurst = lerpBoost * (isMobile() ? 14 : 10);
+    const wobX = Math.sin(wobbleT * 1.3) * (4 + wobBurst);
+    const wobY = Math.sin(wobbleT * 0.9) * (6 + wobBurst * 0.6);
+
+    const speed = 0.05 + lerpBoost * 0.32;
+    currentX = lerp(currentX, targetX + wobX, speed);
+    currentY = lerp(currentY, targetY + wobY, speed);
+
+    // Depth: scale + opacity (always z-index 80 — always visible)
+    const tScale   = sc.depth === 'back' ? 0.55 : 1.0;
+    const tOpacity = sc.depth === 'back' ? 0.50 : 1.0;
+    currentScale   = lerp(currentScale,   tScale,   0.06);
+    currentOpacity = lerp(currentOpacity, tOpacity, 0.06);
+
+    engelWrap.style.transform = `translate(${currentX}px, ${currentY}px) scale(${currentScale})`;
+    engelWrap.style.opacity   = String(currentOpacity);
+
+    requestAnimationFrame(raf);
+}
+
+// ── Init ──────────────────────────────────────────────────────────
+stage.style.background = SCENES[0].bg;
+applyScene(SCENES[0], 0);
+requestAnimationFrame(raf);
+</script>
+</body>
+</html>
