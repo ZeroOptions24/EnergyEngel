@@ -38,7 +38,7 @@
             pointer-events: none;
         }
 
-        /* ── Centered content block ── */
+        /* ── Content centered — angel travels at far left/right edges ── */
         #scene-content {
             position: absolute;
             inset: 0;
@@ -46,11 +46,10 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            /* Top: logo bar. Bottom: none — bubble is inside */
-            padding: 70px 44px 32px;
+            padding: 70px 65px 36px;
             pointer-events: none;
             z-index: 20;
-            transition: opacity 0.22s ease, transform 0.28s cubic-bezier(0.22,1,0.36,1);
+            transition: opacity 0.38s ease, transform 0.48s cubic-bezier(0.22,1,0.36,1);
         }
 
         #scene-step {
@@ -216,13 +215,40 @@
         }
         .dot.active { background: white; transform: scale(1.4); }
 
-        /* ── Angel ── */
+        /* ── Background path SVG ── */
+        #path-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: visible;
+        }
+        #journey-full {
+            transition: stroke 0.65s ease;
+        }
+        #journey-progress {
+            transition: stroke-dashoffset 0.55s cubic-bezier(0.4,0,0.2,1), stroke 0.65s ease;
+        }
+        .waypoint-dot {
+            transition: fill 0.65s ease, r 0.3s ease;
+        }
+        #active-dot {
+            transition: cx 0.5s cubic-bezier(0.4,0,0.2,1),
+                        cy 0.5s cubic-bezier(0.4,0,0.2,1),
+                        fill 0.65s ease;
+        }
+
+        /* ── Angel — BEHIND text so it never blocks headlines ── */
         #engel-wrap {
             position: fixed;
             top: 0; left: 0;
             pointer-events: none;
             will-change: transform;
-            z-index: 80;
+            z-index: 15;   /* below #scene-content (z-index:20) */
+            width: 150px;
+            height: 180px;
         }
         model-viewer {
             width: 150px;
@@ -289,15 +315,16 @@
            MOBILE
            ═══════════════════════════════ */
         @media (max-width: 600px) {
-            model-viewer { width: 90px; height: 110px; }
+            model-viewer { width: 70px; height: 85px; }
+            #engel-wrap { width: 70px; height: 85px; }
 
             #scene-content {
-                padding: 56px 26px 28px;
                 justify-content: center;
+                padding: 60px 60px 80px;
             }
 
             #scene-headline {
-                font-size: clamp(2.4rem, 11vw, 3.4rem);
+                font-size: clamp(2.4rem, 11.5vw, 3.5rem);
                 line-height: 1.02;
                 letter-spacing: -0.03em;
             }
@@ -352,6 +379,34 @@
 </button>
 
 <div id="stage">
+    <!-- ── Background journey path ── -->
+    <svg id="path-bg" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <!-- Dashed full path: organic S-curve, full height top→bottom -->
+        <path id="journey-full"
+            d="M88,4 C96,12 0,9 5,14 C0,22 96,18 88,25 C96,33 0,29 5,36 C0,44 96,41 88,47 C96,54 0,51 5,57 C0,64 94,61 88,67 C94,73 2,72 5,75 C0,81 92,78 86,82 C90,86 4,86 8,88 C2,92 62,90 50,93"
+            fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="0.7"
+            stroke-dasharray="2 2.8" stroke-linecap="round"/>
+        <!-- Solid progress path -->
+        <path id="journey-progress"
+            d="M88,4 C96,12 0,9 5,14 C0,22 96,18 88,25 C96,33 0,29 5,36 C0,44 96,41 88,47 C96,54 0,51 5,57 C0,64 94,61 88,67 C94,73 2,72 5,75 C0,81 92,78 86,82 C90,86 4,86 8,88 C2,92 62,90 50,93"
+            fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.1"
+            stroke-linecap="round"/>
+        <!-- Waypoint dots at each scene stop -->
+        <circle class="waypoint-dot" cx="88" cy="4"  r="1.4" fill="rgba(255,255,255,0.18)"/>
+        <circle class="waypoint-dot" cx="5"  cy="14" r="1.4" fill="rgba(255,255,255,0.18)"/>
+        <circle class="waypoint-dot" cx="88" cy="25" r="1.4" fill="rgba(255,255,255,0.18)"/>
+        <circle class="waypoint-dot" cx="5"  cy="36" r="1.4" fill="rgba(255,255,255,0.18)"/>
+        <circle class="waypoint-dot" cx="88" cy="47" r="1.4" fill="rgba(255,255,255,0.18)"/>
+        <circle class="waypoint-dot" cx="5"  cy="57" r="1.4" fill="rgba(255,255,255,0.18)"/>
+        <circle class="waypoint-dot" cx="88" cy="67" r="1.4" fill="rgba(255,255,255,0.18)"/>
+        <circle class="waypoint-dot" cx="5"  cy="75" r="1.4" fill="rgba(255,255,255,0.18)"/>
+        <circle class="waypoint-dot" cx="86" cy="82" r="1.4" fill="rgba(255,255,255,0.18)"/>
+        <circle class="waypoint-dot" cx="8"  cy="88" r="1.4" fill="rgba(255,255,255,0.18)"/>
+        <circle class="waypoint-dot" cx="50" cy="93" r="1.4" fill="rgba(255,255,255,0.18)"/>
+        <!-- Active dot -->
+        <circle id="active-dot" cx="88" cy="4" r="2.6" fill="white" opacity="0.75"/>
+    </svg>
+
     <div id="scene-content">
         <div id="scene-step"></div>
         <h1 id="scene-headline"></h1>
@@ -387,95 +442,97 @@
 <script>
 // ── Scenes ───────────────────────────────────────────────────────
 // Angel always in corners → center is always free for text
+// Angel path: top (sky) → bottom (house with PV + heat pump)
+// Y increases scene by scene — clear downward journey
 const SCENES = [
-    {
-        bg: 'linear-gradient(135deg, #1e7b1f 0%, #004312 100%)',
-        txtColor: '#fff', step: '',
+    {   // 1 — fast weiß / neutrales Grau (konventionelle Energie)
+        bg: 'linear-gradient(160deg, #f5f4f0 0%, #eceae4 100%)',
+        txtColor: '#1a2e08', step: '',
         headline: 'Willkommen.',
         sub: 'Dein persönlicher Energiemakler — kostenlos, unabhängig & aus Leipzig.',
         speech: '👋 Hallo! Ich bin dein EnergyEngel — ich führe dich durch alles!',
-        angelX: 78, angelY: 8, depth: 'front',    // TOP-RIGHT
+        angelX: 88, angelY: 4,  depth: 'front',
     },
-    {
-        bg: 'linear-gradient(135deg, #004312 0%, #1e7b1f 100%)',
-        txtColor: '#fff', step: '',
+    {   // 2 — helles Grau-Grün
+        bg: 'linear-gradient(160deg, #eceae4 0%, #dfe5d4 100%)',
+        txtColor: '#1a2e08', step: '',
         headline: 'Erneuerbare\nEnergie.\nOhne Stress.',
         sub: 'Ich bringe dich in die Energie von morgen — ehrlich & entspannt.',
         speech: '⚡ Erneuerbarer Strom muss nicht kompliziert sein!',
-        angelX: 4, angelY: 8, depth: 'back',      // TOP-LEFT (kleiner)
+        angelX: 5,  angelY: 14, depth: 'front',
     },
-    {
-        bg: 'linear-gradient(135deg, #f3f8f0 0%, #d4edbb 100%)',
-        txtColor: '#004312', step: 'Das Problem',
+    {   // 3 — weiches Hellgrün
+        bg: 'linear-gradient(160deg, #dfe5d4 0%, #cddcb8 100%)',
+        txtColor: '#1a2e08', step: 'Das Problem',
         headline: 'Zu\nviele\nOptionen?',
         sub: 'Solar, Wärmepumpe, Speicher, Wallbox — wo fängst du überhaupt an?',
         speech: '😵 Ich kenne das Gefühl. Deshalb bin ich hier!',
-        angelX: 4, angelY: 72, depth: 'front',    // BOTTOM-LEFT
+        angelX: 88, angelY: 25, depth: 'front',
     },
-    {
-        bg: 'linear-gradient(135deg, #d4edbb 0%, #f3f8f0 100%)',
-        txtColor: '#004312', step: 'Das Problem',
+    {   // 4 — mittel-helles Grün
+        bg: 'linear-gradient(160deg, #cddcb8 0%, #b4cc96 100%)',
+        txtColor: '#1a2e08', step: 'Das Problem',
         headline: 'Förder-\ndschungel?',
         sub: 'KfW, BAFA, Bundesländer — jeder hat andere Regeln. Wer blickt da noch durch?',
         speech: '🌿 Ich kenne jeden Förderweg — und hole alles raus, was dir zusteht.',
-        angelX: 78, angelY: 72, depth: 'front',   // BOTTOM-RIGHT
+        angelX: 5,  angelY: 36, depth: 'front',
     },
-    {
-        bg: 'linear-gradient(135deg, #f3f8f0 0%, #e8f5e0 100%)',
-        txtColor: '#004312', step: 'Das Problem',
+    {   // 5 — mittleres Grün (Übergang)
+        bg: 'linear-gradient(160deg, #b4cc96 0%, #8fb86a 100%)',
+        txtColor: '#1a2e08', step: 'Das Problem',
         headline: 'Wem kannst\ndu\nvertrauen?',
         sub: 'Hersteller wollen verkaufen. Ich nicht. Ich gehöre keinem — nur dir.',
         speech: '🤝 Meine einzige Motivation: Das Beste für dich zu finden.',
-        angelX: 78, angelY: 8, depth: 'front',    // TOP-RIGHT
+        angelX: 88, angelY: 47, depth: 'front',
     },
-    {
-        bg: 'linear-gradient(135deg, #0a5616 0%, #004312 100%)',
+    {   // 6 — sattes Grün
+        bg: 'linear-gradient(160deg, #6aa040 0%, #4e8828 100%)',
         txtColor: '#fff', step: 'Die Lösung',
         headline: 'Ich kümmere\nmich um\nalles.',
         sub: 'Kostenlos. Herstellerunabhängig. Persönlich — in Leipzig & Umgebung.',
         speech: '✅ Du lehnst dich zurück. Ich erledige den Rest.',
-        angelX: 47, angelY: 74, depth: 'front',   // BOTTOM-CENTER
+        angelX: 5,  angelY: 57, depth: 'front',
     },
-    {
-        bg: 'linear-gradient(135deg, #004312 0%, #0a5616 100%)',
+    {   // 7 — dunkles Grün
+        bg: 'linear-gradient(160deg, #4e8828 0%, #326814 100%)',
         txtColor: '#fff', step: 'Schritt 1',
         headline: 'Du erzählst.\nIch\nhöre zu.',
         sub: 'Wir sprechen über deine Situation, deine Wünsche, dein Zuhause.',
         speech: '💬 Kein Fachkauderwelsch. Ich frage, ich höre zu — ganz einfach.',
-        angelX: 4, angelY: 72, depth: 'front',    // BOTTOM-LEFT
+        angelX: 88, angelY: 67, depth: 'front',
     },
-    {
-        bg: 'linear-gradient(135deg, #0a5616 0%, #1e7b1f 100%)',
+    {   // 8 — tiefes Grün
+        bg: 'linear-gradient(160deg, #326814 0%, #1e5008 100%)',
         txtColor: '#fff', step: 'Schritt 2',
         headline: 'Ich vergleiche\nalles\nfür dich.',
         sub: 'Anbieter, Technologien, Preise — ich finde das beste Paket für dich.',
         speech: '🔍 Hunderte Optionen — ich filtere auf die eine, die wirklich zu dir passt.',
-        angelX: 78, angelY: 8, depth: 'back',     // TOP-RIGHT (kleiner)
+        angelX: 5,  angelY: 75, depth: 'front',
     },
-    {
-        bg: 'linear-gradient(135deg, #1e7b1f 0%, #44a125 100%)',
+    {   // 9 — sehr dunkles Grün
+        bg: 'linear-gradient(160deg, #1e5008 0%, #113c04 100%)',
         txtColor: '#fff', step: 'Schritt 3',
         headline: 'Ich kümmere\nmich um\nden Rest.',
         sub: 'Förderanträge, Handwerker, Inbetriebnahme — alles aus einer Hand.',
         speech: '🚀 Von der Planung bis zum grünen Strom — ich bin dabei!',
-        angelX: 4, angelY: 72, depth: 'front',    // BOTTOM-LEFT
+        angelX: 86, angelY: 82, depth: 'front',
     },
-    {
-        bg: 'linear-gradient(135deg, #f3f8f0 0%, #d4edbb 100%)',
-        txtColor: '#004312', step: 'Leistungen',
+    {   // 10 — fast schwarz-grün
+        bg: 'linear-gradient(160deg, #113c04 0%, #0a2c02 100%)',
+        txtColor: '#fff', step: 'Leistungen',
         headline: 'Alles aus\neiner\nHand.',
         sub: '',
         speech: '☀️ Solar, Wärme, Speicher, Wallbox — ich berate dich bei allem.',
-        angelX: 78, angelY: 8, depth: 'back',     // TOP-RIGHT (kleiner)
+        angelX: 8,  angelY: 88, depth: 'front',
         showIcons: true,
     },
-    {
-        bg: 'linear-gradient(135deg, #004312 0%, #1e7b1f 50%, #004312 100%)',
+    {   // 11 — tiefstes Grün (Ziel erreicht)
+        bg: 'linear-gradient(160deg, #0a2c02 0%, #042000 100%)',
         txtColor: '#fff', step: '',
         headline: 'Ich bin\nfür\ndich da.',
         sub: '',
         speech: '📞 Kostenlos anfragen — ich melde mich persönlich bei dir!',
-        angelX: 76, angelY: 70, depth: 'front',   // BOTTOM-RIGHT
+        angelX: 50, angelY: 93, depth: 'front',
         showContact: true,
     },
 ];
@@ -502,43 +559,121 @@ for (let i = 0; i < N; i++) {
 let activeScene = 0;
 let isTransitioning = false;
 
-function goToScene(idx) {
+function goToScene(idx, dir) {
     idx = Math.max(0, Math.min(N - 1, idx));
     if (idx === activeScene || isTransitioning) return;
+    const direction = (dir !== undefined) ? dir : (idx > activeScene ? 1 : -1);
     isTransitioning = true;
     activeScene = idx;
-    showScene(idx);
-    setTimeout(() => { isTransitioning = false; }, 320);
+    showScene(idx, direction);
+    setTimeout(() => { isTransitioning = false; }, 560);
 }
 
-// Buttons — use pointerdown for instant response on mobile
-function onPrev(e) { e.preventDefault(); goToScene(activeScene - 1); }
-function onNext(e) { e.preventDefault(); goToScene(activeScene + 1); }
+// Buttons
+function onPrev(e) { e.preventDefault(); goToScene(activeScene - 1, -1); }
+function onNext(e) { e.preventDefault(); goToScene(activeScene + 1,  1); }
 
 document.getElementById('nav-prev').addEventListener('pointerdown', onPrev);
 document.getElementById('nav-next').addEventListener('pointerdown', onNext);
 
 // Keyboard
 document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') goToScene(activeScene + 1);
-    if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft')  goToScene(activeScene - 1);
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') goToScene(activeScene + 1,  1);
+    if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft')  goToScene(activeScene - 1, -1);
 });
 
-// Swipe
-let touchStartY = 0, touchStartX = 0;
+// ── Swipe with follow-through ─────────────────────────────────────
+let touchStartY = 0, touchStartX = 0, touchActive = false;
+
 document.addEventListener('touchstart', e => {
-    touchStartY = e.touches[0].clientY;
-    touchStartX = e.touches[0].clientX;
+    if (isTransitioning) return;
+    touchStartY  = e.touches[0].clientY;
+    touchStartX  = e.touches[0].clientX;
+    touchActive  = true;
+    // Pause CSS transition during drag
+    sceneContent.style.transition = 'none';
 }, { passive: true });
+
+document.addEventListener('touchmove', e => {
+    if (!touchActive || isTransitioning) return;
+    const dy = touchStartY - e.touches[0].clientY;
+    const dx = touchStartX - e.touches[0].clientX;
+    if (Math.abs(dy) < Math.abs(dx)) return;  // horizontal — ignore
+    // Drag content: follow finger, max ±90px, dampened
+    const drag = -Math.sign(dy) * Math.min(Math.abs(dy) * 0.45, 90);
+    sceneContent.style.transform = `translateY(${drag}px)`;
+    sceneContent.style.opacity   = String(Math.max(0.4, 1 - Math.abs(dy) / 260));
+}, { passive: true });
+
 document.addEventListener('touchend', e => {
+    if (!touchActive) return;
+    touchActive = false;
     const dy = touchStartY - e.changedTouches[0].clientY;
     const dx = touchStartX - e.changedTouches[0].clientX;
-    if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 45) {
-        goToScene(activeScene + (dy > 0 ? 1 : -1));
+    if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 55) {
+        // Enough swipe → trigger transition
+        goToScene(activeScene + (dy > 0 ? 1 : -1), dy > 0 ? 1 : -1);
+    } else {
+        // Snap back
+        sceneContent.style.transition = 'opacity 0.3s ease, transform 0.38s cubic-bezier(0.22,1,0.36,1)';
+        sceneContent.style.transform  = 'translateY(0)';
+        sceneContent.style.opacity    = '1';
     }
 }, { passive: true });
 
 // ── DOM refs ─────────────────────────────────────────────────────
+// ── Journey path ─────────────────────────────────────────────────
+const journeyFull     = document.getElementById('journey-full');
+const journeyProgress = document.getElementById('journey-progress');
+const activeDotEl     = document.getElementById('active-dot');
+const waypointDots    = document.querySelectorAll('.waypoint-dot');
+// Waypoint coordinates matching SCENES order
+const WAYPOINTS = [
+    {x:88,y:4},{x:5,y:14},{x:88,y:25},{x:5,y:36},{x:88,y:47},
+    {x:5,y:57},{x:88,y:67},{x:5,y:75},{x:86,y:82},{x:8,y:88},{x:50,y:93}
+];
+let pathTotalLength = 0;
+// Measure path length once rendered
+requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+        pathTotalLength = journeyFull.getTotalLength();
+        journeyProgress.style.strokeDasharray = pathTotalLength;
+        journeyProgress.style.strokeDashoffset = pathTotalLength; // start hidden
+        updateJourneyPath(0);
+    });
+});
+
+function updateJourneyPath(idx) {
+    if (!pathTotalLength) return;
+    const t = idx / (N - 1);
+    // Reveal path up to current position
+    journeyProgress.style.strokeDashoffset = pathTotalLength * (1 - t);
+    // Move glowing dot to current waypoint
+    const wp = WAYPOINTS[idx];
+    activeDotEl.setAttribute('cx', wp.x);
+    activeDotEl.setAttribute('cy', wp.y);
+    // Highlight passed waypoints
+    waypointDots.forEach((dot, i) => {
+        dot.setAttribute('fill', i <= idx
+            ? 'rgba(255,255,255,0.85)'
+            : 'rgba(255,255,255,0.25)');
+        dot.setAttribute('r', i === idx ? '2' : '1.4');
+    });
+}
+
+function updatePathColors(isLight) {
+    const dim      = isLight ? 'rgba(0,67,18,0.07)'  : 'rgba(255,255,255,0.07)';
+    const progress = isLight ? 'rgba(0,67,18,0.20)'  : 'rgba(255,255,255,0.22)';
+    const dotFill  = isLight ? 'rgba(0,67,18,0.18)'  : 'rgba(255,255,255,0.18)';
+    const active   = isLight ? 'rgba(0,67,18,0.55)'  : 'rgba(255,255,255,0.7)';
+    journeyFull.setAttribute('stroke', dim);
+    journeyProgress.setAttribute('stroke', progress);
+    activeDotEl.setAttribute('fill', active);
+    waypointDots.forEach(d => {
+        if (d.getAttribute('r') !== '2') d.setAttribute('fill', dotFill);
+    });
+}
+
 const engelWrap    = document.getElementById('engel-wrap');
 const stage        = document.getElementById('stage');
 const headline     = document.getElementById('scene-headline');
@@ -554,12 +689,12 @@ const navNext      = document.getElementById('nav-next');
 
 // ── Angel ─────────────────────────────────────────────────────────
 const isMobile = () => window.innerWidth <= 600;
-const engelW   = () => isMobile() ? 90 : 150;
-const engelH   = () => isMobile() ? 110 : 180;
+const engelW   = () => isMobile() ? 70 : 150;
+const engelH   = () => isMobile() ? 85 : 180;
 
 let wobbleT     = 0;
-let currentX    = window.innerWidth * 0.78;
-let currentY    = window.innerHeight * 0.06;
+let currentX    = window.innerWidth * 0.88;
+let currentY    = window.innerHeight * 0.04;
 let currentScale = 1.0;
 let currentOpacity = 1.0;
 let lerpBoost   = 0;
@@ -570,23 +705,33 @@ function lerp(a, b, t) { return a + (b - a) * t; }
 // ── Scene transition ──────────────────────────────────────────────
 let sceneTimer = null;
 
-function showScene(idx) {
-    const sc = SCENES[idx];
+// dir: +1 = forward (text slides up), -1 = backward (text slides down)
+function showScene(idx, dir) {
+    const outY = dir >= 0 ? '-55px' : '55px';   // current text exits
+    const inY  = dir >= 0 ?  '55px' : '-55px';  // new text enters from opposite
 
-    stage.style.background = sc.bg;
-
-    // Fade out content
+    // Slide current text out
+    sceneContent.style.transition = 'opacity 0.3s ease, transform 0.35s cubic-bezier(0.4,0,0.2,1)';
     sceneContent.style.opacity   = '0';
-    sceneContent.style.transform = 'translateY(12px)';
+    sceneContent.style.transform = `translateY(${outY})`;
+
+    stage.style.background = SCENES[idx].bg;
 
     if (sceneTimer) clearTimeout(sceneTimer);
     sceneTimer = setTimeout(() => {
-        applyScene(sc, idx);
-        requestAnimationFrame(() => {
-            sceneContent.style.opacity   = '1';
-            sceneContent.style.transform = 'translateY(0)';
-        });
-    }, 55);
+        applyScene(SCENES[idx], idx);
+
+        // Position entry state (below/above) — no transition
+        sceneContent.style.transition = 'none';
+        sceneContent.style.opacity    = '0';
+        sceneContent.style.transform  = `translateY(${inY})`;
+
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            sceneContent.style.transition = 'opacity 0.42s ease, transform 0.52s cubic-bezier(0.22,1,0.36,1)';
+            sceneContent.style.opacity    = '1';
+            sceneContent.style.transform  = 'translateY(0)';
+        }));
+    }, 200);
 }
 
 function applyScene(sc, idx) {
@@ -629,6 +774,11 @@ function applyScene(sc, idx) {
     // Speech bubble — always visible, fades in with content
     sceneSpeech.textContent = sc.speech;
 
+    // Journey path
+    const isLight = sc.txtColor !== '#fff';
+    updateJourneyPath(idx);
+    updatePathColors(isLight);
+
     // Progress dots
     document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === idx));
 
@@ -640,7 +790,6 @@ function applyScene(sc, idx) {
     navNext.disabled = idx === N - 1;
 
     // Logo + counter color
-    const isLight = sc.txtColor !== '#fff';
     document.querySelector('#top-logo span').style.color = isLight ? '#004312' : '#ffffff';
     stepCounter.style.color = isLight ? 'rgba(0,67,18,0.55)' : 'rgba(255,255,255,0.65)';
     navPrev.style.color = isLight ? 'rgba(0,67,18,0.5)' : 'rgba(255,255,255,0.7)';
@@ -675,17 +824,12 @@ function raf() {
     currentX = lerp(currentX, targetX + wobX, speed);
     currentY = lerp(currentY, targetY + wobY, speed);
 
-    // Depth: scale + opacity (always z-index 80 — always visible)
-    const tScale   = sc.depth === 'back' ? 0.55 : 1.0;
-    const tOpacity = sc.depth === 'back' ? 0.50 : 1.0;
-    currentScale   = lerp(currentScale,   tScale,   0.06);
-    currentOpacity = lerp(currentOpacity, tOpacity, 0.06);
-
-    engelWrap.style.transform = `translate(${currentX}px, ${currentY}px) scale(${currentScale})`;
-    engelWrap.style.opacity   = String(currentOpacity);
+    engelWrap.style.transform = `translate(${currentX}px, ${currentY}px)`;
+    engelWrap.style.opacity   = '1';
 
     requestAnimationFrame(raf);
 }
+
 
 // ── Init ──────────────────────────────────────────────────────────
 stage.style.background = SCENES[0].bg;
