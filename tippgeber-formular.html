@@ -67,6 +67,25 @@
     display: block;
   }
 
+  .logo-partner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .logo-divider {
+    width: 1px;
+    height: 28px;
+    background: rgba(255,255,255,0.35);
+  }
+
+  .partner-logo-img {
+    height: 38px;
+    width: auto;
+    display: block;
+    border-radius: 6px;
+  }
+
   .logo-fallback {
     display: none;
     align-items: center;
@@ -555,23 +574,22 @@
 
 <!-- HEADER -->
 <header>
-  <a class="logo" href="#">
-    <!--
-      LOGO: src-Wert mit dem tatsächlichen Pfad ersetzen.
-      Beispiel: src="./assets/logo-energyengel.svg"
-      Der Fallback-Block wird automatisch eingeblendet, wenn das Bild nicht geladen werden kann.
-    -->
-    <img
-      class="logo-img"
-      src="LOGO_PLATZHALTER.png"
-      alt="EnergyEngel"
-      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-    >
-    <div class="logo-fallback">
-      <div class="logo-icon-box">🌿</div>
-      <div class="logo-wordmark">Energy<em>Engel</em></div>
-    </div>
-  </a>
+  <div class="logo-partner">
+    <a class="logo" href="#">
+      <img
+        class="logo-img"
+        src="https://energyengel.de/wp-content/uploads/2025/10/GRUEN_EnergyEngel_Logo.jpeg"
+        alt="EnergyEngel"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+      >
+      <div class="logo-fallback">
+        <div class="logo-icon-box">🌿</div>
+        <div class="logo-wordmark">Energy<em>Engel</em></div>
+      </div>
+    </a>
+    <div class="logo-divider"></div>
+    <img class="partner-logo-img" src="Bildschirm_foto_2026-01-30_um_12.35.36-removebg-preview.png" alt="Formaxx">
+  </div>
   <div class="header-badge">Tippgeber Portal</div>
 </header>
 <div class="page-stripe"></div>
