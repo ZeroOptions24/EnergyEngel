@@ -510,7 +510,7 @@ const SCENES = [
         headline: 'Erneuerbare\nEnergie.\nOhne Stress.',
         sub: 'Ich bringe dich in die Energie von morgen — ehrlich & entspannt.',
         speech: '⚡ Erneuerbarer Strom muss nicht kompliziert sein!',
-        angelX: 50, angelY: 68, mascot: true,
+        angelX: 88, angelY: 5,
     },
     {   // 2 — weiches Hellgrün
         bg: 'linear-gradient(160deg, #dfe5d4 0%, #cddcb8 100%)',
@@ -596,7 +596,7 @@ let isTransitioning = false;
 
 function goToScene(idx, dir) {
     idx = Math.max(0, Math.min(N - 1, idx));
-    if (idx === activeScene || isTransitioning) return;
+    if (idx === activeScene || isTransitioning || introPhase) return;
     const direction = (dir !== undefined) ? dir : (idx > activeScene ? 1 : -1);
     isTransitioning = true;
     activeScene = idx;
@@ -745,16 +745,19 @@ const navNext      = document.getElementById('nav-next');
 
 // ── Angel ─────────────────────────────────────────────────────────
 const isMobile  = () => window.innerWidth <= 600;
-const engelW    = () => isMobile() ? 70 : 150;
-const engelH    = () => isMobile() ? 85 : 180;
+const engelW    = () => isMobile() ? 70  : 150;
+const engelH    = () => isMobile() ? 85  : 180;
 const mascotW   = () => isMobile() ? 145 : 240;
 const mascotH   = () => isMobile() ? 182 : 300;
+const introW    = () => Math.min(window.innerWidth  * 0.72, 380);
+const introH    = () => introW() * 1.22;
 
+let introPhase  = true;   // true while the opening animation runs
 let wobbleT     = 0;
-let currentX    = window.innerWidth  * 0.5 - mascotW() / 2;
-let currentY    = window.innerHeight * 0.68 - mascotH() / 2;
-let currentW    = mascotW();
-let currentH    = mascotH();
+let currentW    = introW();
+let currentH    = introH();
+let currentX    = window.innerWidth  / 2 - currentW / 2;
+let currentY    = window.innerHeight / 2 - currentH / 2;
 let lerpBoost   = 0;
 let prevScene   = -1;
 
@@ -855,40 +858,47 @@ function applyScene(sc, idx) {
 // ── RAF: smooth angel movement ─────────────────────────────────────
 const engelViewer = document.getElementById('engel-viewer');
 function raf() {
-    const sc      = SCENES[activeScene];
-    const vw      = window.innerWidth;
-    const vh      = window.innerHeight;
-    const isMasc  = !!sc.mascot;
+    const sc  = SCENES[activeScene];
+    const vw  = window.innerWidth;
+    const vh  = window.innerHeight;
+    const isMasc = !!sc.mascot && !introPhase;
 
-    // Scene changed → boost lerp
-    if (activeScene !== prevScene) {
-        prevScene = activeScene;
-        lerpBoost = 1;
-    }
+    if (activeScene !== prevScene) { prevScene = activeScene; lerpBoost = 1; }
     lerpBoost *= 0.76;
 
-    // Target size: large mascot on scene 0 & last, small on path scenes
-    const tW = isMasc ? mascotW() : engelW();
-    const tH = isMasc ? mascotH() : engelH();
-    const sizeSpeed = 0.06 + lerpBoost * 0.18;
+    // ── Target size ──
+    let tW, tH;
+    if      (introPhase) { tW = introW(); tH = introH(); }
+    else if (isMasc)     { tW = mascotW(); tH = mascotH(); }
+    else                 { tW = engelW();  tH = engelH(); }
+
+    const sizeSpeed = introPhase ? 0.06 : (0.06 + lerpBoost * 0.18);
     currentW = lerp(currentW, tW, sizeSpeed);
     currentH = lerp(currentH, tH, sizeSpeed);
-    engelWrap.style.width  = currentW + 'px';
-    engelWrap.style.height = currentH + 'px';
+    engelWrap.style.width    = currentW + 'px';
+    engelWrap.style.height   = currentH + 'px';
     engelViewer.style.width  = currentW + 'px';
     engelViewer.style.height = currentH + 'px';
 
-    const targetX = Math.max(4, Math.min(vw - currentW - 4, (sc.angelX / 100) * vw - currentW / 2));
-    const targetY = Math.max(4, Math.min(vh - currentH - 4, (sc.angelY / 100) * vh - currentH / 2));
+    // ── Target position ──
+    let targetX, targetY;
+    if (introPhase) {
+        // Hover in the center of the screen
+        targetX = vw / 2 - currentW / 2;
+        targetY = vh / 2 - currentH / 2;
+    } else {
+        targetX = Math.max(4, Math.min(vw - currentW - 4, (sc.angelX / 100) * vw - currentW / 2));
+        targetY = Math.max(4, Math.min(vh - currentH - 4, (sc.angelY / 100) * vh - currentH / 2));
+    }
 
-    // Wobble — gentle breathing for mascot, lively burst for path travel
+    // ── Wobble ──
     wobbleT += 0.022;
     const wobBurst = lerpBoost * (isMobile() ? 14 : 10);
-    const wobAmp   = isMasc ? 3 : (4 + wobBurst);
-    const wobX = Math.sin(wobbleT * 1.3) * wobAmp;
-    const wobY = Math.sin(wobbleT * 0.9) * wobAmp * 0.8;
+    const wobAmp   = introPhase ? 7 : (isMasc ? 3 : (4 + wobBurst));
+    const wobX = Math.sin(wobbleT * 1.1) * wobAmp;
+    const wobY = Math.sin(wobbleT * 0.7) * wobAmp;
 
-    const speed = 0.05 + lerpBoost * 0.32;
+    const speed = introPhase ? 0.04 : (0.05 + lerpBoost * 0.32);
     currentX = lerp(currentX, targetX + wobX, speed);
     currentY = lerp(currentY, targetY + wobY, speed);
 
@@ -898,11 +908,31 @@ function raf() {
     requestAnimationFrame(raf);
 }
 
-
 // ── Init ──────────────────────────────────────────────────────────
 stage.style.background = SCENES[0].bg;
 applyScene(SCENES[0], 0);
+
+// Hide content while angel does its opening flight
+sceneContent.style.opacity    = '0';
+sceneContent.style.transition = 'none';
+// Disable nav during intro
+navPrev.disabled = true;
+navNext.disabled = true;
+
 requestAnimationFrame(raf);
+
+// After 1.4 s: angel flies to corner, then content fades in
+setTimeout(() => {
+    introPhase = false;
+    lerpBoost  = 1.5;   // boost for dramatic acceleration to corner
+    navPrev.disabled = true;  // still scene 0
+    navNext.disabled = false;
+    // Text slides in shortly after angel starts moving
+    setTimeout(() => {
+        sceneContent.style.transition = 'opacity 0.8s ease';
+        sceneContent.style.opacity    = '1';
+    }, 350);
+}, 1400);
 </script>
 </body>
 </html>
