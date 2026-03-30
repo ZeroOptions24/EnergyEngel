@@ -124,6 +124,41 @@
         }
         .icon-card span { font-size: 0.82rem; font-weight: 600; text-align: center; }
 
+        /* ── Product selection buttons ── */
+        #product-buttons {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            max-width: 300px;
+            margin-top: 18px;
+            pointer-events: auto;
+        }
+        .product-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            border-radius: 14px;
+            border: 2px solid rgba(255,255,255,0.22);
+            background: rgba(255,255,255,0.10);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.92rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.18s, border-color 0.18s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .product-btn:hover,
+        .product-btn:active {
+            background: rgba(255,255,255,0.20);
+            border-color: rgba(255,255,255,0.45);
+        }
+        .product-btn .btn-icon { font-size: 1.3rem; }
+        .product-btn .btn-arrow { margin-left: auto; opacity: 0.55; font-size: 1rem; }
+
         /* Contact form */
         #contact-form-wrap {
             display: none;
@@ -155,6 +190,8 @@
         #contact-form-wrap input,
         #contact-form-wrap textarea,
         #contact-form-wrap button { pointer-events: auto; }
+        #product-buttons,
+        #product-buttons .product-btn { pointer-events: auto; }
 
         #contact-form-wrap button {
             padding: 16px;
@@ -250,6 +287,8 @@
             width: 150px;
             height: 180px;
         }
+                model-viewer::part(default-progress-bar) { display: none; }
+        model-viewer::part(default-poster) { opacity: 0; }
         model-viewer {
             width: 150px;
             height: 180px;
@@ -381,30 +420,27 @@
 <div id="stage">
     <!-- ── Background journey path ── -->
     <svg id="path-bg" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <!-- Dashed full path: organic S-curve, full height top→bottom -->
+        <!-- Dashed full path: 8 waypoints, playful varied curves -->
         <path id="journey-full"
-            d="M88,4 C96,12 0,9 5,14 C0,22 96,18 88,25 C96,33 0,29 5,36 C0,44 96,41 88,47 C96,54 0,51 5,57 C0,64 94,61 88,67 C94,73 2,72 5,75 C0,81 92,78 86,82 C90,86 4,86 8,88 C2,92 62,90 50,93"
+            d="M88,5 C112,-3 -14,15 5,19 C12,28 80,26 88,32 C106,22 -10,50 5,45 C-4,48 96,52 88,58 C110,50 -10,68 5,70 C-2,68 104,76 86,82 C80,92 22,92 50,93"
             fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="0.7"
             stroke-dasharray="2 2.8" stroke-linecap="round"/>
         <!-- Solid progress path -->
         <path id="journey-progress"
-            d="M88,4 C96,12 0,9 5,14 C0,22 96,18 88,25 C96,33 0,29 5,36 C0,44 96,41 88,47 C96,54 0,51 5,57 C0,64 94,61 88,67 C94,73 2,72 5,75 C0,81 92,78 86,82 C90,86 4,86 8,88 C2,92 62,90 50,93"
+            d="M88,5 C112,-3 -14,15 5,19 C12,28 80,26 88,32 C106,22 -10,50 5,45 C-4,48 96,52 88,58 C110,50 -10,68 5,70 C-2,68 104,76 86,82 C80,92 22,92 50,93"
             fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.1"
             stroke-linecap="round"/>
-        <!-- Waypoint dots at each scene stop -->
-        <circle class="waypoint-dot" cx="88" cy="4"  r="1.4" fill="rgba(255,255,255,0.18)"/>
-        <circle class="waypoint-dot" cx="5"  cy="14" r="1.4" fill="rgba(255,255,255,0.18)"/>
-        <circle class="waypoint-dot" cx="88" cy="25" r="1.4" fill="rgba(255,255,255,0.18)"/>
-        <circle class="waypoint-dot" cx="5"  cy="36" r="1.4" fill="rgba(255,255,255,0.18)"/>
-        <circle class="waypoint-dot" cx="88" cy="47" r="1.4" fill="rgba(255,255,255,0.18)"/>
-        <circle class="waypoint-dot" cx="5"  cy="57" r="1.4" fill="rgba(255,255,255,0.18)"/>
-        <circle class="waypoint-dot" cx="88" cy="67" r="1.4" fill="rgba(255,255,255,0.18)"/>
-        <circle class="waypoint-dot" cx="5"  cy="75" r="1.4" fill="rgba(255,255,255,0.18)"/>
+        <!-- Waypoint dots — 8 scenes -->
+        <circle class="waypoint-dot" cx="88" cy="5"  r="1.4" fill="rgba(255,255,255,0.18)"/>
+        <circle class="waypoint-dot" cx="5"  cy="19" r="1.4" fill="rgba(255,255,255,0.18)"/>
+        <circle class="waypoint-dot" cx="88" cy="32" r="1.4" fill="rgba(255,255,255,0.18)"/>
+        <circle class="waypoint-dot" cx="5"  cy="45" r="1.4" fill="rgba(255,255,255,0.18)"/>
+        <circle class="waypoint-dot" cx="88" cy="58" r="1.4" fill="rgba(255,255,255,0.18)"/>
+        <circle class="waypoint-dot" cx="5"  cy="70" r="1.4" fill="rgba(255,255,255,0.18)"/>
         <circle class="waypoint-dot" cx="86" cy="82" r="1.4" fill="rgba(255,255,255,0.18)"/>
-        <circle class="waypoint-dot" cx="8"  cy="88" r="1.4" fill="rgba(255,255,255,0.18)"/>
         <circle class="waypoint-dot" cx="50" cy="93" r="1.4" fill="rgba(255,255,255,0.18)"/>
         <!-- Active dot -->
-        <circle id="active-dot" cx="88" cy="4" r="2.6" fill="white" opacity="0.75"/>
+        <circle id="active-dot" cx="88" cy="5" r="2.6" fill="white" opacity="0.75"/>
     </svg>
 
     <div id="scene-content">
@@ -413,6 +449,28 @@
         <p id="scene-sub"></p>
         <div id="scene-icons"></div>
         <div id="scene-speech"></div>
+        <div id="product-buttons">
+            <a href="energyengel-pv.html" class="product-btn">
+                <span class="btn-icon">☀️</span>
+                <span>Photovoltaik</span>
+                <span class="btn-arrow">→</span>
+            </a>
+            <a href="energyengel-waermepumpe.html" class="product-btn">
+                <span class="btn-icon">🌡️</span>
+                <span>Wärmepumpe</span>
+                <span class="btn-arrow">→</span>
+            </a>
+            <a href="energyengel-strom-gas.html" class="product-btn">
+                <span class="btn-icon">⚡</span>
+                <span>Strom &amp; Gas Vergleich</span>
+                <span class="btn-arrow">→</span>
+            </a>
+            <a href="energyengel-komplett.html" class="product-btn">
+                <span class="btn-icon">🏠</span>
+                <span>Komplettlösung</span>
+                <span class="btn-arrow">→</span>
+            </a>
+        </div>
         <div id="contact-form-wrap">
             <input type="text" placeholder="Dein Name">
             <input type="email" placeholder="Deine E-Mail-Adresse">
@@ -426,7 +484,7 @@
 <div id="engel-wrap">
     <model-viewer
         id="engel-viewer"
-        src="Meshy_AI_Electric_Sprite_0129232136_texture.glb"
+        src="engel_compressed.glb"
         camera-orbit="0deg 75deg 3.8m"
         field-of-view="55deg"
         min-field-of-view="55deg"
@@ -435,6 +493,7 @@
         environment-image="neutral"
         exposure="1.2"
         style="background-color: transparent;"
+        loading="eager"
         autoplay
     ></model-viewer>
 </div>
@@ -445,94 +504,70 @@
 // Angel path: top (sky) → bottom (house with PV + heat pump)
 // Y increases scene by scene — clear downward journey
 const SCENES = [
-    {   // 1 — fast weiß / neutrales Grau (konventionelle Energie)
-        bg: 'linear-gradient(160deg, #f5f4f0 0%, #eceae4 100%)',
-        txtColor: '#1a2e08', step: '',
-        headline: 'Willkommen.',
-        sub: 'Dein persönlicher Energiemakler — kostenlos, unabhängig & aus Leipzig.',
-        speech: '👋 Hallo! Ich bin dein EnergyEngel — ich führe dich durch alles!',
-        angelX: 88, angelY: 4,  depth: 'front',
-    },
-    {   // 2 — helles Grau-Grün
+    {   // 1 — helles Grau-Grün (Start)
         bg: 'linear-gradient(160deg, #eceae4 0%, #dfe5d4 100%)',
         txtColor: '#1a2e08', step: '',
         headline: 'Erneuerbare\nEnergie.\nOhne Stress.',
         sub: 'Ich bringe dich in die Energie von morgen — ehrlich & entspannt.',
         speech: '⚡ Erneuerbarer Strom muss nicht kompliziert sein!',
-        angelX: 5,  angelY: 14, depth: 'front',
+        angelX: 50, angelY: 68, mascot: true,
     },
-    {   // 3 — weiches Hellgrün
+    {   // 2 — weiches Hellgrün
         bg: 'linear-gradient(160deg, #dfe5d4 0%, #cddcb8 100%)',
         txtColor: '#1a2e08', step: 'Das Problem',
         headline: 'Zu\nviele\nOptionen?',
         sub: 'Solar, Wärmepumpe, Speicher, Wallbox — wo fängst du überhaupt an?',
         speech: '😵 Ich kenne das Gefühl. Deshalb bin ich hier!',
-        angelX: 88, angelY: 25, depth: 'front',
+        angelX: 5, angelY: 19,
     },
-    {   // 4 — mittel-helles Grün
+    {   // 3 — mittel-helles Grün
         bg: 'linear-gradient(160deg, #cddcb8 0%, #b4cc96 100%)',
         txtColor: '#1a2e08', step: 'Das Problem',
         headline: 'Förder-\ndschungel?',
         sub: 'KfW, BAFA, Bundesländer — jeder hat andere Regeln. Wer blickt da noch durch?',
         speech: '🌿 Ich kenne jeden Förderweg — und hole alles raus, was dir zusteht.',
-        angelX: 5,  angelY: 36, depth: 'front',
+        angelX: 88, angelY: 32,
     },
-    {   // 5 — mittleres Grün (Übergang)
+    {   // 4 — mittleres Grün
         bg: 'linear-gradient(160deg, #b4cc96 0%, #8fb86a 100%)',
         txtColor: '#1a2e08', step: 'Das Problem',
         headline: 'Wem kannst\ndu\nvertrauen?',
         sub: 'Hersteller wollen verkaufen. Ich nicht. Ich gehöre keinem — nur dir.',
         speech: '🤝 Meine einzige Motivation: Das Beste für dich zu finden.',
-        angelX: 88, angelY: 47, depth: 'front',
+        angelX: 5, angelY: 45,
     },
-    {   // 6 — sattes Grün
-        bg: 'linear-gradient(160deg, #6aa040 0%, #4e8828 100%)',
-        txtColor: '#fff', step: 'Die Lösung',
-        headline: 'Ich kümmere\nmich um\nalles.',
-        sub: 'Kostenlos. Herstellerunabhängig. Persönlich — in Leipzig & Umgebung.',
-        speech: '✅ Du lehnst dich zurück. Ich erledige den Rest.',
-        angelX: 5,  angelY: 57, depth: 'front',
-    },
-    {   // 7 — dunkles Grün
-        bg: 'linear-gradient(160deg, #4e8828 0%, #326814 100%)',
+    {   // 5 — dunkles Grün
+        bg: 'linear-gradient(160deg, #6aa040 0%, #326814 100%)',
         txtColor: '#fff', step: 'Schritt 1',
         headline: 'Du erzählst.\nIch\nhöre zu.',
         sub: 'Wir sprechen über deine Situation, deine Wünsche, dein Zuhause.',
         speech: '💬 Kein Fachkauderwelsch. Ich frage, ich höre zu — ganz einfach.',
-        angelX: 88, angelY: 67, depth: 'front',
+        angelX: 88, angelY: 58,
     },
-    {   // 8 — tiefes Grün
+    {   // 6 — tiefes Grün
         bg: 'linear-gradient(160deg, #326814 0%, #1e5008 100%)',
         txtColor: '#fff', step: 'Schritt 2',
         headline: 'Ich vergleiche\nalles\nfür dich.',
         sub: 'Anbieter, Technologien, Preise — ich finde das beste Paket für dich.',
         speech: '🔍 Hunderte Optionen — ich filtere auf die eine, die wirklich zu dir passt.',
-        angelX: 5,  angelY: 75, depth: 'front',
+        angelX: 5, angelY: 70,
     },
-    {   // 9 — sehr dunkles Grün
-        bg: 'linear-gradient(160deg, #1e5008 0%, #113c04 100%)',
-        txtColor: '#fff', step: 'Schritt 3',
-        headline: 'Ich kümmere\nmich um\nden Rest.',
-        sub: 'Förderanträge, Handwerker, Inbetriebnahme — alles aus einer Hand.',
-        speech: '🚀 Von der Planung bis zum grünen Strom — ich bin dabei!',
-        angelX: 86, angelY: 82, depth: 'front',
-    },
-    {   // 10 — fast schwarz-grün
+    {   // 7 — sehr dunkles Grün — Produktauswahl
         bg: 'linear-gradient(160deg, #113c04 0%, #0a2c02 100%)',
-        txtColor: '#fff', step: 'Leistungen',
-        headline: 'Alles aus\neiner\nHand.',
+        txtColor: '#fff', step: 'Was interessiert dich?',
+        headline: 'Wähle\ndein\nThema.',
         sub: '',
-        speech: '☀️ Solar, Wärme, Speicher, Wallbox — ich berate dich bei allem.',
-        angelX: 8,  angelY: 88, depth: 'front',
-        showIcons: true,
+        speech: '👇 Tippe auf das Thema, das zu dir passt!',
+        angelX: 86, angelY: 82,
+        showProducts: true,
     },
-    {   // 11 — tiefstes Grün (Ziel erreicht)
-        bg: 'linear-gradient(160deg, #0a2c02 0%, #042000 100%)',
-        txtColor: '#fff', step: '',
+    {   // 8 — zurück zum hellen Anfang (Ziel erreicht)
+        bg: 'linear-gradient(160deg, #eceae4 0%, #dfe5d4 100%)',
+        txtColor: '#1a2e08', step: '',
         headline: 'Ich bin\nfür\ndich da.',
         sub: '',
         speech: '📞 Kostenlos anfragen — ich melde mich persönlich bei dir!',
-        angelX: 50, angelY: 93, depth: 'front',
+        angelX: 50, angelY: 68, mascot: true,
         showContact: true,
     },
 ];
@@ -629,25 +664,46 @@ const activeDotEl     = document.getElementById('active-dot');
 const waypointDots    = document.querySelectorAll('.waypoint-dot');
 // Waypoint coordinates matching SCENES order
 const WAYPOINTS = [
-    {x:88,y:4},{x:5,y:14},{x:88,y:25},{x:5,y:36},{x:88,y:47},
-    {x:5,y:57},{x:88,y:67},{x:5,y:75},{x:86,y:82},{x:8,y:88},{x:50,y:93}
+    {x:88,y:5},{x:5,y:19},{x:88,y:32},{x:5,y:45},
+    {x:88,y:58},{x:5,y:70},{x:86,y:82},{x:50,y:93}
 ];
 let pathTotalLength = 0;
-// Measure path length once rendered
+let waypointLengths = []; // arc-length along path for each waypoint
+
+// Measure path length + find exact arc-length position of each waypoint
 requestAnimationFrame(() => {
     requestAnimationFrame(() => {
         pathTotalLength = journeyFull.getTotalLength();
-        journeyProgress.style.strokeDasharray = pathTotalLength;
+        journeyProgress.style.strokeDasharray  = pathTotalLength;
         journeyProgress.style.strokeDashoffset = pathTotalLength; // start hidden
+
+        // Sample path at 3000 points, find closest point to each waypoint
+        const SAMPLES = 3000;
+        waypointLengths = WAYPOINTS.map(wp => {
+            let bestDist = Infinity;
+            let bestLen  = 0;
+            for (let i = 0; i <= SAMPLES; i++) {
+                const len = (i / SAMPLES) * pathTotalLength;
+                const pt  = journeyFull.getPointAtLength(len);
+                const dx  = pt.x - wp.x;
+                const dy  = pt.y - wp.y;
+                const d2  = dx * dx + dy * dy;
+                if (d2 < bestDist) { bestDist = d2; bestLen = len; }
+            }
+            return bestLen;
+        });
+
         updateJourneyPath(0);
     });
 });
 
 function updateJourneyPath(idx) {
     if (!pathTotalLength) return;
-    const t = idx / (N - 1);
-    // Reveal path up to current position
-    journeyProgress.style.strokeDashoffset = pathTotalLength * (1 - t);
+    // Use pre-calculated arc-length so progress dot lands exactly on waypoint
+    const len = waypointLengths.length > idx
+        ? waypointLengths[idx]
+        : pathTotalLength * idx / (N - 1);
+    journeyProgress.style.strokeDashoffset = pathTotalLength - len;
     // Move glowing dot to current waypoint
     const wp = WAYPOINTS[idx];
     activeDotEl.setAttribute('cx', wp.x);
@@ -688,15 +744,17 @@ const navPrev      = document.getElementById('nav-prev');
 const navNext      = document.getElementById('nav-next');
 
 // ── Angel ─────────────────────────────────────────────────────────
-const isMobile = () => window.innerWidth <= 600;
-const engelW   = () => isMobile() ? 70 : 150;
-const engelH   = () => isMobile() ? 85 : 180;
+const isMobile  = () => window.innerWidth <= 600;
+const engelW    = () => isMobile() ? 70 : 150;
+const engelH    = () => isMobile() ? 85 : 180;
+const mascotW   = () => isMobile() ? 145 : 240;
+const mascotH   = () => isMobile() ? 182 : 300;
 
 let wobbleT     = 0;
-let currentX    = window.innerWidth * 0.88;
-let currentY    = window.innerHeight * 0.04;
-let currentScale = 1.0;
-let currentOpacity = 1.0;
+let currentX    = window.innerWidth  * 0.5 - mascotW() / 2;
+let currentY    = window.innerHeight * 0.68 - mascotH() / 2;
+let currentW    = mascotW();
+let currentH    = mascotH();
 let lerpBoost   = 0;
 let prevScene   = -1;
 
@@ -749,24 +807,22 @@ function applyScene(sc, idx) {
     sub.textContent   = sc.sub || '';
     sub.style.display = sc.sub ? 'block' : 'none';
 
-    // Icons
-    iconsEl.innerHTML = '';
-    if (sc.showIcons) {
-        ICONS.forEach(ic => {
-            const card = document.createElement('div');
-            card.className = 'icon-card';
-            card.innerHTML = `<div class="icon-circle">${ic.emoji}</div><span style="color:${sc.txtColor}">${ic.label}</span>`;
-            iconsEl.appendChild(card);
-        });
-        iconsEl.style.display = 'flex';
-    } else {
-        iconsEl.style.display = 'none';
-    }
+    // Icons (legacy — no longer used)
+    iconsEl.style.display = 'none';
+
+    // Product buttons
+    const productButtons = document.getElementById('product-buttons');
+    productButtons.style.display = sc.showProducts ? 'flex' : 'none';
 
     // Contact form
     if (sc.showContact) {
+        const isLightBg = sc.txtColor !== '#fff';
         contactWrap.style.display = 'flex';
-        contactWrap.querySelectorAll('input,textarea').forEach(el => { el.style.color = '#fff'; });
+        contactWrap.querySelectorAll('input,textarea').forEach(el => {
+            el.style.color       = sc.txtColor;
+            el.style.borderColor = isLightBg ? 'rgba(0,67,18,0.25)' : 'rgba(255,255,255,0.25)';
+            el.style.background  = isLightBg ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.12)';
+        });
     } else {
         contactWrap.style.display = 'none';
     }
@@ -797,12 +853,12 @@ function applyScene(sc, idx) {
 }
 
 // ── RAF: smooth angel movement ─────────────────────────────────────
+const engelViewer = document.getElementById('engel-viewer');
 function raf() {
-    const sc = SCENES[activeScene];
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const ew = engelW();
-    const eh = engelH();
+    const sc      = SCENES[activeScene];
+    const vw      = window.innerWidth;
+    const vh      = window.innerHeight;
+    const isMasc  = !!sc.mascot;
 
     // Scene changed → boost lerp
     if (activeScene !== prevScene) {
@@ -811,14 +867,26 @@ function raf() {
     }
     lerpBoost *= 0.76;
 
-    const targetX = Math.max(4, Math.min(vw - ew - 4, (sc.angelX / 100) * vw - ew / 2));
-    const targetY = Math.max(4, Math.min(vh - eh - 4, (sc.angelY / 100) * vh - eh / 2));
+    // Target size: large mascot on scene 0 & last, small on path scenes
+    const tW = isMasc ? mascotW() : engelW();
+    const tH = isMasc ? mascotH() : engelH();
+    const sizeSpeed = 0.06 + lerpBoost * 0.18;
+    currentW = lerp(currentW, tW, sizeSpeed);
+    currentH = lerp(currentH, tH, sizeSpeed);
+    engelWrap.style.width  = currentW + 'px';
+    engelWrap.style.height = currentH + 'px';
+    engelViewer.style.width  = currentW + 'px';
+    engelViewer.style.height = currentH + 'px';
 
-    // Wobble — big burst when changing scenes
+    const targetX = Math.max(4, Math.min(vw - currentW - 4, (sc.angelX / 100) * vw - currentW / 2));
+    const targetY = Math.max(4, Math.min(vh - currentH - 4, (sc.angelY / 100) * vh - currentH / 2));
+
+    // Wobble — gentle breathing for mascot, lively burst for path travel
     wobbleT += 0.022;
     const wobBurst = lerpBoost * (isMobile() ? 14 : 10);
-    const wobX = Math.sin(wobbleT * 1.3) * (4 + wobBurst);
-    const wobY = Math.sin(wobbleT * 0.9) * (6 + wobBurst * 0.6);
+    const wobAmp   = isMasc ? 3 : (4 + wobBurst);
+    const wobX = Math.sin(wobbleT * 1.3) * wobAmp;
+    const wobY = Math.sin(wobbleT * 0.9) * wobAmp * 0.8;
 
     const speed = 0.05 + lerpBoost * 0.32;
     currentX = lerp(currentX, targetX + wobX, speed);

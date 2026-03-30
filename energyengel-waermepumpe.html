@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>EnergyEngel | Wärmepumpe</title>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        * { margin:0; padding:0; box-sizing:border-box; }
+        :root { --green-main:#44a125; }
+        html, body { width:100%; height:100%; overflow:hidden; overscroll-behavior:none; font-family:'Inter',sans-serif; }
+        #stage { position:fixed; inset:0; overflow:hidden; transition:background 0.65s ease; pointer-events:none; }
+        #scene-content {
+            position:absolute; inset:0; display:flex; flex-direction:column;
+            align-items:center; justify-content:center; padding:70px 60px 50px;
+            pointer-events:none; z-index:20;
+            transition:opacity 0.38s ease,transform 0.48s cubic-bezier(0.22,1,0.36,1);
+        }
+        #scene-step { font-size:0.72rem; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; margin-bottom:10px; color:#fff; opacity:0.55; }
+        #scene-headline { font-size:clamp(1.8rem,7vw,2.8rem); font-weight:900; text-align:center; line-height:1.08; white-space:pre-line; letter-spacing:-0.025em; color:#fff; margin-bottom:22px; max-width:310px; }
+        #answer-wrap { display:flex; flex-direction:column; gap:10px; width:100%; max-width:300px; pointer-events:auto; }
+        .ans-btn {
+            display:flex; align-items:center; gap:12px; width:100%; padding:14px 18px; border-radius:14px;
+            border:2px solid rgba(255,255,255,0.2); background:rgba(255,255,255,0.09);
+            color:#fff; font-family:'Inter',sans-serif; font-size:0.92rem; font-weight:600;
+            text-align:left; cursor:pointer; transition:background 0.15s,border-color 0.15s;
+            -webkit-tap-highlight-color:transparent;
+        }
+        .ans-btn:active { background:rgba(255,255,255,0.22); border-color:rgba(255,255,255,0.5); }
+        .ans-arrow { margin-left:auto; opacity:0.45; }
+        #contact-form-wrap { display:none; flex-direction:column; gap:10px; width:100%; max-width:300px; pointer-events:auto; }
+        #contact-form-wrap input { width:100%; padding:14px 18px; border-radius:12px; border:2px solid rgba(255,255,255,0.22); background:rgba(255,255,255,0.1); color:#fff; font-family:'Inter',sans-serif; font-size:1rem; outline:none; }
+        #contact-form-wrap input::placeholder { opacity:0.5; color:#fff; }
+        #contact-form-wrap button { padding:16px; border-radius:12px; border:none; background:var(--green-main); color:#fff; font-family:'Inter',sans-serif; font-size:1rem; font-weight:700; cursor:pointer; }
+        #contact-form-wrap, #contact-form-wrap input, #contact-form-wrap button { pointer-events:auto; }
+        #thanks-wrap { display:none; flex-direction:column; align-items:center; text-align:center; gap:14px; pointer-events:auto; }
+        #thanks-wrap .t-icon { font-size:3rem; }
+        #thanks-wrap h2 { font-size:2rem; font-weight:900; color:#fff; }
+        #thanks-wrap p { opacity:0.7; max-width:260px; line-height:1.6; font-size:0.95rem; color:#fff; }
+        #thanks-wrap a { color:rgba(255,255,255,0.55); font-size:0.85rem; text-decoration:none; border-bottom:1px solid rgba(255,255,255,0.25); margin-top:6px; pointer-events:auto; }
+        #path-bg { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:1; overflow:visible; }
+        #journey-full { transition:stroke 0.65s ease; }
+        #journey-progress { transition:stroke-dashoffset 0.55s cubic-bezier(0.4,0,0.2,1); }
+        .waypoint-dot { transition:fill 0.65s ease; }
+        #engel-wrap { position:fixed; top:0; left:0; pointer-events:none; will-change:transform; z-index:15; width:150px; height:180px; }
+        model-viewer { width:150px; height:180px; background:transparent !important; --poster-color:transparent; }
+        #top-logo { position:fixed; top:18px; left:20px; z-index:300; }
+        #top-logo a { font-size:1.1rem; font-weight:800; color:#fff; text-decoration:none; text-shadow:0 2px 8px rgba(0,0,0,0.3); }
+        #step-counter { position:fixed; top:20px; right:20px; z-index:300; font-size:0.72rem; font-weight:700; color:rgba(255,255,255,0.65); letter-spacing:0.05em; }
+        #nav-prev { position:fixed; left:0; right:0; top:0; height:72px; z-index:500; cursor:pointer; pointer-events:auto; -webkit-tap-highlight-color:transparent; background:transparent; border:none; display:flex; align-items:center; justify-content:center; gap:8px; color:rgba(255,255,255,0.65); font-family:'Inter',sans-serif; font-size:0.75rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; padding-top:46px; }
+        #nav-prev[disabled] { opacity:0; pointer-events:none; }
+        @media (max-width:600px) {
+            model-viewer { width:70px; height:85px; } #engel-wrap { width:70px; height:85px; }
+            #scene-content { padding:65px 44px 55px; }
+            #scene-headline { font-size:clamp(1.6rem,8vw,2.2rem); margin-bottom:16px; }
+            #answer-wrap, #contact-form-wrap { max-width:100%; }
+            .ans-btn { font-size:0.88rem; padding:13px 15px; }
+        }
+    </style>
+</head>
+<body>
+<div id="top-logo"><a href="energyengel-landing.html">⚡ EnergyEngel</a></div>
+<div id="step-counter">1 / 5</div>
+<button id="nav-prev">▲ Zurück</button>
+
+<div id="stage">
+    <svg id="path-bg" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <path id="journey-full" d="M88,8 C112,0 -12,22 5,26 C8,34 82,42 88,50 C106,40 -8,66 5,72 C-2,76 26,92 50,88"
+            fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="0.7" stroke-dasharray="2 2.8" stroke-linecap="round"/>
+        <path id="journey-progress" d="M88,8 C112,0 -12,22 5,26 C8,34 82,42 88,50 C106,40 -8,66 5,72 C-2,76 26,92 50,88"
+            fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.1" stroke-linecap="round"/>
+        <circle class="waypoint-dot" cx="88" cy="8"  r="1.4" fill="rgba(255,255,255,0.25)"/>
+        <circle class="waypoint-dot" cx="5"  cy="26" r="1.4" fill="rgba(255,255,255,0.25)"/>
+        <circle class="waypoint-dot" cx="88" cy="50" r="1.4" fill="rgba(255,255,255,0.25)"/>
+        <circle class="waypoint-dot" cx="5"  cy="72" r="1.4" fill="rgba(255,255,255,0.25)"/>
+        <circle class="waypoint-dot" cx="50" cy="88" r="1.4" fill="rgba(255,255,255,0.25)"/>
+        <circle id="active-dot" cx="88" cy="8" r="2.6" fill="white" opacity="0.75"/>
+    </svg>
+    <div id="scene-content">
+        <div id="scene-step"></div>
+        <h1 id="scene-headline"></h1>
+        <div id="answer-wrap"></div>
+        <div id="contact-form-wrap">
+            <input type="text"  id="inp-name"  placeholder="Dein Name *">
+            <input type="tel"   id="inp-tel"   placeholder="Telefonnummer *">
+            <input type="email" id="inp-email" placeholder="E-Mail (optional)">
+            <button type="button" onclick="submitForm()">Jetzt kostenlos anfragen ⚡</button>
+        </div>
+        <div id="thanks-wrap">
+            <div class="t-icon">🎉</div>
+            <h2>Danke!</h2>
+            <p>Ich melde mich persönlich bei dir!</p>
+            <a href="energyengel-landing.html">← Zurück zur Startseite</a>
+        </div>
+    </div>
+</div>
+
+<div id="engel-wrap">
+    <model-viewer src="engel_compressed.glb"
+        camera-orbit="0deg 75deg 3.8m" field-of-view="55deg"
+        min-field-of-view="55deg" max-field-of-view="55deg"
+        shadow-intensity="0" environment-image="neutral" exposure="1.2"
+        style="background-color:transparent;" loading="eager"
+        autoplay></model-viewer>
+</div>
+
+<script>
+const PRODUCT = 'Wärmepumpe';
+const STEPS = [
+    {q:'🌡️ Wärmepumpe\n— Heizung?', answers:['Gas','Öl','Nachtspeicher','Andere']},
+    {q:'Wohn-\nfläche?', answers:['unter 100 m²','100 – 150 m²','150 – 250 m²','über 250 m²']},
+    {q:'Baujahr\ndes Hauses?', answers:['vor 1980','1980 – 2000','nach 2000']},
+    {q:'Wann möchtest\ndu starten?', answers:['So schnell wie möglich','In 3 – 6 Monaten','Erst mal informieren']},
+];
+const WAYPOINTS = [{x:88,y:8},{x:5,y:26},{x:88,y:50},{x:5,y:72},{x:50,y:88}];
+const BGS = ['linear-gradient(160deg,#0a2c02 0%,#113c04 100%)','linear-gradient(160deg,#113c04 0%,#1e5008 100%)','linear-gradient(160deg,#1e5008 0%,#326814 100%)','linear-gradient(160deg,#326814 0%,#4e8828 100%)','linear-gradient(160deg,#4e8828 0%,#6aa040 100%)'];
+
+const SCENES = [
+    ...STEPS.map((s,i)=>({bg:BGS[i],label:`Frage ${i+1} von ${STEPS.length}`,question:s.q,answers:s.answers,angelX:WAYPOINTS[i].x,angelY:WAYPOINTS[i].y})),
+    {bg:BGS[STEPS.length],label:'Letzter Schritt',question:'Fast\ngeschafft! 🙌',answers:null,angelX:WAYPOINTS[STEPS.length].x,angelY:WAYPOINTS[STEPS.length].y,isContact:true}
+];
+const N=SCENES.length, collected={};
+
+const stage=document.getElementById('stage'),sceneContent=document.getElementById('scene-content');
+const stepEl=document.getElementById('scene-step'),headlineEl=document.getElementById('scene-headline');
+const answerWrap=document.getElementById('answer-wrap'),contactWrap=document.getElementById('contact-form-wrap');
+const thanksWrap=document.getElementById('thanks-wrap'),stepCounter=document.getElementById('step-counter');
+const navPrev=document.getElementById('nav-prev');
+const journeyFull=document.getElementById('journey-full'),journeyProgress=document.getElementById('journey-progress');
+const activeDotEl=document.getElementById('active-dot'),waypointDots=document.querySelectorAll('.waypoint-dot');
+
+let pathTotalLength=0,waypointLengths=[];
+requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    pathTotalLength=journeyFull.getTotalLength();
+    journeyProgress.style.strokeDasharray=pathTotalLength;
+    journeyProgress.style.strokeDashoffset=pathTotalLength;
+    const S=2000;
+    waypointLengths=WAYPOINTS.map(wp=>{
+        let bd=Infinity,bl=0;
+        for(let i=0;i<=S;i++){const l=(i/S)*pathTotalLength,pt=journeyFull.getPointAtLength(l),d=(pt.x-wp.x)**2+(pt.y-wp.y)**2;if(d<bd){bd=d;bl=l;}}
+        return bl;
+    });
+    updatePath(0);
+}));
+
+function updatePath(idx){
+    if(!pathTotalLength)return;
+    const len=waypointLengths[idx]??(pathTotalLength*idx/(N-1));
+    journeyProgress.style.strokeDashoffset=pathTotalLength-len;
+    const wp=WAYPOINTS[idx];
+    activeDotEl.setAttribute('cx',wp.x);activeDotEl.setAttribute('cy',wp.y);
+    waypointDots.forEach((d,i)=>{d.setAttribute('fill',i<=idx?'rgba(255,255,255,0.85)':'rgba(255,255,255,0.25)');d.setAttribute('r',i===idx?'2':'1.4');});
+}
+
+let activeScene=0,isTransitioning=false,sceneTimer=null;
+function goToScene(idx,dir){
+    idx=Math.max(0,Math.min(N-1,idx));
+    if(idx===activeScene||isTransitioning)return;
+    isTransitioning=true;
+    const prevIdx=activeScene;
+    activeScene=idx;
+    showScene(idx,dir??(idx>prevIdx?1:-1));
+    setTimeout(()=>{isTransitioning=false;},560);
+}
+function showScene(idx,dir){
+    const outY=dir>=0?'-55px':'55px',inY=dir>=0?'55px':'-55px';
+    sceneContent.style.transition='opacity 0.3s ease,transform 0.35s cubic-bezier(0.4,0,0.2,1)';
+    sceneContent.style.opacity='0';sceneContent.style.transform=`translateY(${outY})`;
+    stage.style.background=SCENES[idx].bg;
+    if(sceneTimer)clearTimeout(sceneTimer);
+    sceneTimer=setTimeout(()=>{
+        applyScene(SCENES[idx],idx);
+        sceneContent.style.transition='none';sceneContent.style.opacity='0';sceneContent.style.transform=`translateY(${inY})`;
+        requestAnimationFrame(()=>requestAnimationFrame(()=>{
+            sceneContent.style.transition='opacity 0.42s ease,transform 0.52s cubic-bezier(0.22,1,0.36,1)';
+            sceneContent.style.opacity='1';sceneContent.style.transform='translateY(0)';
+        }));
+    },200);
+}
+function applyScene(sc,idx){
+    stepEl.textContent=sc.label;headlineEl.textContent=sc.question;
+    updatePath(idx);stepCounter.textContent=`${idx+1} / ${N}`;navPrev.disabled=idx===0;
+    thanksWrap.style.display='none';
+    if(sc.isContact){
+        answerWrap.style.display='none';contactWrap.style.display='flex';
+    } else {
+        contactWrap.style.display='none';answerWrap.style.display='flex';answerWrap.innerHTML='';
+        sc.answers.forEach(ans=>{
+            const btn=document.createElement('button');btn.className='ans-btn';
+            btn.innerHTML=`<span>${ans}</span><span class="ans-arrow">→</span>`;
+            btn.addEventListener('pointerdown',()=>{collected['frage_'+(idx+1)]=ans;goToScene(idx+1,1);});
+            answerWrap.appendChild(btn);
+        });
+    }
+}
+navPrev.addEventListener('pointerdown',e=>{e.preventDefault();activeScene>0?goToScene(activeScene-1,-1):(window.location.href='energyengel-landing.html');});
+document.addEventListener('keydown',e=>{if(e.key==='ArrowUp')goToScene(activeScene-1,-1);});
+
+let touchStartY=0,touchActive=false;
+document.addEventListener('touchstart',e=>{if(isTransitioning)return;touchStartY=e.touches[0].clientY;touchActive=true;sceneContent.style.transition='none';},{passive:true});
+document.addEventListener('touchmove',e=>{if(!touchActive||isTransitioning)return;const dy=touchStartY-e.touches[0].clientY;if(dy<-20){const drag=Math.min(Math.abs(dy)*0.3,60);sceneContent.style.transform=`translateY(${drag}px)`;sceneContent.style.opacity=String(Math.max(0.5,1-Math.abs(dy)/300));}},{passive:true});
+document.addEventListener('touchend',e=>{if(!touchActive)return;touchActive=false;const dy=touchStartY-e.changedTouches[0].clientY;if(dy<-60)goToScene(activeScene-1,-1);else{sceneContent.style.transition='opacity 0.3s ease,transform 0.38s cubic-bezier(0.22,1,0.36,1)';sceneContent.style.transform='translateY(0)';sceneContent.style.opacity='1';}},{passive:true});
+
+const engelWrap=document.getElementById('engel-wrap');
+const isMobile=()=>window.innerWidth<=600,engelW=()=>isMobile()?70:150,engelH=()=>isMobile()?85:180;
+let wobbleT=0,lerpBoost=0,prevScene=-1,currentX=window.innerWidth*0.88,currentY=window.innerHeight*0.08;
+function lerp(a,b,t){return a+(b-a)*t;}
+function raf(){
+    const sc=SCENES[activeScene],vw=window.innerWidth,vh=window.innerHeight,ew=engelW(),eh=engelH();
+    if(activeScene!==prevScene){prevScene=activeScene;lerpBoost=1;}
+    lerpBoost*=0.76;
+    const tx=Math.max(4,Math.min(vw-ew-4,(sc.angelX/100)*vw-ew/2));
+    const ty=Math.max(4,Math.min(vh-eh-4,(sc.angelY/100)*vh-eh/2));
+    wobbleT+=0.022;const wb=lerpBoost*(isMobile()?14:10);
+    currentX=lerp(currentX,tx+Math.sin(wobbleT*1.3)*(4+wb),0.05+lerpBoost*0.32);
+    currentY=lerp(currentY,ty+Math.sin(wobbleT*0.9)*(6+wb*0.6),0.05+lerpBoost*0.32);
+    engelWrap.style.transform=`translate(${currentX}px,${currentY}px)`;engelWrap.style.opacity='1';
+    requestAnimationFrame(raf);
+}
+function submitForm(){
+    const name=document.getElementById('inp-name').value.trim(),tel=document.getElementById('inp-tel').value.trim();
+    if(!name||!tel){alert('Bitte Name und Telefonnummer ausfüllen.');return;}
+    collected.name=name;collected.telefon=tel;collected.email=document.getElementById('inp-email').value.trim();collected.produkt=PRODUCT;
+    console.log('Anfrage:',collected);
+    sceneContent.style.transition='opacity 0.3s ease,transform 0.35s ease';
+    sceneContent.style.opacity='0';sceneContent.style.transform='translateY(-30px)';
+    setTimeout(()=>{
+        headlineEl.textContent='';answerWrap.style.display='none';contactWrap.style.display='none';thanksWrap.style.display='flex';
+        stepEl.textContent='Fertig! ✓';stepCounter.textContent=`${N} / ${N}`;navPrev.disabled=true;
+        sceneContent.style.transition='none';sceneContent.style.opacity='0';sceneContent.style.transform='translateY(30px)';
+        requestAnimationFrame(()=>requestAnimationFrame(()=>{sceneContent.style.transition='opacity 0.42s ease,transform 0.52s cubic-bezier(0.22,1,0.36,1)';sceneContent.style.opacity='1';sceneContent.style.transform='translateY(0)';}));
+    },280);
+}
+stage.style.background=SCENES[0].bg;applyScene(SCENES[0],0);requestAnimationFrame(raf);
+</script>
+</body>
+</html>
