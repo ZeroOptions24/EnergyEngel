@@ -847,6 +847,8 @@ function applyScene(sc, idx) {
     // Nav button states
     navPrev.disabled = idx === 0;
     navNext.disabled = idx === N - 1;
+    // Hide JA button on product-selection scene (user picks a product instead)
+    navNext.style.display = sc.showProducts ? 'none' : 'flex';
 
     // Logo + counter color
     document.querySelector('#top-logo span').style.color = isLight ? '#004312' : '#ffffff';
