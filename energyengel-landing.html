@@ -412,9 +412,9 @@
     <span class="arrow">▲</span>
     <span>Zurück</span>
 </button>
-<button id="nav-next" aria-label="Weiter">
-    <span class="arrow">▼</span>
-    <span>Weiter</span>
+<button id="nav-next" aria-label="Ja">
+    <span>JA</span>
+    <span class="arrow">→</span>
 </button>
 
 <div id="stage">
@@ -507,66 +507,66 @@ const SCENES = [
     {   // 1 — helles Grau-Grün (Start)
         bg: 'linear-gradient(160deg, #eceae4 0%, #dfe5d4 100%)',
         txtColor: '#1a2e08', step: '',
-        headline: 'Erneuerbare\nEnergie.\nOhne Stress.',
-        sub: 'Ich bringe dich in die Energie von morgen — ehrlich & entspannt.',
-        speech: '⚡ Erneuerbarer Strom muss nicht kompliziert sein!',
+        headline: 'Willst du\nEnergie\nohne Stress?',
+        sub: 'Ich bin dein unabhängiger Energiemakler — ehrlich, kostenlos & einfach.',
+        speech: '⚡ Dann bist du hier genau richtig!',
         angelX: 88, angelY: 5,
     },
     {   // 2 — weiches Hellgrün
         bg: 'linear-gradient(160deg, #dfe5d4 0%, #cddcb8 100%)',
         txtColor: '#1a2e08', step: 'Das Problem',
-        headline: 'Zu\nviele\nOptionen?',
-        sub: 'Solar, Wärmepumpe, Speicher, Wallbox — wo fängst du überhaupt an?',
-        speech: '😵 Ich kenne das Gefühl. Deshalb bin ich hier!',
+        headline: 'Zu viele\nOptionen\nüberall?',
+        sub: 'Solar, Wärmepumpe, Speicher, Wallbox — wo soll man überhaupt anfangen?',
+        speech: '😵 Kenn ich! Genau deshalb bin ich hier.',
         angelX: 5, angelY: 19,
     },
     {   // 3 — mittel-helles Grün
         bg: 'linear-gradient(160deg, #cddcb8 0%, #b4cc96 100%)',
         txtColor: '#1a2e08', step: 'Das Problem',
-        headline: 'Förder-\ndschungel?',
+        headline: 'Verlierst du\nim Förder-\ndschungel?',
         sub: 'KfW, BAFA, Bundesländer — jeder hat andere Regeln. Wer blickt da noch durch?',
-        speech: '🌿 Ich kenne jeden Förderweg — und hole alles raus, was dir zusteht.',
+        speech: '🌿 Ich kenn jeden Förderweg — und hol alles raus, was dir zusteht.',
         angelX: 88, angelY: 32,
     },
     {   // 4 — mittleres Grün
         bg: 'linear-gradient(160deg, #b4cc96 0%, #8fb86a 100%)',
         txtColor: '#1a2e08', step: 'Das Problem',
-        headline: 'Wem kannst\ndu\nvertrauen?',
-        sub: 'Hersteller wollen verkaufen. Ich nicht. Ich gehöre keinem — nur dir.',
-        speech: '🤝 Meine einzige Motivation: Das Beste für dich zu finden.',
+        headline: 'Wem kannst\ndu wirklich\nvertrauen?',
+        sub: 'Hersteller wollen verkaufen. Ich nicht. Ich bin unabhängig — nur für dich.',
+        speech: '🤝 Meine einzige Motivation: das Beste für dich zu finden.',
         angelX: 5, angelY: 45,
     },
     {   // 5 — dunkles Grün
         bg: 'linear-gradient(160deg, #6aa040 0%, #326814 100%)',
-        txtColor: '#fff', step: 'Schritt 1',
-        headline: 'Du erzählst.\nIch\nhöre zu.',
-        sub: 'Wir sprechen über deine Situation, deine Wünsche, dein Zuhause.',
-        speech: '💬 Kein Fachkauderwelsch. Ich frage, ich höre zu — ganz einfach.',
+        txtColor: '#fff', step: 'Mein Versprechen',
+        headline: 'Darf ich\ndir einfach\nzuhören?',
+        sub: 'Erzähl mir von deiner Situation, deinen Wünschen und deinem Zuhause.',
+        speech: '💬 Kein Fachkauderwelsch. Nur echtes Zuhören.',
         angelX: 88, angelY: 58,
     },
     {   // 6 — tiefes Grün
         bg: 'linear-gradient(160deg, #326814 0%, #1e5008 100%)',
-        txtColor: '#fff', step: 'Schritt 2',
-        headline: 'Ich vergleiche\nalles\nfür dich.',
-        sub: 'Anbieter, Technologien, Preise — ich finde das beste Paket für dich.',
-        speech: '🔍 Hunderte Optionen — ich filtere auf die eine, die wirklich zu dir passt.',
+        txtColor: '#fff', step: 'Mein Versprechen',
+        headline: 'Soll ich\nalles für\ndich vergleichen?',
+        sub: 'Anbieter, Technologien, Preise — ich finde das perfekte Paket für dich.',
+        speech: '🔍 Hunderte Optionen — ich filter auf genau eine, die zu dir passt.',
         angelX: 5, angelY: 70,
     },
     {   // 7 — sehr dunkles Grün — Produktauswahl
         bg: 'linear-gradient(160deg, #113c04 0%, #0a2c02 100%)',
-        txtColor: '#fff', step: 'Was interessiert dich?',
-        headline: 'Wähle\ndein\nThema.',
+        txtColor: '#fff', step: 'Dein Thema',
+        headline: 'Welches Thema\npasst\nzu dir?',
         sub: '',
-        speech: '👇 Tippe auf das Thema, das zu dir passt!',
+        speech: '👇 Tippe auf dein Thema — ich führ dich durch alles!',
         angelX: 86, angelY: 82,
         showProducts: true,
     },
     {   // 8 — zurück zum hellen Anfang (Ziel erreicht)
         bg: 'linear-gradient(160deg, #eceae4 0%, #dfe5d4 100%)',
         txtColor: '#1a2e08', step: '',
-        headline: 'Ich bin\nfür\ndich da.',
+        headline: 'Darf ich\ndich\nkontaktieren?',
         sub: '',
-        speech: '📞 Kostenlos anfragen — ich melde mich persönlich bei dir!',
+        speech: '📞 Kostenlos & unverbindlich — ich melde mich persönlich bei dir!',
         angelX: 50, angelY: 68, mascot: true,
         showContact: true,
     },
