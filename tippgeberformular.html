@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EnergyEngel – Tippgeber Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-deep:    #004312;
+    --green-dark:    #0A5616;
+    --green-mid:     #1E7B1F;
+    --green-accent:  #44A125;
+    --green-light:   #5CB832;
+    --green-pale:    #f0f8ed;
+    --green-border:  #c2e0b8;
+    --gold:          #b8913a;
+    --gold-light:    #d4a84b;
+    --text-primary:  #1a2e1a;
+    --text-secondary:#3d6639;
+    --text-muted:    #6a9962;
+    --bg:            #f5f8f4;
+    --white:         #ffffff;
+    --border:        #dce8d8;
+    --radius:        10px;
+    --shadow-sm:     0 1px 3px rgba(0,67,18,0.07), 0 1px 2px rgba(0,67,18,0.04);
+    --shadow-md:     0 4px 16px rgba(0,67,18,0.09), 0 1px 4px rgba(0,67,18,0.05);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Header ── */
+  header {
+    position: relative;
+    background: linear-gradient(90deg, #004312 0%, #0A5616 12%, #1E7B1F 30%, #44A125 50%, #1E7B1F 70%, #0A5616 88%, #004312 100%);
+    border-bottom: none;
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 68px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,67,18,0.25);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Logo image — replace src with real path ── */
+  .logo-img {
+    height: 40px;
+    width: auto;
+    display: block;
+  }
+
+  .logo-fallback {
+    display: none;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-icon-box {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--green-accent), var(--green-light));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px; flex-shrink: 0;
+  }
+
+  .logo-wordmark {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    color: #ffffff;
+    letter-spacing: -0.01em;
+    line-height: 1;
+  }
+
+  .logo-wordmark em { font-style: normal; color: #a8e06a; }
+
+  .header-badge {
+    position: relative; z-index: 1;
+    font-size: 0.7rem; font-weight: 600;
+    letter-spacing: 0.13em; text-transform: uppercase;
+    color: #ffffff;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px;
+    padding: 5px 14px;
+  }
+
+  /* ── Accent line ── */
+  .page-stripe {
+    height: 4px;
+    background: linear-gradient(90deg, #004312, #44A125, #004312);
+  }
+
+  /* ── Hero ── */
+  .hero {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 48px 24px 36px;
+    text-align: center;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #d4a84b;
+    margin-bottom: 14px;
+  }
+
+  .hero-eyebrow::before, .hero-eyebrow::after {
+    content: '';
+    width: 22px; height: 1px;
+    background: rgba(212,168,75,0.5);
+  }
+
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.7rem, 3.5vw, 2.4rem);
+    color: #ffffff;
+    line-height: 1.18;
+    margin-bottom: 12px;
+  }
+
+  .hero p {
+    font-size: 0.92rem;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.75;
+    max-width: 470px;
+    margin: 0 auto;
+  }
+
+  /* ── Form wrapper ── */
+  .form-area {
+    background: linear-gradient(180deg, #004312 0%, #0A5616 15%, #1E7B1F 40%, #44A125 60%, #1E7B1F 80%, #0A5616 95%, #004312 100%);
+    padding: 40px 24px 64px;
+    margin-top: -8px;
+  }
+
+  .form-wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* ── Section cards ── */
+  .section-card {
+    background: var(--white);
+    border: none;
+    border-left: 6px solid var(--green-accent);
+    border-radius: 16px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.1);
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .section-card:nth-child(1) { border-left-color: #44A125; animation-delay: 0.00s; }
+  .section-card:nth-child(2) { border-left-color: #1E7B1F; animation-delay: 0.06s; }
+  .section-card:nth-child(3) { border-left-color: #5CB832; animation-delay: 0.12s; }
+  .section-card:nth-child(4) { border-left-color: #0A5616; animation-delay: 0.18s; }
+
+  .section-head {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 24px;
+    border-bottom: 2px solid var(--border);
+    background: var(--green-pale);
+    border-radius: 16px 16px 0 0;
+  }
+
+  .section-head-icon {
+    width: 32px; height: 32px;
+    background: var(--white);
+    border: 1.5px solid var(--green-border);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0;
+  }
+
+  .section-head-text {
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--green-dark);
+  }
+
+  .section-body { padding: 24px 24px 26px; }
+
+  /* ── Grid ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+  .span-2 { grid-column: span 2; }
+
+  @media (max-width: 540px) {
+    .grid-2 { grid-template-columns: 1fr; }
+    .span-2 { grid-column: span 1; }
+    header { padding: 0 16px; }
+    .hero { padding: 30px 16px 22px; }
+    .form-area { padding: 30px 14px 48px; }
+    .form-wrap { padding: 0; }
+    .section-body { padding: 16px 16px 18px; }
+    .submit-card { flex-direction: column; align-items: stretch; }
+    button[type="submit"] { width: 100%; justify-content: center; }
+  }
+
+  /* ── Fields ── */
+  .field { display: flex; flex-direction: column; gap: 6px; }
+
+  label {
+    font-size: 0.77rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+
+  input[type="text"],
+  input[type="tel"],
+  input[type="email"],
+  input[type="number"],
+  select,
+  textarea {
+    background: #fafcfb;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-primary);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    padding: 10px 13px;
+    transition: border-color 0.18s, box-shadow 0.18s;
+    outline: none;
+    width: 100%;
+  }
+
+  input::placeholder, textarea::placeholder { color: #b5c9be; }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--green-light);
+    background: var(--white);
+    box-shadow: 0 0 0 3px rgba(90,179,126,0.13);
+  }
+
+  input.error { border-color: #d9534f !important; background: #fff8f8 !important; }
+
+  select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%233d8c5e' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 13px center;
+    background-color: #fafcfb;
+    padding-right: 36px;
+    cursor: pointer;
+  }
+
+  textarea { resize: vertical; min-height: 92px; line-height: 1.6; }
+
+  .req { color: #c0392b; margin-left: 2px; font-size: 0.82em; }
+
+  /* ── Product tile grid ── */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+  }
+
+  @media (max-width: 580px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 360px) { .product-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .product-tile {
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .product-tile input[type="checkbox"] {
+    position: absolute;
+    opacity: 0; width: 0; height: 0;
+    pointer-events: none;
+  }
+
+  .product-tile-inner {
+    position: relative;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 10px 13px;
+    text-align: center;
+    background: #fafcfb;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    transition: border-color 0.17s, background 0.17s, box-shadow 0.17s, transform 0.14s;
+  }
+
+  .product-tile-inner:hover {
+    border-color: var(--green-light);
+    background: var(--green-pale);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(61,140,94,0.13);
+  }
+
+  /* Selected state */
+  .product-tile input:checked + .product-tile-inner {
+    border-color: var(--green-accent);
+    background: var(--green-pale);
+    box-shadow: 0 0 0 3px rgba(61,140,94,0.15), var(--shadow-sm);
+  }
+
+  .product-tile input:checked + .product-tile-inner .product-check {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .product-tile input:checked + .product-tile-inner .product-label {
+    color: var(--green-mid);
+    font-weight: 600;
+  }
+
+  .product-emoji { font-size: 1.75rem; line-height: 1; }
+
+  .product-label {
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    line-height: 1.25;
+  }
+
+  /* Checkmark badge */
+  .product-check {
+    position: absolute;
+    top: 7px; right: 8px;
+    width: 17px; height: 17px;
+    background: var(--green-accent);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-size: 9px; font-weight: 700;
+    opacity: 0;
+    transform: scale(0.4);
+    transition: opacity 0.18s, transform 0.18s;
+  }
+
+  /* ── Tippgeber section ── */
+  .tippgeber-card {
+    background: var(--white);
+    border: none;
+    border-left: 6px solid var(--gold);
+    border-radius: 16px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.1);
+    animation: fadeUp 0.4s 0.22s ease both;
+  }
+
+  .tippgeber-head {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 24px;
+    background: #fdf8ee;
+    border-bottom: 2px solid #f0e4be;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .tippgeber-head-icon {
+    width: 32px; height: 32px;
+    background: var(--white);
+    border: 1.5px solid #e8d89a;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+
+  .tippgeber-head-text {
+    font-size: 0.82rem; font-weight: 700;
+    letter-spacing: 0.11em; text-transform: uppercase;
+    color: #96751e;
+  }
+
+  .tippgeber-body { padding: 24px 24px 26px; }
+
+  /* ── Submit ── */
+  .submit-card {
+    background: var(--white);
+    border: none;
+    border-left: 6px solid var(--green-light);
+    border-radius: 16px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.1);
+    padding: 22px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    animation: fadeUp 0.4s 0.28s ease both;
+  }
+
+  .submit-note {
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+    max-width: 380px;
+  }
+
+  button[type="submit"] {
+    background: linear-gradient(135deg, #0A5616, #44A125);
+    border: none;
+    border-radius: var(--radius);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; font-weight: 600;
+    padding: 12px 28px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    box-shadow: 0 2px 10px rgba(0,67,18,0.25);
+  }
+
+  button[type="submit"]:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 18px rgba(0,67,18,0.35);
+  }
+
+  button[type="submit"]:active { transform: translateY(0); }
+
+  button[type="submit"]:disabled {
+    opacity: 0.5; cursor: not-allowed;
+    transform: none; box-shadow: none;
+  }
+
+  /* ── Toast ── */
+  .toast {
+    position: fixed;
+    bottom: 26px; left: 50%;
+    transform: translateX(-50%) translateY(14px);
+    background: var(--green-dark);
+    border: 1px solid var(--green-light);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 0.85rem;
+    padding: 11px 20px;
+    display: flex; align-items: center; gap: 8px;
+    opacity: 0;
+    transition: opacity 0.27s, transform 0.27s;
+    z-index: 200; pointer-events: none;
+    white-space: nowrap;
+    box-shadow: var(--shadow-md);
+  }
+
+  .toast.error { background: #5a1e1e; border-color: #c05050; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .spinner {
+    display: inline-block;
+    width: 13px; height: 13px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.65s linear infinite;
+    vertical-align: middle; margin-right: 4px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Success overlay ── */
+  .success-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(245,247,245,0.97);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 32px;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .success-overlay.show { display: flex; }
+
+  .success-icon {
+    width: 72px; height: 72px;
+    background: linear-gradient(135deg, var(--green-dark), var(--green-accent));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 8px 24px rgba(31,74,52,0.25);
+    animation: popIn 0.5s 0.1s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+
+  @keyframes popIn {
+    from { transform: scale(0.4); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+
+  .success-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.9rem;
+    color: var(--green-deep);
+    margin-bottom: 12px;
+  }
+
+  .success-sub {
+    font-size: 0.93rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    max-width: 400px;
+    margin-bottom: 32px;
+  }
+
+  .success-sub strong { color: var(--green-mid); font-weight: 600; }
+
+  .success-new-btn {
+    background: var(--white);
+    border: 1.5px solid var(--green-border);
+    border-radius: var(--radius);
+    color: var(--green-mid);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem; font-weight: 600;
+    padding: 11px 26px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .success-new-btn:hover {
+    background: var(--green-pale);
+    border-color: var(--green-light);
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <a class="logo" href="#">
+    <!--
+      LOGO: src-Wert mit dem tatsächlichen Pfad ersetzen.
+      Beispiel: src="./assets/logo-energyengel.svg"
+      Der Fallback-Block wird automatisch eingeblendet, wenn das Bild nicht geladen werden kann.
+    -->
+    <img
+      class="logo-img"
+      src="LOGO_PLATZHALTER.png"
+      alt="EnergyEngel"
+      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+    >
+    <div class="logo-fallback">
+      <div class="logo-icon-box">🌿</div>
+      <div class="logo-wordmark">Energy<em>Engel</em></div>
+    </div>
+  </a>
+  <div class="header-badge">Tippgeber Portal</div>
+</header>
+<div class="page-stripe"></div>
+
+<!-- FORM -->
+<div class="form-area">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Empfehlungsnetzwerk</div>
+  <h1>Kundenempfehlung<br>einreichen</h1>
+  <p>Trage die Kontaktdaten deines Interessenten ein — wir übernehmen die Beratung und melden uns schnellstmöglich.</p>
+</div>
+
+<div class="form-wrap">
+  <form id="tippgeberForm" novalidate>
+
+    <!-- 1. Kundendaten -->
+    <div class="section-card">
+      <div class="section-head">
+        <div class="section-head-icon">👤</div>
+        <span class="section-head-text">Kundendaten</span>
+      </div>
+      <div class="section-body">
+        <div class="grid-2">
+          <div class="field">
+            <label for="vorname">Vorname <span class="req">*</span></label>
+            <input type="text" id="vorname" name="vorname" placeholder="Max" required>
+          </div>
+          <div class="field">
+            <label for="nachname">Nachname <span class="req">*</span></label>
+            <input type="text" id="nachname" name="nachname" placeholder="Mustermann" required>
+          </div>
+          <div class="field">
+            <label for="telefon">Telefon <span class="req">*</span></label>
+            <input type="tel" id="telefon" name="telefon" placeholder="+49 171 000 0000" required>
+          </div>
+          <div class="field">
+            <label for="email">E-Mail</label>
+            <input type="email" id="email" name="email" placeholder="max@beispiel.de">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Immobilie -->
+    <div class="section-card">
+      <div class="section-head">
+        <div class="section-head-icon">🏠</div>
+        <span class="section-head-text">Immobilie &amp; Adresse</span>
+      </div>
+      <div class="section-body">
+        <div class="grid-2">
+          <div class="field span-2">
+            <label for="strasse">Straße &amp; Hausnummer</label>
+            <input type="text" id="strasse" name="strasse" placeholder="Musterstraße 12">
+          </div>
+          <div class="field">
+            <label for="plz">PLZ</label>
+            <input type="text" id="plz" name="plz" placeholder="04416" maxlength="5">
+          </div>
+          <div class="field">
+            <label for="ort">Ort</label>
+            <input type="text" id="ort" name="ort" placeholder="Markkleeberg">
+          </div>
+          <div class="field">
+            <label for="immobilientyp">Immobilientyp</label>
+            <select id="immobilientyp" name="immobilientyp">
+              <option value="">– bitte wählen –</option>
+              <option>Einfamilienhaus</option>
+              <option>Doppelhaushälfte</option>
+              <option>Reihenhaus</option>
+              <option>Mehrfamilienhaus</option>
+              <option>Gewerbeimmobilie</option>
+              <option>Sonstiges</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="baujahr">Baujahr (ca.)</label>
+            <input type="number" id="baujahr" name="baujahr" placeholder="1985" min="1900" max="2025">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Produkte -->
+    <div class="section-card">
+      <div class="section-head">
+        <div class="section-head-icon">⚡</div>
+        <span class="section-head-text">Interesse des Kunden <span class="req">*</span></span>
+      </div>
+      <div class="section-body">
+        <div class="product-grid" id="productGrid">
+
+          <label class="product-tile">
+            <input type="checkbox" name="themen" value="Photovoltaik">
+            <div class="product-tile-inner">
+              <span class="product-check">✓</span>
+              <span class="product-emoji">☀️</span>
+              <span class="product-label">Photovoltaik</span>
+            </div>
+          </label>
+
+          <label class="product-tile">
+            <input type="checkbox" name="themen" value="Wärmepumpe">
+            <div class="product-tile-inner">
+              <span class="product-check">✓</span>
+              <span class="product-emoji">🌡️</span>
+              <span class="product-label">Wärme&shy;pumpe</span>
+            </div>
+          </label>
+
+          <label class="product-tile">
+            <input type="checkbox" name="themen" value="Batteriespeicher">
+            <div class="product-tile-inner">
+              <span class="product-check">✓</span>
+              <span class="product-emoji">🔋</span>
+              <span class="product-label">Batterie&shy;speicher</span>
+            </div>
+          </label>
+
+          <label class="product-tile">
+            <input type="checkbox" name="themen" value="Stromvertrag">
+            <div class="product-tile-inner">
+              <span class="product-check">✓</span>
+              <span class="product-emoji">⚡</span>
+              <span class="product-label">Strom&shy;vertrag</span>
+            </div>
+          </label>
+
+          <label class="product-tile">
+            <input type="checkbox" name="themen" value="Gasvertrag">
+            <div class="product-tile-inner">
+              <span class="product-check">✓</span>
+              <span class="product-emoji">🔵</span>
+              <span class="product-label">Gas&shy;vertrag</span>
+            </div>
+          </label>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Notiz -->
+    <div class="section-card">
+      <div class="section-head">
+        <div class="section-head-icon">📝</div>
+        <span class="section-head-text">Notiz für EnergyEngel</span>
+      </div>
+      <div class="section-body">
+        <div class="field">
+          <label for="notiz">Hinweise / Kontext</label>
+          <textarea id="notiz" name="notiz" placeholder="Z. B. Kunde plant Neubau, möchte abends angerufen werden, hat bereits Angebote vorliegen …"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tippgeber -->
+    <div class="tippgeber-card">
+      <div class="tippgeber-head">
+        <div class="tippgeber-head-icon">🤝</div>
+        <span class="tippgeber-head-text">Deine Daten (Tippgeber)</span>
+      </div>
+      <div class="tippgeber-body">
+        <div class="grid-2">
+          <div class="field">
+            <label for="tippgeber">Vollständiger Name <span class="req">*</span></label>
+            <input type="text" id="tippgeber" name="tippgeber" placeholder="Vorname Nachname" required>
+          </div>
+          <div class="field">
+            <label for="tippgeber_email">Deine E-Mail-Adresse <span class="req">*</span></label>
+            <input type="email" id="tippgeber_email" name="tippgeber_email" placeholder="deine@email.de" required>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="submit-card">
+      <p class="submit-note">Mit dem Absenden bestätigst du, dass der Kunde einer Kontaktaufnahme durch EnergyEngel zugestimmt hat.</p>
+      <button type="submit" id="submitBtn">Empfehlung einreichen →</button>
+    </div>
+
+  </form>
+</div>
+</div>
+
+<!-- Success Overlay -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-icon">✓</div>
+  <h2 class="success-title">Empfehlung eingereicht!</h2>
+  <p class="success-sub">
+    Danke, <strong id="successName"></strong>!<br>
+    Wir haben deine Empfehlung erhalten und schicken dir gleich eine Bestätigung an <strong id="successEmail"></strong>.<br>
+    EnergyEngel kümmert sich ab sofort um den Kontakt.
+  </p>
+  <button class="success-new-btn" id="successNewBtn">Weitere Empfehlung einreichen</button>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── n8n Webhook URL – hier eintragen ─────────────────────────────
+  // TEST (erfordert 'Listen for Test Event' in n8n):
+  // const WEBHOOK_URL = 'https://energyengel.app.n8n.cloud/webhook-test/empfehlung-eingang';
+  // PRODUCTION (Workflow muss aktiviert sein):
+  const WEBHOOK_URL = 'https://energyengel.app.n8n.cloud/webhook/empfehlung-eingang';
+  // ─────────────────────────────────────────────────────────────────
+
+  const form            = document.getElementById('tippgeberForm');
+  const btn             = document.getElementById('submitBtn');
+  const toast           = document.getElementById('toast');
+  const successOverlay  = document.getElementById('successOverlay');
+  const successName     = document.getElementById('successName');
+  const successEmail    = document.getElementById('successEmail');
+  const successNewBtn   = document.getElementById('successNewBtn');
+
+  function showToast(msg, isError = false) {
+    toast.innerHTML = (isError ? '❌ ' : '✅ ') + msg;
+    toast.className = 'toast' + (isError ? ' error' : '') + ' show';
+    setTimeout(() => { toast.className = 'toast' + (isError ? ' error' : ''); }, 3800);
+  }
+
+  // "Weitere Empfehlung einreichen" resets and hides overlay
+  successNewBtn.addEventListener('click', () => {
+    successOverlay.classList.remove('show');
+    form.reset();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // Required text fields — now includes tippgeber_email
+    const requiredIds = ['vorname', 'nachname', 'telefon', 'tippgeber', 'tippgeber_email'];
+    let firstError = null;
+    for (const id of requiredIds) {
+      const el = document.getElementById(id);
+      if (!el.value.trim()) {
+        el.classList.add('error');
+        if (!firstError) firstError = el;
+      }
+    }
+    if (firstError) {
+      firstError.focus();
+      showToast('Bitte alle Pflichtfelder ausfüllen.', true);
+      return;
+    }
+
+    // Basic email format check for tippgeber
+    const tgEmailEl = document.getElementById('tippgeber_email');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(tgEmailEl.value.trim())) {
+      tgEmailEl.classList.add('error');
+      tgEmailEl.focus();
+      showToast('Bitte eine gültige E-Mail-Adresse eingeben.', true);
+      return;
+    }
+
+    // At least one product
+    const themen = [...document.querySelectorAll('input[name="themen"]:checked')].map(cb => cb.value);
+    if (themen.length === 0) {
+      document.getElementById('productGrid').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      showToast('Bitte mindestens ein Produkt auswählen.', true);
+      return;
+    }
+
+    const tippgeberName  = document.getElementById('tippgeber').value.trim();
+    const tippgeberEmail = document.getElementById('tippgeber_email').value.trim();
+
+    const payload = {
+      tippgeber: {
+        name:  tippgeberName,
+        email: tippgeberEmail,
+      },
+      kunde: {
+        vorname:  document.getElementById('vorname').value.trim(),
+        nachname: document.getElementById('nachname').value.trim(),
+        telefon:  document.getElementById('telefon').value.trim(),
+        email:    document.getElementById('email').value.trim(),
+      },
+      immobilie: {
+        strasse: document.getElementById('strasse').value.trim(),
+        plz:     document.getElementById('plz').value.trim(),
+        ort:     document.getElementById('ort').value.trim(),
+        typ:     document.getElementById('immobilientyp').value,
+        baujahr: document.getElementById('baujahr').value,
+      },
+      themen,
+      notiz:     document.getElementById('notiz').value.trim(),
+      timestamp: new Date().toISOString(),
+    };
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Wird gesendet …';
+
+    try {
+      const res = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      // Show success overlay
+      successName.textContent  = tippgeberName;
+      successEmail.textContent = tippgeberEmail;
+      successOverlay.classList.add('show');
+
+    } catch (err) {
+      console.error(err);
+      showToast('Fehler beim Senden – bitte erneut versuchen.', true);
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = 'Empfehlung einreichen →';
+    }
+  });
+
+  document.querySelectorAll('input, select, textarea').forEach(el => {
+    el.addEventListener('input', () => el.classList.remove('error'));
+  });
+</script>
+</body>
+</html>
