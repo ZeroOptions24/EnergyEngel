@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<!-- saved from url=(0077)file:///C:/Users/Klaus%20Imhof/Downloads/waermepumpen-check-online%20(3).html -->
+<html lang="de"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wärmepumpen-Check Online</title>
+  <style>
+    :root {
+      --green: #16a34a;
+      --dark: #0f172a;
+      --light: #f8fafc;
+      --gray: #64748b;
+      --border: #e2e8f0;
+      --accent: #dcfce7;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #f8fafc, #e0f2fe);
+      color: var(--dark);
+    }
+
+    header {
+      padding: 60px 20px;
+      text-align: center;
+      background: white;
+    }
+
+    header h1 {
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      font-size: 22px;
+      color: var(--gray);
+      margin-bottom: 30px;
+    }
+
+    .btn {
+      background: var(--green);
+      color: white;
+      padding: 15px 28px;
+      border-radius: 12px;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 25px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      color: var(--dark);
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 18px;
+      margin-bottom: 6px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      font-size: 16px;
+    }
+
+    .hint {
+      font-size: 14px;
+      color: var(--gray);
+      margin-top: 5px;
+    }
+
+    .result {
+      display: none;
+      background: var(--accent);
+      border: 2px solid #86efac;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .result-box {
+      background: white;
+      padding: 18px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+
+    .result-box strong {
+      display: block;
+      font-size: 22px;
+      margin-top: 8px;
+      color: var(--green);
+    }
+
+    .lead {
+      display: none;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: var(--gray);
+      font-size: 14px;
+    }
+
+    .notice {
+      font-size: 14px;
+      color: var(--gray);
+      line-height: 1.5;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 32px;
+      }
+
+      header p {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Wärmepumpen-Check Online</h1>
+  <p>In wenigen Minuten zur passenden Wärmepumpen-Empfehlung</p>
+  <button class="btn" onclick="document.getElementById(&#39;check&#39;).scrollIntoView({behavior:&#39;smooth&#39;})">
+    Jetzt Wärmepumpen-Check starten
+  </button>
+</header>
+
+<main class="container" id="check">
+
+  <section class="card">
+    <h2>1. Angaben zum Gebäude</h2>
+
+    <label for="area">Wohnfläche in m²</label>
+    <input type="number" id="area" placeholder="z. B. 150">
+
+    <label for="year">Baujahr</label>
+    <select id="year">
+      <option value="">Bitte auswählen</option>
+      <option value="old">vor 1970</option>
+      <option value="medium">1970–1995</option>
+      <option value="newer">1995–2010</option>
+      <option value="new">nach 2010</option>
+    </select>
+
+    <label for="insulation">Dämmstandard</label>
+    <select id="insulation">
+      <option value="">Bitte auswählen</option>
+      <option value="100">unsaniert</option>
+      <option value="70">teilweise saniert</option>
+      <option value="50">gut gedämmt</option>
+      <option value="35">Neubau / sehr guter Standard</option>
+    </select>
+  </section>
+
+  <section class="card">
+    <h2>2. Aktuelle Heizung</h2>
+
+    <label for="heating">Aktueller Energieträger</label>
+    <select id="heating">
+      <option value="">Bitte auswählen</option>
+      <option value="oil">Öl</option>
+      <option value="gas">Gas</option>
+      <option value="electric">Strom / Nachtspeicher</option>
+      <option value="other">Sonstiges</option>
+    </select>
+
+    <label for="consumption">Jährlicher Verbrauch</label>
+    <input type="number" id="consumption" placeholder="Öl in Liter oder Gas in kWh">
+    <div class="hint">Bei Öl bitte Liter pro Jahr eintragen, bei Gas kWh pro Jahr.</div>
+  </section>
+
+  <section class="card">
+    <h2>3. Heizsystem &amp; Warmwasser</h2>
+
+    <label for="radiators">Heizsystem</label>
+    <select id="radiators">
+      <option value="">Bitte auswählen</option>
+      <option value="floor">Fußbodenheizung</option>
+      <option value="radiators">klassische Heizkörper</option>
+      <option value="both">beides</option>
+    </select>
+
+    <label for="flow">Vorlauftemperatur</label>
+    <select id="flow">
+      <option value="">Bitte auswählen</option>
+      <option value="low">unter 40 °C</option>
+      <option value="middle">40–55 °C</option>
+      <option value="high">über 55 °C</option>
+      <option value="unknown">weiß ich nicht</option>
+    </select>
+
+    <label for="persons">Personen im Haushalt</label>
+    <select id="persons">
+      <option value="">Bitte auswählen</option>
+      <option value="2">1–2 Personen</option>
+      <option value="4">3–4 Personen</option>
+      <option value="5">5 oder mehr Personen</option>
+    </select>
+
+    <label for="outside">Platz für Außengerät vorhanden?</label>
+    <select id="outside">
+      <option value="">Bitte auswählen</option>
+      <option value="yes">Ja</option>
+      <option value="no">Nein</option>
+      <option value="unknown">Unsicher</option>
+    </select>
+
+    <br><br>
+    <button class="btn" onclick="calculate()">Empfehlung berechnen</button>
+  </section>
+
+  <section class="card result" id="result">
+    <h2>Ihre persönliche Wärmepumpen-Empfehlung</h2>
+    <p>Basierend auf Ihren Angaben ergibt sich folgende erste Einschätzung:</p>
+
+    <div class="result-grid">
+      <div class="result-box">
+        Empfohlene Leistung
+        <strong id="power">–</strong>
+      </div>
+      <div class="result-box">
+        Empfohlener Typ
+        <strong id="type">–</strong>
+      </div>
+      <div class="result-box">
+        Geschätzter Stromverbrauch
+        <strong id="electricity">–</strong>
+      </div>
+      <div class="result-box">
+        Mögliche Ersparnis
+        <strong id="saving">–</strong>
+      </div>
+    </div>
+
+    <p class="notice">
+      Hinweis: Diese Berechnung ist eine erste Orientierung und ersetzt keine genaue Heizlastberechnung
+      oder Vor-Ort-Prüfung. Förderungen können je nach Voraussetzungen unterschiedlich ausfallen.
+    </p>
+
+    <br>
+    <button class="btn" onclick="document.getElementById(&#39;lead&#39;).style.display=&#39;block&#39;; document.getElementById(&#39;lead&#39;).scrollIntoView({behavior:&#39;smooth&#39;})">
+      Kostenlose Beratung anfordern
+    </button>
+  </section>
+
+  <section class="card lead" id="lead">
+    <h2>Jetzt kostenlos prüfen lassen</h2>
+    <p>Fordern Sie Ihre persönliche Beratung an. Wir melden uns zeitnah bei Ihnen.</p>
+
+    <label for="name">Name</label>
+    <input type="text" id="name" placeholder="Ihr Name">
+
+    <label for="phone">Telefonnummer</label>
+    <input type="tel" id="phone" placeholder="Ihre Telefonnummer">
+
+    <label for="email">E-Mail</label>
+    <input type="email" id="email" placeholder="Ihre E-Mail-Adresse">
+
+    <label for="zip">Postleitzahl</label>
+    <input type="text" id="zip" placeholder="Ihre PLZ">
+
+    <br><br>
+    <button class="btn" onclick="sendLead()">Anfrage absenden</button>
+
+    <p class="notice">
+      Datenschutz-Hinweis: Die eingegebenen Daten werden nur zur Kontaktaufnahme verwendet.
+      Bitte ergänzen Sie auf Ihrer echten Website noch Ihre Datenschutzerklärung und Ihr Impressum.
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  © 2026 Wärmepumpen-Check Online
+</footer>
+
+<script>
+  function calculate() {
+    const area = Number(document.getElementById('area').value);
+    const insulation = Number(document.getElementById('insulation').value);
+    const heating = document.getElementById('heating').value;
+    const consumption = Number(document.getElementById('consumption').value);
+    const flow = document.getElementById('flow').value;
+    const outside = document.getElementById('outside').value;
+
+    if (!area || !insulation || !heating || !consumption) {
+      alert('Bitte füllen Sie mindestens Wohnfläche, Dämmstandard, Heizung und Verbrauch aus.');
+      return;
+    }
+
+    let heatLoad = (area * insulation) / 1000;
+    let recommendedPowerMin = Math.round(heatLoad);
+    let recommendedPowerMax = Math.round(heatLoad + 2);
+
+    let yearlyHeatDemand;
+
+    if (heating === 'oil') {
+      yearlyHeatDemand = consumption * 10;
+    } else if (heating === 'gas') {
+      yearlyHeatDemand = consumption;
+    } else {
+      yearlyHeatDemand = area * insulation * 18;
+    }
+
+    let cop = 3.2;
+
+    if (flow === 'low') cop = 4.0;
+    if (flow === 'middle') cop = 3.3;
+    if (flow === 'high') cop = 2.7;
+
+    let electricity = Math.round(yearlyHeatDemand / cop);
+
+    let type = 'Luft-Wasser-Wärmepumpe';
+
+    if (outside === 'no') {
+      type = 'Innenaufgestellte Wärmepumpe oder individuelle Lösung';
+    }
+
+    let savingMin = 800;
+    let savingMax = 1500;
+
+    if (consumption > 3000 && heating === 'oil') {
+      savingMin = 1200;
+      savingMax = 2200;
+    }
+
+    document.getElementById('power').innerText = recommendedPowerMin + '–' + recommendedPowerMax + ' kW';
+    document.getElementById('type').innerText = type;
+    document.getElementById('electricity').innerText = electricity.toLocaleString('de-DE') + ' kWh/Jahr';
+    document.getElementById('saving').innerText = savingMin.toLocaleString('de-DE') + '–' + savingMax.toLocaleString('de-DE') + ' €/Jahr';
+
+    document.getElementById('result').style.display = 'block';
+    document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function sendLead() {
+    const name = document.getElementById('name').value;
+    const phone = document.getElementById('phone').value;
+    const email = document.getElementById('email').value;
+    const zip = document.getElementById('zip').value;
+
+    if (!name || !phone || !email || !zip) {
+      alert('Bitte füllen Sie alle Kontaktdaten aus.');
+      return;
+    }
+
+    alert('Vielen Dank! Ihre Anfrage wurde vorbereitet. Für den echten Versand muss noch ein Formular-Dienst oder Server angeschlossen werden.');
+  }
+</script>
+
+
+
+</body></html>
