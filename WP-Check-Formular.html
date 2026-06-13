@@ -431,6 +431,15 @@
             <input type="text" id="mitarbeiter" name="mitarbeiter" placeholder="Name Mitarbeiter">
           </div>
           <div class="field">
+            <label for="mitarbeiter_tel">Eigene Telefonnummer</label>
+            <input type="tel" id="mitarbeiter_tel" name="mitarbeiter_tel" autocomplete="tel">
+          </div>
+          <div class="field">
+            <label for="mitarbeiter_email">Eigene E-Mail</label>
+            <input type="email" id="mitarbeiter_email" name="mitarbeiter_email" autocomplete="email">
+            <span class="errmsg">Bitte gültige E-Mail angeben.</span>
+          </div>
+          <div class="field">
             <label for="ort_aufnahme">Ort</label>
             <input type="text" id="ort_aufnahme" name="ort_aufnahme">
           </div>
@@ -609,7 +618,7 @@ const REQUIRED = [
   "baujahr","wohnflaeche","bewohner","zustand","heizsystem",
   "heizungsart","baujahr_heiz","inbetriebnahme","verbrauch","warmwasser",
   "e_aussen","e_innen","fundament",
-  "mitarbeiter","ort_aufnahme","datum"
+  "mitarbeiter","mitarbeiter_tel","mitarbeiter_email","ort_aufnahme","datum"
 ];
 /* Pflicht nur, wenn das passende Heizsystem / die Heizungsart gewählt ist */
 const REQUIRED_COND = {
@@ -649,11 +658,13 @@ function validate(){
       field.classList.add("invalid"); ok = false; if(!first) first = field;
     }
   });
-  /* E-Mail-Format */
-  const email = document.getElementById("email");
-  if (email.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())){
-    email.closest(".field").classList.add("invalid"); ok = false; if(!first) first = email.closest(".field");
-  }
+  /* E-Mail-Format (Kunde + Mitarbeiter) */
+  ["email","mitarbeiter_email"].forEach(id=>{
+    const el = document.getElementById(id);
+    if (el && el.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim())){
+      el.closest(".field").classList.add("invalid"); ok = false; if(!first) first = el.closest(".field");
+    }
+  });
   /* Fotos – Pflicht, außer nicht-zutreffende Checklisten-Punkte */
   const missing = requiredPhotos().filter(k=>!photoData[k]);
   PHOTO_FIELDS.forEach(f=>document.getElementById("ph-"+f.key).classList.remove("missing"));
@@ -683,6 +694,8 @@ function buildPayload(){
       formular: "Technischer Check Wärmepumpe",
       erstellt_am: new Date().toISOString(),
       aufgenommen_von: v("mitarbeiter"),
+      mitarbeiter_telefon: v("mitarbeiter_tel"),
+      mitarbeiter_email: v("mitarbeiter_email"),
     },
     kunde: {
       name: v("name"),
