@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Termin anlegen | EnergyEngel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     KONFIGURATION – Webhook-URL ganz unten im <script>:
+        const WEBHOOK_URL = "..."
+     ============================================================ */
+  :root{
+    --ee-lime:#7DBF3F;
+    --ee-lime-d:#5FA02C;
+    --ee-dark:#1F3D2B;
+    --ee-ink:#231F20;
+    --ee-gold:#C9A227;
+    --bg:#F4F7F1;
+    --card:#FFFFFF;
+    --line:#E2E9DE;
+    --line-2:#D2DCCB;
+    --muted:#6C7A6E;
+    --ink:#1B271F;
+    --err:#C0392B;
+    --ok:#2E8B57;
+    --radius:14px;
+    --shadow:0 1px 2px rgba(31,61,43,.05), 0 8px 24px rgba(31,61,43,.06);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    font-size:16px;line-height:1.45;
+  }
+
+  /* ---------- Header ---------- */
+  header.app{
+    position:sticky;top:0;z-index:30;background:var(--ee-dark);color:#fff;
+    border-bottom:3px solid var(--ee-lime);overflow:hidden;
+  }
+  header.app::before{
+    content:"";position:absolute;inset:0;
+    background:repeating-linear-gradient(125deg,
+      rgba(125,191,63,0) 0 32px, rgba(125,191,63,.10) 32px 34px);
+    pointer-events:none;
+  }
+  .head-inner{
+    position:relative;max-width:820px;margin:0 auto;
+    padding:14px 18px;display:flex;align-items:center;gap:14px;
+  }
+  .head-logo{
+    height:46px;width:auto;background:#fff;border-radius:10px;padding:5px 11px;
+    display:grid;place-items:center;font-weight:800;color:var(--ee-dark);font-size:1rem;letter-spacing:.3px;
+  }
+  .head-txt h1{font-size:1.02rem;font-weight:700;margin:0;letter-spacing:.2px}
+  .head-txt p{margin:1px 0 0;font-size:.78rem;color:#cfe3bf;font-weight:500}
+
+  /* ---------- Layout ---------- */
+  main{max-width:820px;margin:0 auto;padding:18px 16px 130px}
+
+  .notice{
+    display:flex;gap:12px;align-items:flex-start;
+    background:#FFF3E9;border:1px solid #F6C89A;color:#B4560E;
+    border-radius:var(--radius);padding:14px 16px;margin-bottom:18px;
+    font-size:.9rem;font-weight:600;
+  }
+  .notice .ic{flex:0 0 auto;font-size:1.1rem;line-height:1.2}
+
+  section.block{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    margin-bottom:16px;box-shadow:var(--shadow);overflow:hidden;
+  }
+  .block > h2{
+    margin:0;font-size:1rem;font-weight:700;color:var(--ee-dark);
+    padding:15px 18px;display:flex;align-items:center;gap:11px;
+    border-bottom:1px solid var(--line);background:#FAFCF8;
+  }
+  .block > h2 .opt-tag{
+    margin-left:auto;font-size:.68rem;font-weight:700;letter-spacing:.4px;text-transform:uppercase;
+    color:var(--muted);background:#EEF3EA;border:1px solid var(--line);border-radius:999px;padding:3px 10px;
+  }
+  .block > h2 .num{
+    flex:0 0 auto;width:26px;height:26px;border-radius:8px;
+    background:var(--ee-lime);color:#fff;font-size:.82rem;font-weight:800;
+    display:grid;place-items:center;
+  }
+  .block .body{padding:18px}
+
+  /* ---------- Grid & Felder ---------- */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 18px}
+  .field{display:flex;flex-direction:column;gap:6px}
+  .field.full{grid-column:1 / -1}
+  @media (max-width:600px){ .grid{grid-template-columns:1fr} }
+
+  .q-title{font-size:.9rem;font-weight:700;color:var(--ink)}
+  .q-title .req{color:var(--ee-lime-d);font-weight:800}
+  .q-hint{font-size:.78rem;color:var(--muted);font-weight:500;margin-top:-2px}
+
+  label.lbl{font-size:.82rem;font-weight:600;color:var(--ink)}
+  label.lbl .req{color:var(--ee-lime-d);font-weight:800}
+
+  input[type=text],input[type=tel],input[type=email],
+  input[type=date],input[type=time],textarea{
+    width:100%;font:inherit;font-size:.95rem;color:var(--ink);
+    background:#fff;border:1.5px solid var(--line-2);border-radius:10px;
+    padding:11px 12px;outline:none;transition:border-color .15s, box-shadow .15s;
+  }
+  input:focus,textarea:focus{border-color:var(--ee-lime);box-shadow:0 0 0 3px rgba(125,191,63,.18);}
+  .field.invalid input{border-color:var(--err);box-shadow:0 0 0 3px rgba(192,57,43,.14)}
+
+  textarea{resize:vertical;min-height:92px;line-height:1.5}
+  input[type=date],input[type=time]{min-height:45px}
+
+  .opt-inline{
+    font-size:.7rem;font-weight:600;color:var(--muted);
+    background:#EEF3EA;border:1px solid var(--line);border-radius:999px;
+    padding:2px 8px;margin-left:6px;text-transform:none;letter-spacing:0;
+  }
+  .field.invalid .err-msg{display:block}
+  .err-msg{display:none;font-size:.72rem;color:var(--err);font-weight:600}
+
+  /* ---------- Options (Radio-Pills) ---------- */
+  .opts{display:flex;flex-direction:column;gap:8px}
+  .opts.cols{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px}
+  @media (max-width:600px){ .opts.cols{grid-template-columns:1fr} }
+  .opt{
+    position:relative;display:flex;align-items:center;gap:11px;
+    border:1.5px solid var(--line-2);border-radius:11px;padding:11px 14px;
+    cursor:pointer;background:#fff;transition:border-color .15s, background .15s;
+    font-size:.92rem;font-weight:500;color:var(--ink);
+  }
+  .opt:hover{border-color:var(--ee-lime)}
+  .opt input{position:absolute;opacity:0;width:0;height:0}
+  .opt .dot{
+    flex:0 0 auto;width:19px;height:19px;border-radius:50%;
+    border:2px solid var(--line-2);display:grid;place-items:center;transition:border-color .15s;
+  }
+  .opt .dot::after{content:"";width:9px;height:9px;border-radius:50%;background:var(--ee-lime);transform:scale(0);transition:transform .12s}
+  .opt input:checked ~ .dot{border-color:var(--ee-lime)}
+  .opt input:checked ~ .dot::after{transform:scale(1)}
+  .opt input:checked ~ .txt{font-weight:600;color:var(--ee-dark)}
+  .opt:has(input:checked){border-color:var(--ee-lime);background:#F3F9EC}
+  .field.invalid .opts .opt{border-color:var(--err)}
+
+  /* ---------- Checkbox-Variante ---------- */
+  .opt .box{
+    flex:0 0 auto;width:19px;height:19px;border-radius:6px;
+    border:2px solid var(--line-2);display:grid;place-items:center;
+    transition:border-color .15s, background .15s;
+  }
+  .opt .box::after{
+    content:"";width:10px;height:5px;margin-top:-3px;
+    border-left:2.5px solid #fff;border-bottom:2.5px solid #fff;
+    transform:rotate(-45deg) scale(0);transition:transform .12s;
+  }
+  .opt input:checked ~ .box{border-color:var(--ee-lime);background:var(--ee-lime)}
+  .opt input:checked ~ .box::after{transform:rotate(-45deg) scale(1)}
+
+  /* ---------- Standort-Button ---------- */
+  .geo-row{grid-column:1 / -1;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .btn-geo{
+    appearance:none;cursor:pointer;font:inherit;font-size:.88rem;font-weight:700;
+    background:#EEF6E5;color:var(--ee-lime-d);border:1.5px solid var(--ee-lime);
+    border-radius:10px;padding:10px 16px;display:inline-flex;align-items:center;gap:9px;
+    transition:background .15s;
+  }
+  .btn-geo:hover{background:#E3F1D3}
+  .btn-geo:disabled{opacity:.6;cursor:not-allowed}
+  .geo-status{font-size:.8rem;color:var(--muted);font-weight:600}
+  .geo-status.ok{color:var(--ok)}
+  .geo-status.err{color:var(--err)}
+
+  /* ---------- Submit ---------- */
+  .footer-bar{
+    position:fixed;left:0;right:0;bottom:0;z-index:40;
+    background:rgba(255,255,255,.92);backdrop-filter:blur(8px);
+    border-top:1px solid var(--line);padding:12px 16px;
+  }
+  .footer-inner{max-width:820px;margin:0 auto;display:flex;align-items:center;gap:14px;justify-content:space-between}
+  .bar-status{font-size:.82rem;color:var(--muted);font-weight:600}
+  .btn{
+    appearance:none;border:0;cursor:pointer;
+    background:var(--ee-lime);color:#fff;font:inherit;font-weight:800;font-size:.98rem;
+    padding:13px 26px;border-radius:12px;display:inline-flex;align-items:center;gap:10px;
+    box-shadow:0 6px 16px rgba(125,191,63,.35);transition:filter .15s, transform .05s;
+  }
+  .btn:hover{filter:brightness(1.04)}
+  .btn:active{transform:translateY(1px)}
+  .btn:disabled{opacity:.7;cursor:not-allowed}
+  .btn .spin{width:16px;height:16px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;display:none;animation:spin .7s linear infinite}
+  .btn.loading .spin{display:inline-block}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ---------- Toast ---------- */
+  .toast{
+    position:fixed;left:50%;bottom:88px;transform:translateX(-50%) translateY(20px);
+    background:var(--ee-dark);color:#fff;padding:13px 20px;border-radius:12px;
+    font-size:.9rem;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.25);
+    opacity:0;pointer-events:none;transition:opacity .25s, transform .25s;z-index:60;max-width:92vw;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast.err{background:var(--err)}
+
+  /* ---------- Erfolgs-Screen ---------- */
+  .success{display:none;text-align:center;padding:40px 20px}
+  .success.show{display:block}
+  .success .check{
+    width:76px;height:76px;border-radius:50%;background:#EAF6DE;color:var(--ee-lime-d);
+    display:grid;place-items:center;margin:0 auto 18px;font-size:2.2rem;font-weight:800;
+    border:2px solid var(--ee-lime);
+  }
+  .success h2{margin:0 0 8px;color:var(--ee-dark);font-size:1.4rem}
+  .success p{margin:0 0 22px;color:var(--muted)}
+  .success .btn-again{background:var(--ee-dark);box-shadow:none;padding:11px 22px}
+</style>
+</head>
+<body>
+
+<header class="app">
+  <div class="head-inner">
+    <div class="head-logo">EnergyEngel</div>
+    <div class="head-txt">
+      <h1>Termin anlegen</h1>
+      <p>Kontaktdaten &amp; Thema → automatisch in Pipedrive</p>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="notice" id="notice">
+    <span class="ic">✍️</span>
+    <span>Von oben nach unten ausfüllen: erst Notizen an der Tür, Kontaktdaten ganz zum Schluss. Pflicht sind nur Thema, Nachname, Telefon und Adresse.</span>
+  </div>
+
+  <form id="form" novalidate>
+
+    <!-- 1. Notizen (zuerst – direkt an der Haustür) -->
+    <section class="block">
+      <h2><span class="num">1</span> Notizen zum Gespräch <span class="opt-tag">optional</span></h2>
+      <div class="body">
+        <div class="grid">
+
+          <div class="field full" data-field="notizen">
+            <label class="lbl">Notizen</label>
+            <div class="q-hint">Alles, was der Innendienst zum Termin wissen sollte.</div>
+            <textarea name="notizen" rows="5" placeholder="z. B. Kunde hat bereits Angebot von Wettbewerber, Hund im Garten, Klingel defekt …"></textarea>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Thema des Termins -->
+    <section class="block">
+      <h2><span class="num">2</span> Worum geht es beim Termin?</h2>
+      <div class="body">
+        <div class="grid">
+
+          <div class="field full" data-field="thema">
+            <div class="q-title">Thema <span class="req">*</span></div>
+            <div class="q-hint">Mehrfachauswahl möglich.</div>
+            <div class="opts cols">
+              <label class="opt"><input type="checkbox" name="thema" value="Photovoltaikanlage"><span class="box"></span><span class="txt">Photovoltaikanlage</span></label>
+              <label class="opt"><input type="checkbox" name="thema" value="Wärmepumpe"><span class="box"></span><span class="txt">Wärmepumpe</span></label>
+              <label class="opt"><input type="checkbox" name="thema" value="Enpal"><span class="box"></span><span class="txt">Enpal</span></label>
+              <label class="opt"><input type="checkbox" name="thema" value="Unabhängige Beratung über EnergyEngel"><span class="box"></span><span class="txt">Unabhängige Beratung über EnergyEngel</span></label>
+            </div>
+            <span class="err-msg">Bitte mindestens ein Thema auswählen.</span>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Terminabsprache -->
+    <section class="block">
+      <h2><span class="num">3</span> Terminabsprache <span class="opt-tag">optional</span></h2>
+      <div class="body">
+        <div class="grid">
+
+          <div class="field full" data-field="entscheider">
+            <div class="q-title">Sitzen beim Termin alle Entscheider mit am Tisch?</div>
+            <div class="q-hint">z. B. Ehepartner oder Miteigentümer – wichtig für den Abschluss.</div>
+            <div class="opts cols">
+              <label class="opt"><input type="radio" name="entscheider" value="Ja"><span class="dot"></span><span class="txt">Ja, alle Entscheider sind dabei</span></label>
+              <label class="opt"><input type="radio" name="entscheider" value="Nein"><span class="dot"></span><span class="txt">Nein, nicht alle dabei</span></label>
+            </div>
+          </div>
+
+          <div class="field full" data-field="rueckruf">
+            <div class="q-title">Wann soll der Kunde angerufen werden?</div>
+            <div class="q-hint">Tag auswählen und passendes Zeitfenster ankreuzen.</div>
+          </div>
+
+          <div class="field" data-field="rueckruf_datum">
+            <label class="lbl">Datum</label>
+            <input type="date" name="rueckruf_datum">
+          </div>
+          <div class="field" data-field="rueckruf_uhrzeit">
+            <label class="lbl">Genaue Uhrzeit <span class="opt-inline">falls vereinbart</span></label>
+            <input type="time" name="rueckruf_uhrzeit">
+          </div>
+
+          <div class="field full" data-field="rueckruf_fenster">
+            <label class="lbl">Erreichbarkeit</label>
+            <div class="q-hint">Mehrfachauswahl möglich – alle Zeiten ankreuzen, zu denen der Kunde erreichbar ist.</div>
+            <div class="opts cols">
+              <label class="opt"><input type="checkbox" name="rueckruf_fenster" value="Vormittag (8–12 Uhr)"><span class="box"></span><span class="txt">Vormittag (8–12 Uhr)</span></label>
+              <label class="opt"><input type="checkbox" name="rueckruf_fenster" value="Mittag (12–15 Uhr)"><span class="box"></span><span class="txt">Mittag (12–15 Uhr)</span></label>
+              <label class="opt"><input type="checkbox" name="rueckruf_fenster" value="Nachmittag (15–18 Uhr)"><span class="box"></span><span class="txt">Nachmittag (15–18 Uhr)</span></label>
+              <label class="opt"><input type="checkbox" name="rueckruf_fenster" value="Abend (18–20 Uhr)"><span class="box"></span><span class="txt">Abend (18–20 Uhr)</span></label>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Kontaktdaten -->
+    <section class="block">
+      <h2><span class="num">4</span> Kontaktdaten aufnehmen</h2>
+      <div class="body">
+        <div class="grid">
+
+          <div class="field full" data-field="anrede">
+            <div class="q-title">Anrede</div>
+            <div class="opts cols">
+              <label class="opt"><input type="radio" name="anrede" value="Frau"><span class="dot"></span><span class="txt">Frau</span></label>
+              <label class="opt"><input type="radio" name="anrede" value="Herr"><span class="dot"></span><span class="txt">Herr</span></label>
+            </div>
+          </div>
+
+          <div class="field" data-field="vorname">
+            <label class="lbl">Vorname</label>
+            <input type="text" name="vorname" autocomplete="given-name" placeholder="Max">
+            <span class="err-msg">Bitte ausfüllen.</span>
+          </div>
+          <div class="field" data-field="nachname">
+            <label class="lbl">Nachname <span class="req">*</span></label>
+            <input type="text" name="nachname" autocomplete="family-name" placeholder="Mustermann">
+            <span class="err-msg">Bitte ausfüllen.</span>
+          </div>
+
+          <div class="field" data-field="telefon">
+            <label class="lbl">Telefon <span class="req">*</span></label>
+            <input type="tel" name="telefon" autocomplete="tel" placeholder="+49 170 1234567" inputmode="tel">
+            <span class="err-msg">Bitte ausfüllen.</span>
+          </div>
+          <div class="field" data-field="email">
+            <label class="lbl">E-Mail</label>
+            <input type="email" name="email" autocomplete="email" placeholder="max@beispiel.de" inputmode="email">
+            <span class="err-msg">Bitte gültige E-Mail angeben.</span>
+          </div>
+
+          <div class="geo-row">
+            <button type="button" class="btn-geo" id="geoBtn">
+              <span>📍</span><span class="geo-label">Adresse per Standort ausfüllen</span>
+            </button>
+            <span class="geo-status" id="geoStatus"></span>
+          </div>
+
+          <div class="field" data-field="strasse">
+            <label class="lbl">Straße <span class="req">*</span></label>
+            <input type="text" name="strasse" autocomplete="address-line1" placeholder="Musterstraße">
+            <span class="err-msg">Bitte ausfüllen.</span>
+          </div>
+          <div class="field" data-field="hausnummer">
+            <label class="lbl">Hausnummer <span class="req">*</span></label>
+            <input type="text" name="hausnummer" placeholder="12a">
+            <span class="err-msg">Bitte ausfüllen.</span>
+          </div>
+
+          <div class="field" data-field="plz">
+            <label class="lbl">Postleitzahl <span class="req">*</span></label>
+            <input type="text" name="plz" autocomplete="postal-code" placeholder="12345" inputmode="numeric">
+            <span class="err-msg">Bitte gültige PLZ (5 Ziffern).</span>
+          </div>
+          <div class="field" data-field="stadt">
+            <label class="lbl">Stadt <span class="req">*</span></label>
+            <input type="text" name="stadt" autocomplete="address-level2" placeholder="Musterstadt">
+            <span class="err-msg">Bitte ausfüllen.</span>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </form>
+
+  <!-- Erfolgs-Screen -->
+  <div class="success" id="success">
+    <div class="check">✓</div>
+    <h2>Lead erstellt!</h2>
+    <p>Der neue Kunde wurde erfolgreich in Pipedrive angelegt.</p>
+    <button type="button" class="btn btn-again" id="btnAgain">Weiteren Kunden anlegen</button>
+  </div>
+</main>
+
+<div class="footer-bar" id="footerBar">
+  <div class="footer-inner">
+    <span class="bar-status" id="barStatus"></span>
+    <button type="button" class="btn" id="submitBtn">
+      <span class="spin"></span><span class="label">Lead erstellen</span>
+    </button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   HIER die Webhook-URL aus deinem n8n-Workflow eintragen.
+   Leer lassen = Test-Modus (Payload landet in der Konsole, F12).
+   ============================================================ */
+const WEBHOOK_URL = "https://energyengel.app.n8n.cloud/webhook/wp-lead";
+
+const form      = document.getElementById("form");
+const btn       = document.getElementById("submitBtn");
+const toast     = document.getElementById("toast");
+const barStatus = document.getElementById("barStatus");
+const successEl = document.getElementById("success");
+const footerBar = document.getElementById("footerBar");
+const noticeEl  = document.getElementById("notice");
+
+/* Pflichtfelder */
+const RADIO_FIELDS = [];                 // Anrede & Entscheider-Frage sind optional
+const CHECK_FIELDS = ["thema"];          // mind. eine Auswahl nötig
+const TEXT_FIELDS  = ["nachname","telefon","strasse","hausnummer","plz","stadt"];
+const OPTIONAL_EMAIL = true;             // E-Mail optional, aber wenn gefüllt: Formatprüfung
+
+function setInvalid(name, on){
+  const f = document.querySelector(`.field[data-field="${name}"]`);
+  if (f) f.classList.toggle("invalid", on);
+  return f;
+}
+
+/* Fehler entfernen, sobald korrigiert wird */
+form.addEventListener("input", e=>{
+  const f = e.target.closest(".field");
+  if (f) f.classList.remove("invalid");
+});
+form.addEventListener("change", e=>{
+  const f = e.target.closest(".field");
+  if (f) f.classList.remove("invalid");
+});
+
+function validate(){
+  let ok = true, first = null;
+  validate._first = null;
+
+  RADIO_FIELDS.forEach(name=>{
+    const checked = form.querySelector(`input[name="${name}"]:checked`);
+    const bad = !checked;
+    const f = setInvalid(name, bad);
+    if (bad){ ok = false; first = first || f; }
+  });
+
+  CHECK_FIELDS.forEach(name=>{
+    const bad = form.querySelectorAll(`input[name="${name}"]:checked`).length === 0;
+    const f = setInvalid(name, bad);
+    if (bad){ ok = false; first = first || f; }
+  });
+
+  TEXT_FIELDS.forEach(name=>{
+    const el = form.querySelector(`[name="${name}"]`);
+    let val = (el.value || "").trim();
+    let bad = !val;
+    if (!bad && name === "plz") bad = !/^\d{5}$/.test(val);
+    const f = setInvalid(name, bad);
+    if (bad){ ok = false; first = first || f; }
+  });
+
+  /* E-Mail ist optional – nur prüfen, wenn etwas eingetragen wurde */
+  const mail = (form.querySelector('[name="email"]').value || "").trim();
+  const mailBad = !!mail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail);
+  const mf = setInvalid("email", mailBad);
+  if (mailBad){ ok = false; first = first || mf; }
+
+  validate._first = first;
+  return ok;
+}
+
+function val(name){
+  const el = form.querySelector(`[name="${name}"]`);
+  if (!el) return "";
+  if (el.type === undefined){
+    const c = form.querySelector(`input[name="${name}"]:checked`);
+    return c ? c.value : "";
+  }
+  return (el.value || "").trim();
+}
+function radio(name){
+  const c = form.querySelector(`input[name="${name}"]:checked`);
+  return c ? c.value : "";
+}
+function checks(name){
+  return Array.from(form.querySelectorAll(`input[name="${name}"]:checked`)).map(el=>el.value);
+}
+
+/* Rückruf frühestens ab heute */
+(()=>{
+  const el = form.querySelector('[name="rueckruf_datum"]');
+  if (el) el.min = new Date().toLocaleDateString("sv-SE"); // YYYY-MM-DD, lokale Zeitzone
+})();
+
+/* Rückruf-Wunsch als lesbaren Satz, z. B. "Mo, 10.08.2026, Vormittag (8–12 Uhr)" */
+function rueckrufText(){
+  const d = val("rueckruf_datum");
+  const u = val("rueckruf_uhrzeit");
+  const f = checks("rueckruf_fenster");
+  const teile = [];
+  if (d){
+    const dt = new Date(d + "T00:00:00");
+    teile.push(dt.toLocaleDateString("de-DE", {weekday:"short", day:"2-digit", month:"2-digit", year:"numeric"}));
+  }
+  if (u) teile.push(u + " Uhr");
+  if (f.length) teile.push(f.join(" / "));
+  return teile.join(", ");
+}
+
+function buildPayload(){
+  const vorname  = val("vorname");
+  const nachname = val("nachname");
+  return {
+    kunde: {
+      anrede:     radio("anrede"),
+      vorname:    vorname,
+      nachname:   nachname,
+      name:       (vorname + " " + nachname).trim(),
+      telefon:    val("telefon"),
+      email:      val("email"),
+      strasse:    val("strasse"),
+      hausnummer: val("hausnummer"),
+      plz:        val("plz"),
+      stadt:      val("stadt"),
+      adresse:    `${val("strasse")} ${val("hausnummer")}, ${val("plz")} ${val("stadt")}`.trim()
+    },
+    termin: {
+      thema:            checks("thema"),
+      thema_text:       checks("thema").join(", "),
+      alle_entscheider: radio("entscheider")
+    },
+    rueckruf: {
+      datum:            val("rueckruf_datum"),
+      uhrzeit:          val("rueckruf_uhrzeit"),
+      zeitfenster:      checks("rueckruf_fenster"),
+      zeitfenster_text: checks("rueckruf_fenster").join(" / "),
+      text:             rueckrufText()
+    },
+    notizen: val("notizen"),
+    meta: {
+      quelle:   "Türgeschäft Lead-Formular",
+      standort: geoData,
+      datum:    new Date().toISOString()
+    }
+  };
+}
+
+/* ============================================================
+   Standort → Adresse automatisch ausfüllen
+   Reverse-Geocoding über OpenStreetMap/Nominatim (kein API-Key).
+   Funktioniert nur über HTTPS (GitHub Pages ist HTTPS ✔).
+   ============================================================ */
+const geoBtn    = document.getElementById("geoBtn");
+const geoStatus = document.getElementById("geoStatus");
+let geoData     = null;
+
+function setGeoStatus(msg, kind=""){
+  geoStatus.textContent = msg;
+  geoStatus.className = "geo-status" + (kind ? " " + kind : "");
+}
+
+function fillField(name, value){
+  if (!value) return;
+  const el = form.querySelector(`[name="${name}"]`);
+  if (!el) return;
+  el.value = value;
+  el.closest(".field")?.classList.remove("invalid");
+}
+
+geoBtn.addEventListener("click", ()=>{
+  if (!navigator.geolocation){
+    setGeoStatus("Standort wird von diesem Browser nicht unterstützt.", "err");
+    return;
+  }
+  geoBtn.disabled = true;
+  setGeoStatus("Standort wird ermittelt …");
+
+  navigator.geolocation.getCurrentPosition(async pos=>{
+    const lat = pos.coords.latitude, lon = pos.coords.longitude;
+    geoData = { lat, lon, genauigkeit_m: Math.round(pos.coords.accuracy || 0) };
+    setGeoStatus("Adresse wird geladen …");
+    try{
+      const url = "https://nominatim.openstreetmap.org/reverse"
+                + `?format=jsonv2&lat=${lat}&lon=${lon}&addressdetails=1&zoom=18&accept-language=de`;
+      const res = await fetch(url, { headers:{ "Accept":"application/json" } });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const data = await res.json();
+      const a = data.address || {};
+
+      const strasse = a.road || a.pedestrian || a.footway || a.residential || a.path || "";
+      const stadt   = a.city || a.town || a.village || a.municipality || a.suburb || a.county || "";
+
+      fillField("strasse",    strasse);
+      fillField("hausnummer", a.house_number || "");
+      fillField("plz",        a.postcode || "");
+      fillField("stadt",      stadt);
+      geoData.adresse_roh = data.display_name || "";
+
+      if (strasse || stadt){
+        const fehlt = !a.house_number ? " Hausnummer bitte ergänzen." : "";
+        setGeoStatus("Adresse übernommen – bitte kurz prüfen." + fehlt, "ok");
+      }else{
+        setGeoStatus("Keine Adresse gefunden – bitte manuell eintragen.", "err");
+      }
+    }catch(err){
+      console.error(err);
+      setGeoStatus("Adresse konnte nicht geladen werden – bitte manuell eintragen.", "err");
+    }finally{
+      geoBtn.disabled = false;
+    }
+  }, err=>{
+    console.error(err);
+    geoBtn.disabled = false;
+    const msg = err.code === 1
+      ? "Standortfreigabe abgelehnt – bitte im Browser erlauben."
+      : "Standort konnte nicht ermittelt werden.";
+    setGeoStatus(msg, "err");
+  }, { enableHighAccuracy:true, timeout:15000, maximumAge:0 });
+});
+
+let toastTimer;
+function showToast(msg, err=false){
+  clearTimeout(toastTimer);
+  toast.textContent = msg;
+  toast.classList.toggle("err", err);
+  toast.classList.add("show");
+  toastTimer = setTimeout(()=>toast.classList.remove("show"), 4000);
+}
+
+function setLoading(on){
+  btn.classList.toggle("loading", on);
+  btn.disabled = on;
+  btn.querySelector(".label").textContent = on ? "Wird angelegt …" : "Lead erstellen";
+}
+
+btn.addEventListener("click", async ()=>{
+  if (!validate()){
+    showToast("Bitte Pflichtfelder prüfen.", true);
+    validate._first?.scrollIntoView({behavior:"smooth", block:"center"});
+    return;
+  }
+  const payload = buildPayload();
+
+  if (!WEBHOOK_URL){
+    console.log("WP-Lead Payload (Webhook noch nicht gesetzt):", payload);
+    showToast("Webhook-URL fehlt – Payload liegt in der Konsole (F12).", true);
+    return;
+  }
+
+  setLoading(true);
+  barStatus.textContent = "";
+  try{
+    const res = await fetch(WEBHOOK_URL, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error("HTTP "+res.status);
+    // Erfolg
+    form.style.display = "none";
+    noticeEl.style.display = "none";
+    footerBar.style.display = "none";
+    successEl.classList.add("show");
+    window.scrollTo({top:0, behavior:"smooth"});
+  }catch(err){
+    console.error(err);
+    showToast("Anlegen fehlgeschlagen. Verbindung/Webhook prüfen.", true);
+  }finally{
+    setLoading(false);
+  }
+});
+
+document.getElementById("btnAgain").addEventListener("click", ()=>{
+  form.reset();
+  form.querySelectorAll(".field.invalid").forEach(f=>f.classList.remove("invalid"));
+  geoData = null;
+  setGeoStatus("");
+  successEl.classList.remove("show");
+  form.style.display = "";
+  noticeEl.style.display = "";
+  footerBar.style.display = "";
+  window.scrollTo({top:0, behavior:"smooth"});
+});
+</script>
+</body>
+</html>
