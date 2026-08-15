@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wärmepumpe – Neuen Kunden anlegen | EnergyEngel</title>
+<title>Termin anlegen | EnergyEngel</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -103,13 +103,23 @@
   label.lbl{font-size:.82rem;font-weight:600;color:var(--ink)}
   label.lbl .req{color:var(--ee-lime-d);font-weight:800}
 
-  input[type=text],input[type=tel],input[type=email]{
+  input[type=text],input[type=tel],input[type=email],
+  input[type=date],input[type=time],textarea{
     width:100%;font:inherit;font-size:.95rem;color:var(--ink);
     background:#fff;border:1.5px solid var(--line-2);border-radius:10px;
     padding:11px 12px;outline:none;transition:border-color .15s, box-shadow .15s;
   }
-  input:focus{border-color:var(--ee-lime);box-shadow:0 0 0 3px rgba(125,191,63,.18);}
+  input:focus,textarea:focus{border-color:var(--ee-lime);box-shadow:0 0 0 3px rgba(125,191,63,.18);}
   .field.invalid input{border-color:var(--err);box-shadow:0 0 0 3px rgba(192,57,43,.14)}
+
+  textarea{resize:vertical;min-height:92px;line-height:1.5}
+  input[type=date],input[type=time]{min-height:45px}
+
+  .opt-inline{
+    font-size:.7rem;font-weight:600;color:var(--muted);
+    background:#EEF3EA;border:1px solid var(--line);border-radius:999px;
+    padding:2px 8px;margin-left:6px;text-transform:none;letter-spacing:0;
+  }
   .field.invalid .err-msg{display:block}
   .err-msg{display:none;font-size:.72rem;color:var(--err);font-weight:600}
 
@@ -135,6 +145,34 @@
   .opt input:checked ~ .txt{font-weight:600;color:var(--ee-dark)}
   .opt:has(input:checked){border-color:var(--ee-lime);background:#F3F9EC}
   .field.invalid .opts .opt{border-color:var(--err)}
+
+  /* ---------- Checkbox-Variante ---------- */
+  .opt .box{
+    flex:0 0 auto;width:19px;height:19px;border-radius:6px;
+    border:2px solid var(--line-2);display:grid;place-items:center;
+    transition:border-color .15s, background .15s;
+  }
+  .opt .box::after{
+    content:"";width:10px;height:5px;margin-top:-3px;
+    border-left:2.5px solid #fff;border-bottom:2.5px solid #fff;
+    transform:rotate(-45deg) scale(0);transition:transform .12s;
+  }
+  .opt input:checked ~ .box{border-color:var(--ee-lime);background:var(--ee-lime)}
+  .opt input:checked ~ .box::after{transform:rotate(-45deg) scale(1)}
+
+  /* ---------- Standort-Button ---------- */
+  .geo-row{grid-column:1 / -1;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .btn-geo{
+    appearance:none;cursor:pointer;font:inherit;font-size:.88rem;font-weight:700;
+    background:#EEF6E5;color:var(--ee-lime-d);border:1.5px solid var(--ee-lime);
+    border-radius:10px;padding:10px 16px;display:inline-flex;align-items:center;gap:9px;
+    transition:background .15s;
+  }
+  .btn-geo:hover{background:#E3F1D3}
+  .btn-geo:disabled{opacity:.6;cursor:not-allowed}
+  .geo-status{font-size:.8rem;color:var(--muted);font-weight:600}
+  .geo-status.ok{color:var(--ok)}
+  .geo-status.err{color:var(--err)}
 
   /* ---------- Submit ---------- */
   .footer-bar{
@@ -186,8 +224,8 @@
   <div class="head-inner">
     <div class="head-logo">EnergyEngel</div>
     <div class="head-txt">
-      <h1>Wärmepumpe – Neuen Kunden anlegen</h1>
-      <p>Fragebogen &amp; Kontaktdaten → automatisch in Pipedrive</p>
+      <h1>Termin anlegen</h1>
+      <p>Kontaktdaten &amp; Thema → automatisch in Pipedrive</p>
     </div>
   </div>
 </header>
@@ -195,14 +233,96 @@
 <main>
   <div class="notice" id="notice">
     <span class="ic">✍️</span>
-    <span>Bitte zuerst alle Angaben machen &amp; abschließend auf „Lead erstellen" klicken, um den neuen Kunden anzulegen.</span>
+    <span>Von oben nach unten ausfüllen: erst Notizen an der Tür, Kontaktdaten ganz zum Schluss. Pflicht sind nur Thema, Nachname, Telefon und Adresse.</span>
   </div>
 
   <form id="form" novalidate>
 
-    <!-- 1. Kontaktdaten -->
+    <!-- 1. Notizen (zuerst – direkt an der Haustür) -->
     <section class="block">
-      <h2><span class="num">1</span> Kontaktdaten angeben</h2>
+      <h2><span class="num">1</span> Notizen zum Gespräch <span class="opt-tag">optional</span></h2>
+      <div class="body">
+        <div class="grid">
+
+          <div class="field full" data-field="notizen">
+            <label class="lbl">Notizen</label>
+            <div class="q-hint">Alles, was der Innendienst zum Termin wissen sollte.</div>
+            <textarea name="notizen" rows="5" placeholder="z. B. Kunde hat bereits Angebot von Wettbewerber, Hund im Garten, Klingel defekt …"></textarea>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Thema des Termins -->
+    <section class="block">
+      <h2><span class="num">2</span> Worum geht es beim Termin?</h2>
+      <div class="body">
+        <div class="grid">
+
+          <div class="field full" data-field="thema">
+            <div class="q-title">Thema <span class="req">*</span></div>
+            <div class="q-hint">Mehrfachauswahl möglich.</div>
+            <div class="opts cols">
+              <label class="opt"><input type="checkbox" name="thema" value="Photovoltaikanlage"><span class="box"></span><span class="txt">Photovoltaikanlage</span></label>
+              <label class="opt"><input type="checkbox" name="thema" value="Wärmepumpe"><span class="box"></span><span class="txt">Wärmepumpe</span></label>
+              <label class="opt"><input type="checkbox" name="thema" value="Enpal"><span class="box"></span><span class="txt">Enpal</span></label>
+              <label class="opt"><input type="checkbox" name="thema" value="Unabhängige Beratung über EnergyEngel"><span class="box"></span><span class="txt">Unabhängige Beratung über EnergyEngel</span></label>
+            </div>
+            <span class="err-msg">Bitte mindestens ein Thema auswählen.</span>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Terminabsprache -->
+    <section class="block">
+      <h2><span class="num">3</span> Terminabsprache <span class="opt-tag">optional</span></h2>
+      <div class="body">
+        <div class="grid">
+
+          <div class="field full" data-field="entscheider">
+            <div class="q-title">Sitzen beim Termin alle Entscheider mit am Tisch?</div>
+            <div class="q-hint">z. B. Ehepartner oder Miteigentümer – wichtig für den Abschluss.</div>
+            <div class="opts cols">
+              <label class="opt"><input type="radio" name="entscheider" value="Ja"><span class="dot"></span><span class="txt">Ja, alle Entscheider sind dabei</span></label>
+              <label class="opt"><input type="radio" name="entscheider" value="Nein"><span class="dot"></span><span class="txt">Nein, nicht alle dabei</span></label>
+            </div>
+          </div>
+
+          <div class="field full" data-field="rueckruf">
+            <div class="q-title">Wann soll der Kunde angerufen werden?</div>
+            <div class="q-hint">Tag auswählen und passendes Zeitfenster ankreuzen.</div>
+          </div>
+
+          <div class="field" data-field="rueckruf_datum">
+            <label class="lbl">Datum</label>
+            <input type="date" name="rueckruf_datum">
+          </div>
+          <div class="field" data-field="rueckruf_uhrzeit">
+            <label class="lbl">Genaue Uhrzeit <span class="opt-inline">falls vereinbart</span></label>
+            <input type="time" name="rueckruf_uhrzeit">
+          </div>
+
+          <div class="field full" data-field="rueckruf_fenster">
+            <label class="lbl">Erreichbarkeit</label>
+            <div class="q-hint">Mehrfachauswahl möglich – alle Zeiten ankreuzen, zu denen der Kunde erreichbar ist.</div>
+            <div class="opts cols">
+              <label class="opt"><input type="checkbox" name="rueckruf_fenster" value="Vormittag (8–12 Uhr)"><span class="box"></span><span class="txt">Vormittag (8–12 Uhr)</span></label>
+              <label class="opt"><input type="checkbox" name="rueckruf_fenster" value="Mittag (12–15 Uhr)"><span class="box"></span><span class="txt">Mittag (12–15 Uhr)</span></label>
+              <label class="opt"><input type="checkbox" name="rueckruf_fenster" value="Nachmittag (15–18 Uhr)"><span class="box"></span><span class="txt">Nachmittag (15–18 Uhr)</span></label>
+              <label class="opt"><input type="checkbox" name="rueckruf_fenster" value="Abend (18–20 Uhr)"><span class="box"></span><span class="txt">Abend (18–20 Uhr)</span></label>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Kontaktdaten -->
+    <section class="block">
+      <h2><span class="num">4</span> Kontaktdaten aufnehmen</h2>
       <div class="body">
         <div class="grid">
 
@@ -215,7 +335,7 @@
           </div>
 
           <div class="field" data-field="vorname">
-            <label class="lbl">Vorname <span class="req">*</span></label>
+            <label class="lbl">Vorname</label>
             <input type="text" name="vorname" autocomplete="given-name" placeholder="Max">
             <span class="err-msg">Bitte ausfüllen.</span>
           </div>
@@ -231,9 +351,16 @@
             <span class="err-msg">Bitte ausfüllen.</span>
           </div>
           <div class="field" data-field="email">
-            <label class="lbl">E-Mail <span class="req">*</span></label>
+            <label class="lbl">E-Mail</label>
             <input type="email" name="email" autocomplete="email" placeholder="max@beispiel.de" inputmode="email">
             <span class="err-msg">Bitte gültige E-Mail angeben.</span>
+          </div>
+
+          <div class="geo-row">
+            <button type="button" class="btn-geo" id="geoBtn">
+              <span>📍</span><span class="geo-label">Adresse per Standort ausfüllen</span>
+            </button>
+            <span class="geo-status" id="geoStatus"></span>
           </div>
 
           <div class="field" data-field="strasse">
@@ -256,96 +383,6 @@
             <label class="lbl">Stadt <span class="req">*</span></label>
             <input type="text" name="stadt" autocomplete="address-level2" placeholder="Musterstadt">
             <span class="err-msg">Bitte ausfüllen.</span>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- 2. Heizungs-Fragebogen (optional) -->
-    <section class="block">
-      <h2><span class="num">2</span> Angaben zur Heizung <span class="opt-tag">optional</span></h2>
-      <div class="body">
-        <div class="grid">
-
-          <div class="field" data-field="wohnflaeche">
-            <label class="lbl">Wohnfläche (Quadratmeter)</label>
-            <input type="text" name="wohnflaeche" placeholder="z. B. 140" inputmode="numeric">
-          </div>
-          <div class="field" data-field="baujahr">
-            <label class="lbl">Baujahr des Hauses</label>
-            <input type="text" name="baujahr" placeholder="z. B. 1998" inputmode="numeric">
-          </div>
-
-          <div class="field full" data-field="heizungsart">
-            <div class="q-title">Wie heizen Sie aktuell?</div>
-            <div class="opts cols">
-              <label class="opt"><input type="radio" name="heizungsart" value="Öl"><span class="dot"></span><span class="txt">Öl</span></label>
-              <label class="opt"><input type="radio" name="heizungsart" value="Gas"><span class="dot"></span><span class="txt">Gas</span></label>
-              <label class="opt"><input type="radio" name="heizungsart" value="Holz"><span class="dot"></span><span class="txt">Holz</span></label>
-              <label class="opt"><input type="radio" name="heizungsart" value="Strom"><span class="dot"></span><span class="txt">Strom</span></label>
-              <label class="opt"><input type="radio" name="heizungsart" value="Anderes"><span class="dot"></span><span class="txt">Anderes</span></label>
-            </div>
-            <span class="err-msg">Bitte auswählen.</span>
-          </div>
-
-          <div class="field full" data-field="heizung_alter">
-            <div class="q-title">Wie viele Jahre ist Ihre alte Heizung schon in Betrieb?</div>
-            <div class="q-hint">Die Förderung kann bei einer älteren Heizung höher ausfallen.</div>
-            <div class="opts cols">
-              <label class="opt"><input type="radio" name="heizung_alter" value="Unter 10 Jahre"><span class="dot"></span><span class="txt">Unter 10 Jahre</span></label>
-              <label class="opt"><input type="radio" name="heizung_alter" value="10-15 Jahre"><span class="dot"></span><span class="txt">10–15 Jahre</span></label>
-              <label class="opt"><input type="radio" name="heizung_alter" value="15-20 Jahre"><span class="dot"></span><span class="txt">15–20 Jahre</span></label>
-              <label class="opt"><input type="radio" name="heizung_alter" value="20-25 Jahre"><span class="dot"></span><span class="txt">20–25 Jahre</span></label>
-              <label class="opt"><input type="radio" name="heizung_alter" value="Älter als 25 Jahre"><span class="dot"></span><span class="txt">Älter als 25 Jahre</span></label>
-              <label class="opt"><input type="radio" name="heizung_alter" value="Weiß nicht"><span class="dot"></span><span class="txt">Weiß nicht</span></label>
-            </div>
-            <span class="err-msg">Bitte auswählen.</span>
-          </div>
-
-          <div class="field full" data-field="gebaeudetyp">
-            <div class="q-title">Für welchen Gebäudetyp benötigen Sie eine neue Heizung?</div>
-            <div class="q-hint">Abhängig vom Gebäudetyp besteht Anspruch auf zusätzliche Förderung.</div>
-            <div class="opts cols">
-              <label class="opt"><input type="radio" name="gebaeudetyp" value="Einfamilienhaus"><span class="dot"></span><span class="txt">Einfamilienhaus</span></label>
-              <label class="opt"><input type="radio" name="gebaeudetyp" value="Mehrfamilienhaus"><span class="dot"></span><span class="txt">Mehrfamilienhaus</span></label>
-              <label class="opt"><input type="radio" name="gebaeudetyp" value="Reihenhaus"><span class="dot"></span><span class="txt">Reihenhaus</span></label>
-              <label class="opt"><input type="radio" name="gebaeudetyp" value="Anderes"><span class="dot"></span><span class="txt">Anderes</span></label>
-            </div>
-            <span class="err-msg">Bitte auswählen.</span>
-          </div>
-
-          <div class="field full" data-field="eigentuemer">
-            <div class="q-title">Sind Sie Eigentümer der Immobilie?</div>
-            <div class="q-hint">Eigentümer erhalten eine Grundförderung von bis zu 9.000 € beim Heizungstausch.</div>
-            <div class="opts cols">
-              <label class="opt"><input type="radio" name="eigentuemer" value="Ja"><span class="dot"></span><span class="txt">Ja</span></label>
-              <label class="opt"><input type="radio" name="eigentuemer" value="Nein"><span class="dot"></span><span class="txt">Nein</span></label>
-            </div>
-            <span class="err-msg">Bitte auswählen.</span>
-          </div>
-
-          <div class="field full" data-field="heizung_standort">
-            <div class="q-title">Wo im Haus befindet sich Ihre Heizung?</div>
-            <div class="opts cols">
-              <label class="opt"><input type="radio" name="heizung_standort" value="Keller"><span class="dot"></span><span class="txt">Keller</span></label>
-              <label class="opt"><input type="radio" name="heizung_standort" value="Erdgeschoss"><span class="dot"></span><span class="txt">Erdgeschoss</span></label>
-              <label class="opt"><input type="radio" name="heizung_standort" value="Obergeschoss"><span class="dot"></span><span class="txt">Obergeschoss</span></label>
-              <label class="opt"><input type="radio" name="heizung_standort" value="Dachgeschoss"><span class="dot"></span><span class="txt">Dachgeschoss</span></label>
-            </div>
-            <span class="err-msg">Bitte auswählen.</span>
-          </div>
-
-          <div class="field full" data-field="zeitplan">
-            <div class="q-title">Wann soll die neue Heizung installiert werden?</div>
-            <div class="opts cols">
-              <label class="opt"><input type="radio" name="zeitplan" value="Sofort"><span class="dot"></span><span class="txt">Sofort</span></label>
-              <label class="opt"><input type="radio" name="zeitplan" value="In 1-3 Monaten"><span class="dot"></span><span class="txt">In 1–3 Monaten</span></label>
-              <label class="opt"><input type="radio" name="zeitplan" value="In 3-6 Monaten"><span class="dot"></span><span class="txt">In 3–6 Monaten</span></label>
-              <label class="opt"><input type="radio" name="zeitplan" value="In 6-12 Monaten"><span class="dot"></span><span class="txt">In 6–12 Monaten</span></label>
-              <label class="opt"><input type="radio" name="zeitplan" value="Heizungswechsel nicht geplant"><span class="dot"></span><span class="txt">Heizungswechsel nicht geplant</span></label>
-            </div>
-            <span class="err-msg">Bitte auswählen.</span>
           </div>
 
         </div>
@@ -390,8 +427,10 @@ const footerBar = document.getElementById("footerBar");
 const noticeEl  = document.getElementById("notice");
 
 /* Pflichtfelder */
-const RADIO_FIELDS = []; // keine Pflicht-Auswahl mehr (Heizungsfragen & Anrede sind optional)
-const TEXT_FIELDS  = ["vorname","nachname","telefon","email","strasse","hausnummer","plz","stadt"];
+const RADIO_FIELDS = [];                 // Anrede & Entscheider-Frage sind optional
+const CHECK_FIELDS = ["thema"];          // mind. eine Auswahl nötig
+const TEXT_FIELDS  = ["nachname","telefon","strasse","hausnummer","plz","stadt"];
+const OPTIONAL_EMAIL = true;             // E-Mail optional, aber wenn gefüllt: Formatprüfung
 
 function setInvalid(name, on){
   const f = document.querySelector(`.field[data-field="${name}"]`);
@@ -420,15 +459,26 @@ function validate(){
     if (bad){ ok = false; first = first || f; }
   });
 
+  CHECK_FIELDS.forEach(name=>{
+    const bad = form.querySelectorAll(`input[name="${name}"]:checked`).length === 0;
+    const f = setInvalid(name, bad);
+    if (bad){ ok = false; first = first || f; }
+  });
+
   TEXT_FIELDS.forEach(name=>{
     const el = form.querySelector(`[name="${name}"]`);
     let val = (el.value || "").trim();
     let bad = !val;
-    if (!bad && name === "email") bad = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
-    if (!bad && name === "plz")   bad = !/^\d{5}$/.test(val);
+    if (!bad && name === "plz") bad = !/^\d{5}$/.test(val);
     const f = setInvalid(name, bad);
     if (bad){ ok = false; first = first || f; }
   });
+
+  /* E-Mail ist optional – nur prüfen, wenn etwas eingetragen wurde */
+  const mail = (form.querySelector('[name="email"]').value || "").trim();
+  const mailBad = !!mail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail);
+  const mf = setInvalid("email", mailBad);
+  if (mailBad){ ok = false; first = first || mf; }
 
   validate._first = first;
   return ok;
@@ -446,6 +496,30 @@ function val(name){
 function radio(name){
   const c = form.querySelector(`input[name="${name}"]:checked`);
   return c ? c.value : "";
+}
+function checks(name){
+  return Array.from(form.querySelectorAll(`input[name="${name}"]:checked`)).map(el=>el.value);
+}
+
+/* Rückruf frühestens ab heute */
+(()=>{
+  const el = form.querySelector('[name="rueckruf_datum"]');
+  if (el) el.min = new Date().toLocaleDateString("sv-SE"); // YYYY-MM-DD, lokale Zeitzone
+})();
+
+/* Rückruf-Wunsch als lesbaren Satz, z. B. "Mo, 10.08.2026, Vormittag (8–12 Uhr)" */
+function rueckrufText(){
+  const d = val("rueckruf_datum");
+  const u = val("rueckruf_uhrzeit");
+  const f = checks("rueckruf_fenster");
+  const teile = [];
+  if (d){
+    const dt = new Date(d + "T00:00:00");
+    teile.push(dt.toLocaleDateString("de-DE", {weekday:"short", day:"2-digit", month:"2-digit", year:"numeric"}));
+  }
+  if (u) teile.push(u + " Uhr");
+  if (f.length) teile.push(f.join(" / "));
+  return teile.join(", ");
 }
 
 function buildPayload(){
@@ -465,22 +539,99 @@ function buildPayload(){
       stadt:      val("stadt"),
       adresse:    `${val("strasse")} ${val("hausnummer")}, ${val("plz")} ${val("stadt")}`.trim()
     },
-    heizung: {
-      aktuell:     radio("heizungsart"),
-      alter:       radio("heizung_alter"),
-      gebaeudetyp: radio("gebaeudetyp"),
-      eigentuemer: radio("eigentuemer"),
-      standort:    radio("heizung_standort"),
-      zeitplan:    radio("zeitplan"),
-      wohnflaeche: val("wohnflaeche"),
-      baujahr:     val("baujahr")
+    termin: {
+      thema:            checks("thema"),
+      thema_text:       checks("thema").join(", "),
+      alle_entscheider: radio("entscheider")
     },
+    rueckruf: {
+      datum:            val("rueckruf_datum"),
+      uhrzeit:          val("rueckruf_uhrzeit"),
+      zeitfenster:      checks("rueckruf_fenster"),
+      zeitfenster_text: checks("rueckruf_fenster").join(" / "),
+      text:             rueckrufText()
+    },
+    notizen: val("notizen"),
     meta: {
-      quelle: "Wärmepumpe Lead-Formular",
-      datum:  new Date().toISOString()
+      quelle:   "Türgeschäft Lead-Formular",
+      standort: geoData,
+      datum:    new Date().toISOString()
     }
   };
 }
+
+/* ============================================================
+   Standort → Adresse automatisch ausfüllen
+   Reverse-Geocoding über OpenStreetMap/Nominatim (kein API-Key).
+   Funktioniert nur über HTTPS (GitHub Pages ist HTTPS ✔).
+   ============================================================ */
+const geoBtn    = document.getElementById("geoBtn");
+const geoStatus = document.getElementById("geoStatus");
+let geoData     = null;
+
+function setGeoStatus(msg, kind=""){
+  geoStatus.textContent = msg;
+  geoStatus.className = "geo-status" + (kind ? " " + kind : "");
+}
+
+function fillField(name, value){
+  if (!value) return;
+  const el = form.querySelector(`[name="${name}"]`);
+  if (!el) return;
+  el.value = value;
+  el.closest(".field")?.classList.remove("invalid");
+}
+
+geoBtn.addEventListener("click", ()=>{
+  if (!navigator.geolocation){
+    setGeoStatus("Standort wird von diesem Browser nicht unterstützt.", "err");
+    return;
+  }
+  geoBtn.disabled = true;
+  setGeoStatus("Standort wird ermittelt …");
+
+  navigator.geolocation.getCurrentPosition(async pos=>{
+    const lat = pos.coords.latitude, lon = pos.coords.longitude;
+    geoData = { lat, lon, genauigkeit_m: Math.round(pos.coords.accuracy || 0) };
+    setGeoStatus("Adresse wird geladen …");
+    try{
+      const url = "https://nominatim.openstreetmap.org/reverse"
+                + `?format=jsonv2&lat=${lat}&lon=${lon}&addressdetails=1&zoom=18&accept-language=de`;
+      const res = await fetch(url, { headers:{ "Accept":"application/json" } });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const data = await res.json();
+      const a = data.address || {};
+
+      const strasse = a.road || a.pedestrian || a.footway || a.residential || a.path || "";
+      const stadt   = a.city || a.town || a.village || a.municipality || a.suburb || a.county || "";
+
+      fillField("strasse",    strasse);
+      fillField("hausnummer", a.house_number || "");
+      fillField("plz",        a.postcode || "");
+      fillField("stadt",      stadt);
+      geoData.adresse_roh = data.display_name || "";
+
+      if (strasse || stadt){
+        const fehlt = !a.house_number ? " Hausnummer bitte ergänzen." : "";
+        setGeoStatus("Adresse übernommen – bitte kurz prüfen." + fehlt, "ok");
+      }else{
+        setGeoStatus("Keine Adresse gefunden – bitte manuell eintragen.", "err");
+      }
+    }catch(err){
+      console.error(err);
+      setGeoStatus("Adresse konnte nicht geladen werden – bitte manuell eintragen.", "err");
+    }finally{
+      geoBtn.disabled = false;
+    }
+  }, err=>{
+    console.error(err);
+    geoBtn.disabled = false;
+    const msg = err.code === 1
+      ? "Standortfreigabe abgelehnt – bitte im Browser erlauben."
+      : "Standort konnte nicht ermittelt werden.";
+    setGeoStatus(msg, "err");
+  }, { enableHighAccuracy:true, timeout:15000, maximumAge:0 });
+});
 
 let toastTimer;
 function showToast(msg, err=false){
@@ -537,6 +688,8 @@ btn.addEventListener("click", async ()=>{
 document.getElementById("btnAgain").addEventListener("click", ()=>{
   form.reset();
   form.querySelectorAll(".field.invalid").forEach(f=>f.classList.remove("invalid"));
+  geoData = null;
+  setGeoStatus("");
   successEl.classList.remove("show");
   form.style.display = "";
   noticeEl.style.display = "";
