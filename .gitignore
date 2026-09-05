@@ -1,0 +1,4 @@
+# lokale Zugangsdaten, niemals commiten
+.env
+.env.local
+*.secret
