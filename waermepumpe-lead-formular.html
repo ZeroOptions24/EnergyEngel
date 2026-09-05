@@ -174,6 +174,34 @@
   .geo-status.ok{color:var(--ok)}
   .geo-status.err{color:var(--err)}
 
+  /* ---------- Rückruf Schnellauswahl ---------- */
+  .qc-wrap{display:flex;flex-direction:column;gap:10px}
+  .qc-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+  .qc-btn{
+    appearance:none;cursor:pointer;font:inherit;border:1.5px solid var(--line-2);
+    background:#fff;color:var(--ink);border-radius:12px;font-weight:700;
+    transition:border-color .15s, background .15s, transform .05s;
+  }
+  .qc-btn:active{transform:translateY(1px)}
+  .qc-btn.today{
+    padding:16px 30px;font-size:1.05rem;background:var(--ee-lime);color:#fff;border-color:var(--ee-lime);
+    box-shadow:0 6px 16px rgba(125,191,63,.3);
+  }
+  .qc-btn.today:hover{filter:brightness(1.04)}
+  .qc-btn.today.selected{background:var(--ee-dark);border-color:var(--ee-dark);box-shadow:none}
+  .qc-btn.tomorrow{padding:11px 20px;font-size:.92rem;background:#EEF6E5;color:var(--ee-lime-d);border-color:var(--ee-lime)}
+  .qc-btn.tomorrow.selected{background:var(--ee-dark);color:#fff;border-color:var(--ee-dark)}
+  .qc-btn.other{
+    padding:8px 4px;font-size:.85rem;font-weight:600;color:var(--muted);
+    background:transparent;border:0;text-decoration:underline;text-underline-offset:2px;
+  }
+  .qc-btn.other:hover{color:var(--ee-dark)}
+  .qc-picked{font-size:.82rem;font-weight:600;color:var(--ee-lime-d)}
+  .rueckruf-details{display:grid;grid-template-columns:1fr 1fr;gap:16px 18px;margin-top:4px}
+  .rueckruf-details[hidden]{display:none}
+  .rueckruf-details .field.full{grid-column:1 / -1}
+  @media (max-width:600px){ .rueckruf-details{grid-template-columns:1fr} }
+
   /* ---------- Submit ---------- */
   .footer-bar{
     position:fixed;left:0;right:0;bottom:0;z-index:40;
@@ -293,26 +321,37 @@
 
           <div class="field full" data-field="rueckruf">
             <div class="q-title">Wann soll der Kunde angerufen werden?</div>
-            <div class="q-hint">Tag auswählen und passendes Zeitfenster ankreuzen.</div>
+            <div class="q-hint">Am besten sofort einen konkreten Termin setzen – je kürzer die Wartezeit, desto besser die Quote.</div>
+            <div class="qc-wrap">
+              <div class="qc-row">
+                <button type="button" class="qc-btn today" id="qcToday">Heute</button>
+                <button type="button" class="qc-btn tomorrow" id="qcTomorrow">Morgen</button>
+                <button type="button" class="qc-btn other" id="qcOther">wann anders</button>
+                <span class="qc-picked" id="qcPicked"></span>
+              </div>
+            </div>
           </div>
 
-          <div class="field" data-field="rueckruf_datum">
-            <label class="lbl">Datum</label>
-            <input type="date" name="rueckruf_datum">
-          </div>
-          <div class="field" data-field="rueckruf_uhrzeit">
-            <label class="lbl">Genaue Uhrzeit <span class="opt-inline">falls vereinbart</span></label>
-            <input type="time" name="rueckruf_uhrzeit">
-          </div>
+          <!-- Unverändert gegenüber vorher – nur standardmäßig eingeklappt, nichts entfernt -->
+          <div class="rueckruf-details" id="rueckrufDetails" hidden>
+            <div class="field" data-field="rueckruf_datum">
+              <label class="lbl">Datum</label>
+              <input type="date" name="rueckruf_datum">
+            </div>
+            <div class="field" data-field="rueckruf_uhrzeit">
+              <label class="lbl">Genaue Uhrzeit <span class="opt-inline">falls vereinbart</span></label>
+              <input type="time" name="rueckruf_uhrzeit">
+            </div>
 
-          <div class="field full" data-field="rueckruf_fenster">
-            <label class="lbl">Erreichbarkeit</label>
-            <div class="q-hint">Mehrfachauswahl möglich – alle Zeiten ankreuzen, zu denen der Kunde erreichbar ist.</div>
-            <div class="opts cols">
-              <label class="opt"><input type="checkbox" name="rueckruf_fenster" value="Vormittag (8–12 Uhr)"><span class="box"></span><span class="txt">Vormittag (8–12 Uhr)</span></label>
-              <label class="opt"><input type="checkbox" name="rueckruf_fenster" value="Mittag (12–15 Uhr)"><span class="box"></span><span class="txt">Mittag (12–15 Uhr)</span></label>
-              <label class="opt"><input type="checkbox" name="rueckruf_fenster" value="Nachmittag (15–18 Uhr)"><span class="box"></span><span class="txt">Nachmittag (15–18 Uhr)</span></label>
-              <label class="opt"><input type="checkbox" name="rueckruf_fenster" value="Abend (18–20 Uhr)"><span class="box"></span><span class="txt">Abend (18–20 Uhr)</span></label>
+            <div class="field full" data-field="rueckruf_fenster">
+              <label class="lbl">Erreichbarkeit</label>
+              <div class="q-hint">Mehrfachauswahl möglich – alle Zeiten ankreuzen, zu denen der Kunde erreichbar ist.</div>
+              <div class="opts cols">
+                <label class="opt"><input type="checkbox" name="rueckruf_fenster" value="Vormittag (8–12 Uhr)"><span class="box"></span><span class="txt">Vormittag (8–12 Uhr)</span></label>
+                <label class="opt"><input type="checkbox" name="rueckruf_fenster" value="Mittag (12–15 Uhr)"><span class="box"></span><span class="txt">Mittag (12–15 Uhr)</span></label>
+                <label class="opt"><input type="checkbox" name="rueckruf_fenster" value="Nachmittag (15–18 Uhr)"><span class="box"></span><span class="txt">Nachmittag (15–18 Uhr)</span></label>
+                <label class="opt"><input type="checkbox" name="rueckruf_fenster" value="Abend (18–20 Uhr)"><span class="box"></span><span class="txt">Abend (18–20 Uhr)</span></label>
+              </div>
             </div>
           </div>
 
@@ -507,6 +546,51 @@ function checks(name){
   if (el) el.min = new Date().toLocaleDateString("sv-SE"); // YYYY-MM-DD, lokale Zeitzone
 })();
 
+/* Rückruf-Schnellauswahl: Heute / Morgen / wann anders
+   Schreibt nur in die bestehenden Felder rueckruf_datum etc. –
+   buildPayload() und rueckrufText() bleiben unverändert. */
+(()=>{
+  const datumEl     = form.querySelector('[name="rueckruf_datum"]');
+  const details     = document.getElementById("rueckrufDetails");
+  const btnToday    = document.getElementById("qcToday");
+  const btnTomorrow = document.getElementById("qcTomorrow");
+  const btnOther    = document.getElementById("qcOther");
+  const picked      = document.getElementById("qcPicked");
+  if (!datumEl || !details || !btnToday || !btnTomorrow || !btnOther) return;
+
+  function isoDate(offsetDays){
+    const d = new Date();
+    d.setDate(d.getDate() + offsetDays);
+    return d.toLocaleDateString("sv-SE"); // YYYY-MM-DD, lokale Zeitzone
+  }
+  function weekdayLabel(offsetDays){
+    const d = new Date();
+    d.setDate(d.getDate() + offsetDays);
+    return d.toLocaleDateString("de-DE", {weekday:"short", day:"2-digit", month:"2-digit"});
+  }
+  function selectQuick(offsetDays, btn){
+    datumEl.value = isoDate(offsetDays);
+    details.hidden = true;
+    btnToday.classList.toggle("selected", btn === btnToday);
+    btnTomorrow.classList.toggle("selected", btn === btnTomorrow);
+    picked.textContent = "✓ " + (offsetDays === 0 ? "Heute" : "Morgen") + ", " + weekdayLabel(offsetDays);
+  }
+
+  btnToday.addEventListener("click", ()=> selectQuick(0, btnToday));
+  btnTomorrow.addEventListener("click", ()=> selectQuick(1, btnTomorrow));
+  btnOther.addEventListener("click", ()=>{
+    details.hidden = false;
+    btnToday.classList.remove("selected");
+    btnTomorrow.classList.remove("selected");
+    picked.textContent = "";
+    details.scrollIntoView({behavior:"smooth", block:"nearest"});
+  });
+})();
+
+/* Setter-Kennung aus dem Link (?setter=kurzcode) für die Zuordnung in Pipedrive/n8n.
+   Fehlt der Parameter (alte Links, Tests), bleibt es einfach leer. */
+const SETTER_CODE = new URLSearchParams(location.search).get("setter") || "";
+
 /* Rückruf-Wunsch als lesbaren Satz, z. B. "Mo, 10.08.2026, Vormittag (8–12 Uhr)" */
 function rueckrufText(){
   const d = val("rueckruf_datum");
@@ -554,6 +638,7 @@ function buildPayload(){
     notizen: val("notizen"),
     meta: {
       quelle:   "Türgeschäft Lead-Formular",
+      setter:   SETTER_CODE,
       standort: geoData,
       datum:    new Date().toISOString()
     }
