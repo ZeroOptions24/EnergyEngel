@@ -223,6 +223,25 @@
   .btn.loading .spin{display:inline-block}
   @keyframes spin{to{transform:rotate(360deg)}}
 
+  /* ---------- Vorqualifizierung-CTA (Ende des Formulars) ---------- */
+  .prequal-cta{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:18px;margin-bottom:16px;text-align:center;
+  }
+  .btn-prequal{
+    appearance:none;border:0;cursor:pointer;width:100%;
+    background:var(--ee-dark);color:#fff;font:inherit;font-weight:800;font-size:1rem;
+    padding:15px 20px;border-radius:12px;
+    display:inline-flex;align-items:center;justify-content:center;gap:10px;
+    transition:filter .15s, transform .05s;
+  }
+  .btn-prequal:hover{filter:brightness(1.08)}
+  .btn-prequal:active{transform:translateY(1px)}
+  .btn-prequal:disabled{opacity:.7;cursor:not-allowed}
+  .btn-prequal .spin{width:16px;height:16px;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;display:none;animation:spin .7s linear infinite}
+  .btn-prequal.loading .spin{display:inline-block}
+  .prequal-hint{margin:10px 0 0;font-size:.78rem;color:var(--muted);font-weight:500}
+
   /* ---------- Toast ---------- */
   .toast{
     position:fixed;left:50%;bottom:88px;transform:translateX(-50%) translateY(20px);
@@ -428,6 +447,14 @@
       </div>
     </section>
 
+    <!-- Direkt an der Tür weiter zur Vorqualifizierung -->
+    <div class="prequal-cta">
+      <button type="button" class="btn-prequal" id="prequalBtn">
+        <span class="spin"></span><span class="label">Direkt an der Tür vorqualifizieren →</span>
+      </button>
+      <p class="prequal-hint">Legt den Lead an und öffnet direkt die Vorqualifizierungs-Fragen — alle eingegebenen Daten werden übernommen.</p>
+    </div>
+
   </form>
 
   <!-- Erfolgs-Screen -->
@@ -457,13 +484,14 @@
    ============================================================ */
 const WEBHOOK_URL = "https://energyengel.app.n8n.cloud/webhook/wp-lead";
 
-const form      = document.getElementById("form");
-const btn       = document.getElementById("submitBtn");
-const toast     = document.getElementById("toast");
-const barStatus = document.getElementById("barStatus");
-const successEl = document.getElementById("success");
-const footerBar = document.getElementById("footerBar");
-const noticeEl  = document.getElementById("notice");
+const form       = document.getElementById("form");
+const btn        = document.getElementById("submitBtn");
+const prequalBtn = document.getElementById("prequalBtn");
+const toast      = document.getElementById("toast");
+const barStatus  = document.getElementById("barStatus");
+const successEl  = document.getElementById("success");
+const footerBar  = document.getElementById("footerBar");
+const noticeEl   = document.getElementById("notice");
 
 /* Pflichtfelder */
 const RADIO_FIELDS = [];                 // Anrede & Entscheider-Frage sind optional
@@ -591,6 +619,12 @@ function checks(name){
    Fehlt der Parameter (alte Links, Tests), bleibt es einfach leer. */
 const SETTER_CODE = new URLSearchParams(location.search).get("setter") || "";
 
+/* Eindeutige Lead-Referenz – landet in Pipedrive (Custom Field) und wird ans
+   Vorqualifizierungs-Formular übergeben, damit dieses denselben Deal wiederfindet. */
+const LEAD_REF = (window.crypto && crypto.randomUUID)
+  ? crypto.randomUUID()
+  : "lr-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10);
+
 /* Rückruf-Wunsch als lesbaren Satz, z. B. "Mo, 10.08.2026, Vormittag (8–12 Uhr)" */
 function rueckrufText(){
   const d = val("rueckruf_datum");
@@ -639,6 +673,7 @@ function buildPayload(){
     meta: {
       quelle:   "Türgeschäft Lead-Formular",
       setter:   SETTER_CODE,
+      leadRef:  LEAD_REF,
       standort: geoData,
       datum:    new Date().toISOString()
     }
@@ -727,27 +762,33 @@ function showToast(msg, err=false){
   toastTimer = setTimeout(()=>toast.classList.remove("show"), 4000);
 }
 
-function setLoading(on){
-  btn.classList.toggle("loading", on);
-  btn.disabled = on;
-  btn.querySelector(".label").textContent = on ? "Wird angelegt …" : "Lead erstellen";
+function setBusy(on, activeBtn){
+  [btn, prequalBtn].forEach(b=>{ b.disabled = on; });
+  if (activeBtn){
+    activeBtn.classList.toggle("loading", on);
+    activeBtn.querySelector(".label").textContent = on
+      ? "Wird angelegt …"
+      : (activeBtn === btn ? "Lead erstellen" : "Direkt an der Tür vorqualifizieren →");
+  }
 }
 
-btn.addEventListener("click", async ()=>{
+/* Gemeinsame Absende-Logik für beide Buttons.
+   Gibt { ok, payload } zurück – der Aufrufer entscheidet, was danach passiert. */
+async function submitLead(activeBtn){
   if (!validate()){
     showToast("Bitte Pflichtfelder prüfen.", true);
     validate._first?.scrollIntoView({behavior:"smooth", block:"center"});
-    return;
+    return { ok:false };
   }
   const payload = buildPayload();
 
   if (!WEBHOOK_URL){
     console.log("WP-Lead Payload (Webhook noch nicht gesetzt):", payload);
     showToast("Webhook-URL fehlt – Payload liegt in der Konsole (F12).", true);
-    return;
+    return { ok:false };
   }
 
-  setLoading(true);
+  setBusy(true, activeBtn);
   barStatus.textContent = "";
   try{
     const res = await fetch(WEBHOOK_URL, {
@@ -756,18 +797,46 @@ btn.addEventListener("click", async ()=>{
       body: JSON.stringify(payload),
     });
     if (!res.ok) throw new Error("HTTP "+res.status);
-    // Erfolg
-    form.style.display = "none";
-    noticeEl.style.display = "none";
-    footerBar.style.display = "none";
-    successEl.classList.add("show");
-    window.scrollTo({top:0, behavior:"smooth"});
+    return { ok:true, payload };
   }catch(err){
     console.error(err);
     showToast("Anlegen fehlgeschlagen. Verbindung/Webhook prüfen.", true);
+    return { ok:false };
   }finally{
-    setLoading(false);
+    setBusy(false, activeBtn);
   }
+}
+
+/* "Lead erstellen" – anlegen und Erfolgs-Screen zeigen. */
+btn.addEventListener("click", async ()=>{
+  const r = await submitLead(btn);
+  if (!r.ok) return;
+  form.style.display = "none";
+  noticeEl.style.display = "none";
+  footerBar.style.display = "none";
+  successEl.classList.add("show");
+  window.scrollTo({top:0, behavior:"smooth"});
+});
+
+/* "Direkt an der Tür vorqualifizieren" – anlegen, Daten für Formular 2
+   in sessionStorage ablegen (nicht in der URL – enthält PII) und weiterleiten. */
+prequalBtn.addEventListener("click", async ()=>{
+  const r = await submitLead(prequalBtn);
+  if (!r.ok) return;
+  try{
+    sessionStorage.setItem("ee_wp_lead", JSON.stringify({
+      leadRef:  LEAD_REF,
+      kunde:    r.payload.kunde,
+      termin:   r.payload.termin,
+      rueckruf: r.payload.rueckruf,
+      notizen:  r.payload.notizen,
+      setter:   SETTER_CODE,
+      ts:       Date.now()
+    }));
+  }catch(e){
+    console.warn("sessionStorage nicht verfügbar:", e);
+  }
+  location.href = "waermepumpe-vorqualifizierung.html" + location.search;
 });
 
 document.getElementById("btnAgain").addEventListener("click", ()=>{
