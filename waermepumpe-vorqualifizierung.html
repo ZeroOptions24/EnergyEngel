@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vorqualifizierung | EnergyEngel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     KONFIGURATION – Webhook-URL ganz unten im <script>:
+        const WEBHOOK_URL = "..."
+     Gleiches Design-System wie waermepumpe-lead-formular.html,
+     damit sich beide Formulare wie ein durchgängiger Flow anfühlen.
+     ============================================================ */
+  :root{
+    --ee-lime:#7DBF3F;
+    --ee-lime-d:#5FA02C;
+    --ee-dark:#1F3D2B;
+    --ee-ink:#231F20;
+    --ee-gold:#C9A227;
+    --bg:#F4F7F1;
+    --card:#FFFFFF;
+    --line:#E2E9DE;
+    --line-2:#D2DCCB;
+    --muted:#6C7A6E;
+    --ink:#1B271F;
+    --err:#C0392B;
+    --ok:#2E8B57;
+    --radius:14px;
+    --shadow:0 1px 2px rgba(31,61,43,.05), 0 8px 24px rgba(31,61,43,.06);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    font-size:16px;line-height:1.45;
+  }
+
+  /* ---------- Header ---------- */
+  header.app{
+    position:sticky;top:0;z-index:30;background:var(--ee-dark);color:#fff;
+    border-bottom:3px solid var(--ee-lime);overflow:hidden;
+  }
+  header.app::before{
+    content:"";position:absolute;inset:0;
+    background:repeating-linear-gradient(125deg,
+      rgba(125,191,63,0) 0 32px, rgba(125,191,63,.10) 32px 34px);
+    pointer-events:none;
+  }
+  .head-inner{
+    position:relative;max-width:820px;margin:0 auto;
+    padding:14px 18px;display:flex;align-items:center;gap:14px;
+  }
+  .head-logo{
+    height:46px;width:auto;background:#fff;border-radius:10px;padding:5px 11px;
+    display:grid;place-items:center;font-weight:800;color:var(--ee-dark);font-size:1rem;letter-spacing:.3px;
+  }
+  .head-txt h1{font-size:1.02rem;font-weight:700;margin:0;letter-spacing:.2px}
+  .head-txt p{margin:1px 0 0;font-size:.78rem;color:#cfe3bf;font-weight:500}
+
+  /* ---------- Layout ---------- */
+  main{max-width:820px;margin:0 auto;padding:18px 16px 130px}
+
+  .notice{
+    display:flex;gap:12px;align-items:flex-start;
+    background:#FFF3E9;border:1px solid #F6C89A;color:#B4560E;
+    border-radius:var(--radius);padding:14px 16px;margin-bottom:18px;
+    font-size:.9rem;font-weight:600;
+  }
+  .notice .ic{flex:0 0 auto;font-size:1.1rem;line-height:1.2}
+  .notice a{color:inherit;text-decoration:underline}
+
+  /* ---------- Kundendaten-Recap ---------- */
+  .recap{
+    background:var(--ee-dark);color:#fff;border-radius:var(--radius);
+    padding:16px 18px;margin-bottom:18px;box-shadow:var(--shadow);
+  }
+  .recap .recap-eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:#9fd47a;margin-bottom:6px}
+  .recap .recap-name{font-size:1.05rem;font-weight:800;margin-bottom:4px}
+  .recap .recap-line{font-size:.85rem;color:#cfe3bf;font-weight:500}
+
+  section.block{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    margin-bottom:16px;box-shadow:var(--shadow);overflow:hidden;
+  }
+  .block > h2{
+    margin:0;font-size:1rem;font-weight:700;color:var(--ee-dark);
+    padding:15px 18px;display:flex;align-items:center;gap:11px;
+    border-bottom:1px solid var(--line);background:#FAFCF8;
+  }
+  .block > h2 .opt-tag{
+    margin-left:auto;font-size:.68rem;font-weight:700;letter-spacing:.4px;text-transform:uppercase;
+    color:var(--muted);background:#EEF3EA;border:1px solid var(--line);border-radius:999px;padding:3px 10px;
+  }
+  .block > h2 .num{
+    flex:0 0 auto;width:26px;height:26px;border-radius:8px;
+    background:var(--ee-lime);color:#fff;font-size:.82rem;font-weight:800;
+    display:grid;place-items:center;
+  }
+  .block .body{padding:18px}
+
+  /* ---------- Grid & Felder ---------- */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 18px}
+  .field{display:flex;flex-direction:column;gap:6px}
+  .field.full{grid-column:1 / -1}
+  .field[hidden]{display:none}
+  @media (max-width:600px){ .grid{grid-template-columns:1fr} }
+
+  .q-title-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .q-title{font-size:.9rem;font-weight:700;color:var(--ink)}
+  .q-title .req{color:var(--ee-lime-d);font-weight:800}
+  .q-hint{font-size:.78rem;color:var(--muted);font-weight:500;margin-top:-2px}
+
+  .heizlast-tag{
+    flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;
+    font-size:.68rem;font-weight:700;color:#B4560E;
+    background:#FFF3E9;border:1px solid #F6C89A;border-radius:999px;
+    padding:3px 10px;white-space:nowrap;
+  }
+
+  label.lbl{font-size:.82rem;font-weight:600;color:var(--ink)}
+  label.lbl .req{color:var(--ee-lime-d);font-weight:800}
+
+  input[type=text],input[type=tel],input[type=email],input[type=number],
+  input[type=date],input[type=time],select,textarea{
+    width:100%;font:inherit;font-size:.95rem;color:var(--ink);
+    background:#fff;border:1.5px solid var(--line-2);border-radius:10px;
+    padding:11px 12px;outline:none;transition:border-color .15s, box-shadow .15s;
+    appearance:none;
+  }
+  select{
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9'><path d='M1 1l6 6 6-6' stroke='%236C7A6E' stroke-width='2' fill='none' fill-rule='evenodd'/></svg>");
+    background-repeat:no-repeat;background-position:right 14px center;padding-right:34px;
+  }
+  input:focus,select:focus,textarea:focus{border-color:var(--ee-lime);box-shadow:0 0 0 3px rgba(125,191,63,.18);}
+  .field.invalid input,.field.invalid select{border-color:var(--err);box-shadow:0 0 0 3px rgba(192,57,43,.14)}
+
+  textarea{resize:vertical;min-height:92px;line-height:1.5}
+
+  .opt-inline{
+    font-size:.7rem;font-weight:600;color:var(--muted);
+    background:#EEF3EA;border:1px solid var(--line);border-radius:999px;
+    padding:2px 8px;margin-left:6px;text-transform:none;letter-spacing:0;
+  }
+  .field.invalid .err-msg{display:block}
+  .err-msg{display:none;font-size:.72rem;color:var(--err);font-weight:600}
+
+  /* ---------- Options (Radio-Pills) ---------- */
+  .opts{display:flex;flex-direction:column;gap:8px}
+  .opts.cols{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px}
+  @media (max-width:600px){ .opts.cols{grid-template-columns:1fr} }
+  .opt{
+    position:relative;display:flex;align-items:center;gap:11px;
+    border:1.5px solid var(--line-2);border-radius:11px;padding:11px 14px;
+    cursor:pointer;background:#fff;transition:border-color .15s, background .15s;
+    font-size:.92rem;font-weight:500;color:var(--ink);
+  }
+  .opt:hover{border-color:var(--ee-lime)}
+  .opt input{position:absolute;opacity:0;width:0;height:0}
+  .opt .dot{
+    flex:0 0 auto;width:19px;height:19px;border-radius:50%;
+    border:2px solid var(--line-2);display:grid;place-items:center;transition:border-color .15s;
+  }
+  .opt .dot::after{content:"";width:9px;height:9px;border-radius:50%;background:var(--ee-lime);transform:scale(0);transition:transform .12s}
+  .opt input:checked ~ .dot{border-color:var(--ee-lime)}
+  .opt input:checked ~ .dot::after{transform:scale(1)}
+  .opt input:checked ~ .txt{font-weight:600;color:var(--ee-dark)}
+  .opt:has(input:checked){border-color:var(--ee-lime);background:#F3F9EC}
+  .field.invalid .opts .opt{border-color:var(--err)}
+
+  /* ---------- Conditional Sub-Felder ---------- */
+  .subfields{
+    grid-column:1 / -1;display:grid;grid-template-columns:1fr 1fr;gap:16px 18px;
+    margin-top:2px;padding:14px;background:#FAFCF8;border:1px dashed var(--line-2);border-radius:12px;
+  }
+  .subfields[hidden]{display:none}
+  .subfields .field.full{grid-column:1 / -1}
+  @media (max-width:600px){ .subfields{grid-template-columns:1fr} }
+
+  /* ---------- Submit ---------- */
+  .footer-bar{
+    position:fixed;left:0;right:0;bottom:0;z-index:40;
+    background:rgba(255,255,255,.92);backdrop-filter:blur(8px);
+    border-top:1px solid var(--line);padding:12px 16px;
+  }
+  .footer-inner{max-width:820px;margin:0 auto;display:flex;align-items:center;gap:14px;justify-content:space-between}
+  .bar-status{font-size:.82rem;color:var(--muted);font-weight:600}
+  .btn{
+    appearance:none;border:0;cursor:pointer;
+    background:var(--ee-lime);color:#fff;font:inherit;font-weight:800;font-size:.98rem;
+    padding:13px 26px;border-radius:12px;display:inline-flex;align-items:center;gap:10px;
+    box-shadow:0 6px 16px rgba(125,191,63,.35);transition:filter .15s, transform .05s;
+    margin-left:auto;
+  }
+  .btn:hover{filter:brightness(1.04)}
+  .btn:active{transform:translateY(1px)}
+  .btn:disabled{opacity:.7;cursor:not-allowed}
+  .btn .spin{width:16px;height:16px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;display:none;animation:spin .7s linear infinite}
+  .btn.loading .spin{display:inline-block}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ---------- Toast ---------- */
+  .toast{
+    position:fixed;left:50%;bottom:88px;transform:translateX(-50%) translateY(20px);
+    background:var(--ee-dark);color:#fff;padding:13px 20px;border-radius:12px;
+    font-size:.9rem;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.25);
+    opacity:0;pointer-events:none;transition:opacity .25s, transform .25s;z-index:60;max-width:92vw;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast.err{background:var(--err)}
+
+  /* ---------- Erfolgs-Screen ---------- */
+  .success{display:none;text-align:center;padding:40px 20px}
+  .success.show{display:block}
+  .success .check{
+    width:76px;height:76px;border-radius:50%;background:#EAF6DE;color:var(--ee-lime-d);
+    display:grid;place-items:center;margin:0 auto 18px;font-size:2.2rem;font-weight:800;
+    border:2px solid var(--ee-lime);
+  }
+  .success h2{margin:0 0 8px;color:var(--ee-dark);font-size:1.4rem}
+  .success p{margin:0 0 22px;color:var(--muted)}
+  .success .btn-again{background:var(--ee-dark);box-shadow:none;padding:11px 22px;margin:0 auto}
+</style>
+</head>
+<body>
+
+<header class="app">
+  <div class="head-inner">
+    <div class="head-logo">EnergyEngel</div>
+    <div class="head-txt">
+      <h1>Vorqualifizierung</h1>
+      <p>Direkt an der Tür — Antworten gehen an denselben Pipedrive-Deal</p>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- Fallback, falls direkt aufgerufen ohne Formular 1 -->
+  <div class="notice" id="noData" hidden>
+    <span class="ic">⚠️</span>
+    <span>Keine Kundendaten gefunden. Bitte über <a href="waermepumpe-lead-formular.html" id="backLink">das Lead-Formular</a> starten und dort „Direkt an der Tür vorqualifizieren" wählen.</span>
+  </div>
+
+  <!-- Übernommene Kundendaten aus Formular 1 -->
+  <div class="recap" id="recap" hidden>
+    <div class="recap-eyebrow">Übernommen aus dem Lead-Formular</div>
+    <div class="recap-name" id="recapName">—</div>
+    <div class="recap-line" id="recapTelefon">—</div>
+    <div class="recap-line" id="recapAdresse">—</div>
+  </div>
+
+  <form id="form" novalidate hidden>
+
+    <!-- 1. Gebäude -->
+    <section class="block">
+      <h2><span class="num">1</span> Gebäude</h2>
+      <div class="body">
+        <div class="grid">
+
+          <div class="field full" data-field="haustyp">
+            <div class="q-title">Ist Ihr Haus ein Ein- oder Mehrfamilienhaus?</div>
+            <div class="opts cols">
+              <label class="opt"><input type="radio" name="haustyp" value="EFH"><span class="dot"></span><span class="txt">EFH</span></label>
+              <label class="opt"><input type="radio" name="haustyp" value="MFH"><span class="dot"></span><span class="txt">MFH</span></label>
+            </div>
+          </div>
+
+          <div class="field" data-field="gebaeudeart">
+            <label class="lbl">Um welche Gebäudeart handelt es sich?</label>
+            <select name="gebaeudeart">
+              <option value="">Antwort auswählen</option>
+              <option>Freistehend</option>
+              <option>Doppelhaushälfte</option>
+              <option>Reihenendhaus</option>
+              <option>Reihenmittelhaus</option>
+            </select>
+          </div>
+          <div class="field" data-field="geschosse">
+            <label class="lbl">Bewohnbare Geschosse</label>
+            <select name="geschosse">
+              <option value="">Antwort auswählen</option>
+              <option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option>
+            </select>
+          </div>
+
+          <div class="field" data-field="wohneinheiten">
+            <label class="lbl">Anzahl der Wohneinheiten</label>
+            <select name="wohneinheiten">
+              <option value="">Antwort auswählen</option>
+              <option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option>
+            </select>
+          </div>
+          <div class="field" data-field="personen_haus">
+            <label class="lbl">Personen im Haus</label>
+            <input type="number" name="personen_haus" min="0" inputmode="numeric" placeholder="z. B. 3">
+          </div>
+
+          <div class="field" data-field="personen_u18">
+            <label class="lbl">Davon unter 18 Jahren</label>
+            <select name="personen_u18">
+              <option value="">Antwort auswählen</option>
+              <option>0</option><option>1</option><option>2</option><option>3</option><option>4+</option>
+            </select>
+          </div>
+          <div class="field" data-field="baumassnahmen">
+            <label class="lbl">Baumaßnahmen geplant/laufend?</label>
+            <div class="opts cols">
+              <label class="opt"><input type="radio" name="baumassnahmen" value="Ja"><span class="dot"></span><span class="txt">Ja</span></label>
+              <label class="opt"><input type="radio" name="baumassnahmen" value="Nein"><span class="dot"></span><span class="txt">Nein</span></label>
+            </div>
+          </div>
+
+          <div class="field" data-field="wohnflaeche">
+            <div class="q-title-row">
+              <label class="lbl">Beheizbare Wohnfläche (m²)</label>
+              <span class="heizlast-tag">🔥 Heizlast</span>
+            </div>
+            <input type="number" name="wohnflaeche" min="0" inputmode="numeric" placeholder="z. B. 140">
+          </div>
+          <div class="field" data-field="baujahr_haus">
+            <div class="q-title-row">
+              <label class="lbl">Baujahr des Hauses</label>
+              <span class="heizlast-tag">🔥 Heizlast</span>
+            </div>
+            <input type="number" name="baujahr_haus" min="1800" max="2026" inputmode="numeric" placeholder="z. B. 1978">
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Dämmung -->
+    <section class="block">
+      <h2><span class="num">2</span> Dämmung</h2>
+      <div class="body">
+        <div class="grid">
+
+          <div class="field full" data-field="fassade_gedaemmt">
+            <div class="q-title-row">
+              <div class="q-title">Ist die Fassade nachträglich gedämmt worden?</div>
+              <span class="heizlast-tag">🔥 Heizlast</span>
+            </div>
+            <div class="opts cols">
+              <label class="opt"><input type="radio" name="fassade_gedaemmt" value="Ja"><span class="dot"></span><span class="txt">Ja</span></label>
+              <label class="opt"><input type="radio" name="fassade_gedaemmt" value="Nein"><span class="dot"></span><span class="txt">Nein</span></label>
+            </div>
+          </div>
+
+          <div class="subfields" id="fassadeDetails" hidden>
+            <div class="field" data-field="fassade_daemmung_art">
+              <label class="lbl">Art und Dicke der Dämmung</label>
+              <input type="text" name="fassade_daemmung_art" placeholder="z. B. 4cm Styropor">
+            </div>
+            <div class="field" data-field="fassade_daemmung_jahr">
+              <label class="lbl">Wann aufgebracht (Jahr)</label>
+              <input type="number" name="fassade_daemmung_jahr" min="1900" max="2026" inputmode="numeric" placeholder="z. B. 1979">
+            </div>
+          </div>
+
+          <div class="field full" data-field="dach_gedaemmt">
+            <div class="q-title-row">
+              <div class="q-title">Ist das Dach oder der Dachboden nachträglich gedämmt worden?</div>
+              <span class="heizlast-tag">🔥 Heizlast</span>
+            </div>
+            <div class="opts cols">
+              <label class="opt"><input type="radio" name="dach_gedaemmt" value="Ja"><span class="dot"></span><span class="txt">Ja</span></label>
+              <label class="opt"><input type="radio" name="dach_gedaemmt" value="Nein"><span class="dot"></span><span class="txt">Nein</span></label>
+            </div>
+          </div>
+
+          <div class="subfields" id="dachDetails" hidden>
+            <div class="field full" data-field="dach_daemmung_ort">
+              <label class="lbl">Wo ist die Dämmung am Dach aufgebracht?</label>
+              <select name="dach_daemmung_ort">
+                <option value="">Antwort auswählen</option>
+                <option>Auf der obersten Geschossdecke</option>
+                <option>Zwischen den Sparren</option>
+                <option>Unter den Sparren</option>
+                <option>Aufsparrendämmung (auf dem Dach)</option>
+              </select>
+            </div>
+            <div class="field" data-field="dach_daemmung_art">
+              <label class="lbl">Art und Dicke der Dämmung</label>
+              <input type="text" name="dach_daemmung_art" placeholder="z. B. 4cm Styropor">
+            </div>
+            <div class="field" data-field="dach_daemmung_jahr">
+              <label class="lbl">Wann aufgebracht (Jahr)</label>
+              <input type="number" name="dach_daemmung_jahr" min="1900" max="2026" inputmode="numeric" placeholder="z. B. 1979">
+            </div>
+          </div>
+
+          <div class="field full" data-field="fenster">
+            <div class="q-title-row">
+              <div class="q-title">Sind die Fenster isolierverglast?</div>
+              <span class="heizlast-tag">🔥 Heizlast</span>
+            </div>
+            <div class="opts cols">
+              <label class="opt"><input type="radio" name="fenster" value="Einfachverglasung"><span class="dot"></span><span class="txt">Einfachverglasung</span></label>
+              <label class="opt"><input type="radio" name="fenster" value="2 Scheibenglas"><span class="dot"></span><span class="txt">2 Scheibenglas</span></label>
+              <label class="opt"><input type="radio" name="fenster" value="2 Scheiben Wärmeschutzglas"><span class="dot"></span><span class="txt">2 Scheiben Wärmeschutzglas</span></label>
+              <label class="opt"><input type="radio" name="fenster" value="3 Scheibenglas oder 3 Scheiben Wärmeschutzglas"><span class="dot"></span><span class="txt">3 Scheibenglas oder 3 Scheiben Wärmeschutzglas</span></label>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Heizung -->
+    <section class="block">
+      <h2><span class="num">3</span> Heizung</h2>
+      <div class="body">
+        <div class="grid">
+
+          <div class="field" data-field="heizungsart">
+            <label class="lbl">Art der Heizung</label>
+            <select name="heizungsart">
+              <option value="">Antwort auswählen</option>
+              <option>Öl</option>
+              <option>Gas</option>
+              <option>Fernwärme</option>
+              <option>Strom (Nachtspeicher)</option>
+              <option>Holz/Pellets</option>
+              <option>Wärmepumpe</option>
+              <option>Sonstige</option>
+            </select>
+          </div>
+          <div class="field" data-field="heizungsart_2">
+            <label class="lbl">Art der 2. Heizung <span class="opt-inline">nur Wärmequellen, die die WP ersetzen soll</span></label>
+            <select name="heizungsart_2">
+              <option value="">Antwort auswählen</option>
+              <option>Keine</option>
+              <option>Öl</option>
+              <option>Gas</option>
+              <option>Fernwärme</option>
+              <option>Strom (Nachtspeicher)</option>
+              <option>Holz/Pellets</option>
+              <option>Sonstige</option>
+            </select>
+          </div>
+
+          <div class="field" data-field="oelverbrauch" id="oelverbrauchField" hidden>
+            <label class="lbl">Ölverbrauch (Liter/Jahr) <span class="opt-inline">1l = 10kWh</span></label>
+            <input type="number" name="oelverbrauch" min="0" inputmode="numeric" placeholder="z. B. 1800">
+          </div>
+          <div class="field" data-field="heizung_baujahr">
+            <label class="lbl">Baujahr der Heizung</label>
+            <input type="number" name="heizung_baujahr" min="1950" max="2026" inputmode="numeric" placeholder="z. B. 2020">
+          </div>
+
+          <div class="field" data-field="heizung_funktionstuechtig">
+            <label class="lbl">Heizung noch funktionstüchtig?</label>
+            <div class="opts cols">
+              <label class="opt"><input type="radio" name="heizung_funktionstuechtig" value="Ja"><span class="dot"></span><span class="txt">Ja</span></label>
+              <label class="opt"><input type="radio" name="heizung_funktionstuechtig" value="Nein"><span class="dot"></span><span class="txt">Nein</span></label>
+            </div>
+          </div>
+          <div class="field" data-field="heizraum">
+            <label class="lbl">Wo befindet sich der Heizraum?</label>
+            <select name="heizraum">
+              <option value="">Antwort auswählen</option>
+              <option>Keller</option>
+              <option>Erdgeschoss</option>
+              <option>Dachboden</option>
+              <option>Sonstige</option>
+            </select>
+          </div>
+
+          <div class="field full" data-field="heizverteilung">
+            <div class="q-title">Womit heizen Sie (Verteilung)?</div>
+            <div class="opts cols">
+              <label class="opt"><input type="radio" name="heizverteilung" value="Heizkörper"><span class="dot"></span><span class="txt">Heizkörper</span></label>
+              <label class="opt"><input type="radio" name="heizverteilung" value="Fußbodenheizung"><span class="dot"></span><span class="txt">Fußbodenheizung</span></label>
+              <label class="opt"><input type="radio" name="heizverteilung" value="Beides"><span class="dot"></span><span class="txt">Beides</span></label>
+              <label class="opt"><input type="radio" name="heizverteilung" value="Weder Noch"><span class="dot"></span><span class="txt">Weder Noch</span></label>
+            </div>
+          </div>
+
+          <div class="field full" data-field="warmwasser">
+            <div class="q-title">Wird das Warmwasser auch über die Heizung erwärmt?</div>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="warmwasser" value="Ja"><span class="dot"></span><span class="txt">Ja</span></label>
+              <label class="opt"><input type="radio" name="warmwasser" value="Nein"><span class="dot"></span><span class="txt">Nein</span></label>
+              <label class="opt"><input type="radio" name="warmwasser" value="Nein, aber künftig über die Wärmepumpe"><span class="dot"></span><span class="txt">Nein, aber in Zukunft soll das Warmwasser über die Wärmepumpe erwärmt werden</span></label>
+            </div>
+          </div>
+
+          <div class="field" data-field="solarthermie">
+            <label class="lbl">Solarthermieanlage vorhanden?</label>
+            <div class="opts cols">
+              <label class="opt"><input type="radio" name="solarthermie" value="Ja"><span class="dot"></span><span class="txt">Ja</span></label>
+              <label class="opt"><input type="radio" name="solarthermie" value="Nein"><span class="dot"></span><span class="txt">Nein</span></label>
+            </div>
+          </div>
+          <div class="field" data-field="wasserg_kamin">
+            <label class="lbl">Wassergeführter Kamin vorhanden?</label>
+            <div class="opts cols">
+              <label class="opt"><input type="radio" name="wasserg_kamin" value="Ja"><span class="dot"></span><span class="txt">Ja</span></label>
+              <label class="opt"><input type="radio" name="wasserg_kamin" value="Nein"><span class="dot"></span><span class="txt">Nein</span></label>
+            </div>
+          </div>
+
+          <div class="field full" data-field="energiekosten_heizung">
+            <label class="lbl">Energiekosten für die Heizung (ct/kWh)</label>
+            <input type="number" name="energiekosten_heizung" min="0" step="0.1" inputmode="decimal" placeholder="z. B. 10">
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Strom & PV -->
+    <section class="block">
+      <h2><span class="num">4</span> Strom &amp; PV</h2>
+      <div class="body">
+        <div class="grid">
+
+          <div class="field" data-field="stromkosten">
+            <label class="lbl">Stromkosten (ct/kWh)</label>
+            <input type="number" name="stromkosten" min="0" step="0.1" inputmode="decimal" placeholder="z. B. 25">
+          </div>
+
+          <div class="field" data-field="pv_anlage">
+            <label class="lbl">PV-Anlage auf dem Dach?</label>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="pv_anlage" value="Ja, von Enpal"><span class="dot"></span><span class="txt">Ja, von Enpal</span></label>
+              <label class="opt"><input type="radio" name="pv_anlage" value="Ja, von einem Drittanbieter"><span class="dot"></span><span class="txt">Ja, von einem Drittanbieter</span></label>
+              <label class="opt"><input type="radio" name="pv_anlage" value="Nein"><span class="dot"></span><span class="txt">Nein</span></label>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Eigentum & Haushalt -->
+    <section class="block">
+      <h2><span class="num">5</span> Eigentum &amp; Haushalt</h2>
+      <div class="body">
+        <div class="grid">
+
+          <div class="field full" data-field="eigentuemer">
+            <div class="q-title">Sind Sie als Privatperson (oder GbR) im Grundbuch eingetragener Eigentümer?</div>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="eigentuemer" value="Ja"><span class="dot"></span><span class="txt">Ja</span></label>
+              <label class="opt"><input type="radio" name="eigentuemer" value="Nein"><span class="dot"></span><span class="txt">Nein</span></label>
+              <label class="opt"><input type="radio" name="eigentuemer" value="Nein, aber verwandt"><span class="dot"></span><span class="txt">Nein, aber verwandt (Wichtig: Eigentümer muss im SC1 sein)</span></label>
+            </div>
+          </div>
+
+          <div class="field" data-field="zweiter_eigentuemer">
+            <label class="lbl">Zweiter Eigentümer vorhanden?</label>
+            <div class="opts cols">
+              <label class="opt"><input type="radio" name="zweiter_eigentuemer" value="Ja"><span class="dot"></span><span class="txt">Ja</span></label>
+              <label class="opt"><input type="radio" name="zweiter_eigentuemer" value="Nein"><span class="dot"></span><span class="txt">Nein</span></label>
+            </div>
+          </div>
+          <div class="field" data-field="selbst_bewohnt">
+            <label class="lbl">Selbst bewohnt oder Einzug geplant?</label>
+            <div class="opts cols">
+              <label class="opt"><input type="radio" name="selbst_bewohnt" value="Ja"><span class="dot"></span><span class="txt">Ja</span></label>
+              <label class="opt"><input type="radio" name="selbst_bewohnt" value="Nein"><span class="dot"></span><span class="txt">Nein</span></label>
+            </div>
+          </div>
+
+          <div class="field full" data-field="haushaltseinkommen">
+            <div class="q-title">Jährliches Brutto-Haushaltseinkommen</div>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="haushaltseinkommen" value="Unter 30.000 €"><span class="dot"></span><span class="txt">Unter 30.000 €</span></label>
+              <label class="opt"><input type="radio" name="haushaltseinkommen" value="30.000–40.000 €"><span class="dot"></span><span class="txt">30.000–40.000 €</span></label>
+              <label class="opt"><input type="radio" name="haushaltseinkommen" value="40.000–50.000 €"><span class="dot"></span><span class="txt">40.000–50.000 €</span></label>
+              <label class="opt"><input type="radio" name="haushaltseinkommen" value="50.000–60.000 €"><span class="dot"></span><span class="txt">50.000–60.000 €</span></label>
+              <label class="opt"><input type="radio" name="haushaltseinkommen" value="Über 60.000 €"><span class="dot"></span><span class="txt">Über 60.000 €</span></label>
+            </div>
+          </div>
+
+          <div class="field" data-field="smartphone">
+            <label class="lbl">Besitzt Kunde ein Smartphone?</label>
+            <div class="opts cols">
+              <label class="opt"><input type="radio" name="smartphone" value="Ja"><span class="dot"></span><span class="txt">Ja</span></label>
+              <label class="opt"><input type="radio" name="smartphone" value="Nein"><span class="dot"></span><span class="txt">Nein</span></label>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </form>
+
+  <!-- Erfolgs-Screen -->
+  <div class="success" id="success">
+    <div class="check">✓</div>
+    <h2>Vorqualifizierung übermittelt!</h2>
+    <p>Die Antworten wurden an den bestehenden Pipedrive-Deal angehängt.</p>
+    <button type="button" class="btn btn-again" id="btnAgain">Neuen Lead anlegen</button>
+  </div>
+</main>
+
+<div class="footer-bar" id="footerBar" hidden>
+  <div class="footer-inner">
+    <span class="bar-status" id="barStatus"></span>
+    <button type="button" class="btn" id="submitBtn">
+      <span class="spin"></span><span class="label">Vorqualifizierung abschicken</span>
+    </button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   HIER die Webhook-URL aus deinem n8n-Workflow eintragen.
+   Leer lassen = Test-Modus (Payload landet in der Konsole, F12).
+   ============================================================ */
+const WEBHOOK_URL = "https://energyengel.app.n8n.cloud/webhook/wp-vorqual";
+
+const form      = document.getElementById("form");
+const btn       = document.getElementById("submitBtn");
+const toast     = document.getElementById("toast");
+const barStatus = document.getElementById("barStatus");
+const successEl = document.getElementById("success");
+const footerBar = document.getElementById("footerBar");
+const noDataEl  = document.getElementById("noData");
+const recapEl   = document.getElementById("recap");
+
+/* Setter-Kennung aus dem Link, für Backlink + Payload */
+const SETTER_CODE = new URLSearchParams(location.search).get("setter") || "";
+document.getElementById("backLink").href = "waermepumpe-lead-formular.html" + location.search;
+
+/* ============================================================
+   Kundendaten aus Formular 1 laden (sessionStorage, nicht URL – PII).
+   Ohne Daten: Formular ausblenden, Hinweis zeigen.
+   ============================================================ */
+let LEAD = null;
+try{ LEAD = JSON.parse(sessionStorage.getItem("ee_wp_lead") || "null"); }catch(e){ LEAD = null; }
+
+if (!LEAD || !LEAD.dealId){
+  noDataEl.hidden = false;
+}else{
+  recapEl.hidden = false;
+  form.hidden = false;
+  footerBar.hidden = false;
+  document.getElementById("recapName").textContent = LEAD.kunde?.name || "—";
+  document.getElementById("recapTelefon").textContent = "📞 " + (LEAD.kunde?.telefon || "—");
+  document.getElementById("recapAdresse").textContent = "📍 " + (LEAD.kunde?.adresse || "—");
+}
+
+function val(name){
+  const el = form.querySelector(`[name="${name}"]`);
+  if (!el) return "";
+  return (el.value || "").trim();
+}
+function radio(name){
+  const c = form.querySelector(`input[name="${name}"]:checked`);
+  return c ? c.value : "";
+}
+
+/* Fehler entfernen, sobald korrigiert wird (aktuell keine Pflichtfelder,
+   aber die Struktur steht, falls später welche dazukommen) */
+form.addEventListener("input", e=>{
+  const f = e.target.closest(".field");
+  if (f) f.classList.remove("invalid");
+});
+form.addEventListener("change", e=>{
+  const f = e.target.closest(".field");
+  if (f) f.classList.remove("invalid");
+});
+
+/* ---------- Bedingte Zusatzfelder ---------- */
+function bindConditional(triggerName, triggerValue, targetEl){
+  function update(){ targetEl.hidden = (radio(triggerName) !== triggerValue); }
+  form.querySelectorAll(`input[name="${triggerName}"]`).forEach(el=>el.addEventListener("change", update));
+  update();
+}
+bindConditional("fassade_gedaemmt", "Ja", document.getElementById("fassadeDetails"));
+bindConditional("dach_gedaemmt", "Ja", document.getElementById("dachDetails"));
+
+(()=>{
+  const heizungsartEl = form.querySelector('[name="heizungsart"]');
+  const oelField = document.getElementById("oelverbrauchField");
+  function update(){ oelField.hidden = heizungsartEl.value !== "Öl"; }
+  heizungsartEl.addEventListener("change", update);
+  update();
+})();
+
+/* ---------- Payload ---------- */
+function buildPayload(){
+  return {
+    dealId: LEAD?.dealId ?? null,
+    kunde:  LEAD?.kunde ?? {},
+    gebaeude: {
+      haustyp:        radio("haustyp"),
+      gebaeudeart:    val("gebaeudeart"),
+      geschosse:      val("geschosse"),
+      wohneinheiten:  val("wohneinheiten"),
+      personen_haus:  val("personen_haus"),
+      personen_u18:   val("personen_u18"),
+      baumassnahmen:  radio("baumassnahmen"),
+      wohnflaeche_m2: val("wohnflaeche"),
+      baujahr:        val("baujahr_haus")
+    },
+    daemmung: {
+      fassade_gedaemmt: radio("fassade_gedaemmt"),
+      fassade_art:      val("fassade_daemmung_art"),
+      fassade_jahr:     val("fassade_daemmung_jahr"),
+      dach_gedaemmt:    radio("dach_gedaemmt"),
+      dach_ort:         val("dach_daemmung_ort"),
+      dach_art:         val("dach_daemmung_art"),
+      dach_jahr:        val("dach_daemmung_jahr"),
+      fenster:          radio("fenster")
+    },
+    heizung: {
+      art:                  val("heizungsart"),
+      art_2:                val("heizungsart_2"),
+      oelverbrauch_liter:   val("oelverbrauch"),
+      baujahr:              val("heizung_baujahr"),
+      funktionstuechtig:    radio("heizung_funktionstuechtig"),
+      heizraum:             val("heizraum"),
+      verteilung:           radio("heizverteilung"),
+      warmwasser:           radio("warmwasser"),
+      solarthermie:         radio("solarthermie"),
+      wassergefuehrter_kamin: radio("wasserg_kamin"),
+      energiekosten_ct_kwh: val("energiekosten_heizung")
+    },
+    strom_pv: {
+      stromkosten_ct_kwh: val("stromkosten"),
+      pv_anlage:          radio("pv_anlage")
+    },
+    eigentum: {
+      eigentuemer:          radio("eigentuemer"),
+      zweiter_eigentuemer:  radio("zweiter_eigentuemer"),
+      selbst_bewohnt:       radio("selbst_bewohnt"),
+      haushaltseinkommen:   radio("haushaltseinkommen"),
+      smartphone:           radio("smartphone")
+    },
+    meta: {
+      quelle: "Vorqualifizierung an der Tür",
+      setter: LEAD?.setter || SETTER_CODE,
+      datum:  new Date().toISOString()
+    }
+  };
+}
+
+let toastTimer;
+function showToast(msg, err=false){
+  clearTimeout(toastTimer);
+  toast.textContent = msg;
+  toast.classList.toggle("err", err);
+  toast.classList.add("show");
+  toastTimer = setTimeout(()=>toast.classList.remove("show"), 4000);
+}
+
+function setLoading(on){
+  btn.classList.toggle("loading", on);
+  btn.disabled = on;
+  btn.querySelector(".label").textContent = on ? "Wird übermittelt …" : "Vorqualifizierung abschicken";
+}
+
+btn.addEventListener("click", async ()=>{
+  if (!LEAD?.dealId){
+    showToast("Kein Deal zugeordnet – bitte über Formular 1 starten.", true);
+    return;
+  }
+  const payload = buildPayload();
+
+  if (!WEBHOOK_URL){
+    console.log("Vorqual-Payload (Webhook noch nicht gesetzt):", payload);
+    showToast("Webhook-URL fehlt – Payload liegt in der Konsole (F12).", true);
+    return;
+  }
+
+  setLoading(true);
+  barStatus.textContent = "";
+  try{
+    const res = await fetch(WEBHOOK_URL, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error("HTTP "+res.status);
+    try{ sessionStorage.removeItem("ee_wp_lead"); }catch(e){}
+    form.style.display = "none";
+    recapEl.style.display = "none";
+    footerBar.style.display = "none";
+    successEl.classList.add("show");
+    window.scrollTo({top:0, behavior:"smooth"});
+  }catch(err){
+    console.error(err);
+    showToast("Übermitteln fehlgeschlagen. Verbindung/Webhook prüfen.", true);
+  }finally{
+    setLoading(false);
+  }
+});
+
+document.getElementById("btnAgain").addEventListener("click", ()=>{
+  location.href = "waermepumpe-lead-formular.html" + location.search;
+});
+</script>
+</body>
+</html>
