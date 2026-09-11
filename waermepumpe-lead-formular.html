@@ -619,12 +619,6 @@ function checks(name){
    Fehlt der Parameter (alte Links, Tests), bleibt es einfach leer. */
 const SETTER_CODE = new URLSearchParams(location.search).get("setter") || "";
 
-/* Eindeutige Lead-Referenz – landet in Pipedrive (Custom Field) und wird ans
-   Vorqualifizierungs-Formular übergeben, damit dieses denselben Deal wiederfindet. */
-const LEAD_REF = (window.crypto && crypto.randomUUID)
-  ? crypto.randomUUID()
-  : "lr-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10);
-
 /* Rückruf-Wunsch als lesbaren Satz, z. B. "Mo, 10.08.2026, Vormittag (8–12 Uhr)" */
 function rueckrufText(){
   const d = val("rueckruf_datum");
@@ -673,7 +667,6 @@ function buildPayload(){
     meta: {
       quelle:   "Türgeschäft Lead-Formular",
       setter:   SETTER_CODE,
-      leadRef:  LEAD_REF,
       standort: geoData,
       datum:    new Date().toISOString()
     }
@@ -797,7 +790,9 @@ async function submitLead(activeBtn){
       body: JSON.stringify(payload),
     });
     if (!res.ok) throw new Error("HTTP "+res.status);
-    return { ok:true, payload };
+    let dealId = null;
+    try{ dealId = (await res.json()).dealId ?? null; }catch(e){ /* alte Antwort ohne JSON-Body, egal */ }
+    return { ok:true, payload, dealId };
   }catch(err){
     console.error(err);
     showToast("Anlegen fehlgeschlagen. Verbindung/Webhook prüfen.", true);
@@ -823,9 +818,14 @@ btn.addEventListener("click", async ()=>{
 prequalBtn.addEventListener("click", async ()=>{
   const r = await submitLead(prequalBtn);
   if (!r.ok) return;
+  if (!r.dealId){
+    console.error("Keine Deal-ID von n8n erhalten:", r);
+    showToast("Lead wurde angelegt, aber ohne Deal-ID zurückgemeldet – Vorqualifizierung kann den Deal nicht zuordnen. Bitte n8n prüfen.", true);
+    return;
+  }
   try{
     sessionStorage.setItem("ee_wp_lead", JSON.stringify({
-      leadRef:  LEAD_REF,
+      dealId:   r.dealId,
       kunde:    r.payload.kunde,
       termin:   r.payload.termin,
       rueckruf: r.payload.rueckruf,
