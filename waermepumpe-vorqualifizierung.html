@@ -202,6 +202,17 @@
   .btn.loading .spin{display:inline-block}
   @keyframes spin{to{transform:rotate(360deg)}}
 
+  .btn-phone{
+    appearance:none;cursor:pointer;font:inherit;font-weight:700;font-size:.9rem;
+    background:#fff;color:var(--ee-dark);border:1.5px solid var(--line-2);
+    padding:11px 18px;border-radius:12px;display:inline-flex;align-items:center;gap:8px;
+    transition:border-color .15s, background .15s;
+  }
+  .btn-phone:hover{border-color:var(--ee-dark);background:#FAFCF8}
+  .btn-phone:disabled{opacity:.6;cursor:not-allowed}
+  .btn-phone .spin{width:14px;height:14px;border:2.5px solid rgba(31,61,43,.25);border-top-color:var(--ee-dark);border-radius:50%;display:none;animation:spin .7s linear infinite}
+  .btn-phone.loading .spin{display:inline-block}
+
   /* ---------- Toast ---------- */
   .toast{
     position:fixed;left:50%;bottom:88px;transform:translateX(-50%) translateY(20px);
@@ -604,6 +615,9 @@
 <div class="footer-bar" id="footerBar" hidden>
   <div class="footer-inner">
     <span class="bar-status" id="barStatus"></span>
+    <button type="button" class="btn-phone" id="phoneBtn">
+      <span class="spin"></span><span class="label">📞 Rest telefonisch klären</span>
+    </button>
     <button type="button" class="btn" id="submitBtn">
       <span class="spin"></span><span class="label">Vorqualifizierung abschicken</span>
     </button>
@@ -755,26 +769,33 @@ function showToast(msg, err=false){
   toastTimer = setTimeout(()=>toast.classList.remove("show"), 4000);
 }
 
-function setLoading(on){
-  btn.classList.toggle("loading", on);
-  btn.disabled = on;
-  btn.querySelector(".label").textContent = on ? "Wird übermittelt …" : "Vorqualifizierung abschicken";
+const phoneBtn = document.getElementById("phoneBtn");
+
+function setBusy(on, activeBtn){
+  [btn, phoneBtn].forEach((b)=>{ b.disabled = on; });
+  if (!activeBtn) return;
+  activeBtn.classList.toggle("loading", on);
+  activeBtn.querySelector(".label").textContent = on
+    ? "Wird übermittelt …"
+    : (activeBtn === btn ? "Vorqualifizierung abschicken" : "📞 Rest telefonisch klären");
 }
 
-btn.addEventListener("click", async ()=>{
+/* Gemeinsame Absende-Logik – schickt, was aktuell ausgefüllt ist (auch
+   teilweise, es gibt keine Pflichtfelder). Gibt { ok } zurück. */
+async function submitVorqual(activeBtn){
   if (!LEAD?.dealId){
     showToast("Kein Deal zugeordnet – bitte über Formular 1 starten.", true);
-    return;
+    return { ok:false };
   }
   const payload = buildPayload();
 
   if (!WEBHOOK_URL){
     console.log("Vorqual-Payload (Webhook noch nicht gesetzt):", payload);
     showToast("Webhook-URL fehlt – Payload liegt in der Konsole (F12).", true);
-    return;
+    return { ok:false };
   }
 
-  setLoading(true);
+  setBusy(true, activeBtn);
   barStatus.textContent = "";
   try{
     const res = await fetch(WEBHOOK_URL, {
@@ -783,18 +804,35 @@ btn.addEventListener("click", async ()=>{
       body: JSON.stringify(payload),
     });
     if (!res.ok) throw new Error("HTTP "+res.status);
-    try{ sessionStorage.removeItem("ee_wp_lead"); }catch(e){}
-    form.style.display = "none";
-    recapEl.style.display = "none";
-    footerBar.style.display = "none";
-    successEl.classList.add("show");
-    window.scrollTo({top:0, behavior:"smooth"});
+    return { ok:true };
   }catch(err){
     console.error(err);
     showToast("Übermitteln fehlgeschlagen. Verbindung/Webhook prüfen.", true);
+    return { ok:false };
   }finally{
-    setLoading(false);
+    setBusy(false, activeBtn);
   }
+}
+
+/* "Vorqualifizierung abschicken" – fertig, Erfolgs-Screen. */
+btn.addEventListener("click", async ()=>{
+  const r = await submitVorqual(btn);
+  if (!r.ok) return;
+  try{ sessionStorage.removeItem("ee_wp_lead"); }catch(e){}
+  form.style.display = "none";
+  recapEl.style.display = "none";
+  footerBar.style.display = "none";
+  successEl.classList.add("show");
+  window.scrollTo({top:0, behavior:"smooth"});
+});
+
+/* "Rest telefonisch klären" – speichert den (evtl. unvollständigen) Stand
+   und leitet mit der Deal-ID zum Telefonleitfaden weiter, statt den
+   sessionStorage-Datensatz zu löschen (Formular 1 bleibt unangetastet). */
+phoneBtn.addEventListener("click", async ()=>{
+  const r = await submitVorqual(phoneBtn);
+  if (!r.ok) return;
+  location.href = "energy_engel_telefonleitfaden_v2.html?dealId=" + encodeURIComponent(LEAD.dealId) + location.search.replace(/^\?/, "&");
 });
 
 document.getElementById("btnAgain").addEventListener("click", ()=>{
