@@ -832,7 +832,7 @@ btn.addEventListener("click", async ()=>{
 phoneBtn.addEventListener("click", async ()=>{
   const r = await submitVorqual(phoneBtn);
   if (!r.ok) return;
-  location.href = "energy_engel_telefonleitfaden_v2.html?dealId=" + encodeURIComponent(LEAD.dealId) + location.search.replace(/^\?/, "&");
+  location.href = "energy_engel_telefonleitfaden_live_neu.html?dealId=" + encodeURIComponent(LEAD.dealId) + location.search.replace(/^\?/, "&");
 });
 
 document.getElementById("btnAgain").addEventListener("click", ()=>{
