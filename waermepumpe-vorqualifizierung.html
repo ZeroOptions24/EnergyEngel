@@ -647,21 +647,108 @@ const SETTER_CODE = new URLSearchParams(location.search).get("setter") || "";
 document.getElementById("backLink").href = "waermepumpe-lead-formular.html" + location.search;
 
 /* ============================================================
-   Kundendaten aus Formular 1 laden (sessionStorage, nicht URL – PII).
-   Ohne Daten: Formular ausblenden, Hinweis zeigen.
+   Kundendaten laden – zwei Wege:
+   1. ?dealId=... in der URL (Link aus Pipedrive) → lädt alles, was
+      schon in Pipedrive steht, direkt per API. Für den Fall, dass
+      jemand ohne den Umweg über Formular 1 direkt aus dem Deal heraus
+      nachträglich ausfüllen/ergänzen will.
+   2. sessionStorage (Formular 1 im selben Browser-Tab) – wie bisher.
    ============================================================ */
-let LEAD = null;
-try{ LEAD = JSON.parse(sessionStorage.getItem("ee_wp_lead") || "null"); }catch(e){ LEAD = null; }
+const VQ_READ_URL = "https://energyengel.app.n8n.cloud/webhook/vq-daten-lesen";
+const URL_DEAL_ID = new URLSearchParams(location.search).get("dealId") || null;
 
-if (!LEAD || !LEAD.dealId){
-  noDataEl.hidden = false;
-}else{
+let LEAD = null;
+
+function showRecap(){
   recapEl.hidden = false;
   form.hidden = false;
   footerBar.hidden = false;
   document.getElementById("recapName").textContent = LEAD.kunde?.name || "—";
   document.getElementById("recapTelefon").textContent = "📞 " + (LEAD.kunde?.telefon || "—");
   document.getElementById("recapAdresse").textContent = "📍 " + (LEAD.kunde?.adresse || "—");
+}
+
+/* Radio-Gruppen vs. Select/Text – damit die Vorbefüllung weiß, wie sie
+   jedes Feld setzen muss. Namen = die "name"-Attribute im Formular. */
+const VQ_RADIO_FIELDS = new Set([
+  "haustyp","baumassnahmen","fassade_gedaemmt","dach_gedaemmt","fenster",
+  "heizung_funktionstuechtig","heizverteilung","warmwasser","solarthermie",
+  "wasserg_kamin","pv_anlage","eigentuemer","zweiter_eigentuemer",
+  "selbst_bewohnt","haushaltseinkommen","smartphone"
+]);
+/* Pfad in der vq-daten-lesen-Antwort -> Feldname im Formular */
+const VQ_FIELD_MAP = {
+  "gebaeude.haustyp":"haustyp", "gebaeude.gebaeudeart":"gebaeudeart", "gebaeude.geschosse":"geschosse",
+  "gebaeude.wohneinheiten":"wohneinheiten", "gebaeude.personen_haus":"personen_haus",
+  "gebaeude.personen_u18":"personen_u18", "gebaeude.baumassnahmen":"baumassnahmen",
+  "gebaeude.wohnflaeche_m2":"wohnflaeche", "gebaeude.baujahr":"baujahr_haus",
+  "daemmung.fassade_gedaemmt":"fassade_gedaemmt", "daemmung.fassade_art":"fassade_daemmung_art",
+  "daemmung.fassade_jahr":"fassade_daemmung_jahr", "daemmung.dach_gedaemmt":"dach_gedaemmt",
+  "daemmung.dach_ort":"dach_daemmung_ort", "daemmung.dach_art":"dach_daemmung_art",
+  "daemmung.dach_jahr":"dach_daemmung_jahr", "daemmung.fenster":"fenster",
+  "heizung.art":"heizungsart", "heizung.art_2":"heizungsart_2", "heizung.oelverbrauch_liter":"oelverbrauch",
+  "heizung.baujahr":"heizung_baujahr", "heizung.funktionstuechtig":"heizung_funktionstuechtig",
+  "heizung.heizraum":"heizraum", "heizung.verteilung":"heizverteilung", "heizung.warmwasser":"warmwasser",
+  "heizung.solarthermie":"solarthermie", "heizung.wassergefuehrter_kamin":"wasserg_kamin",
+  "heizung.energiekosten_ct_kwh":"energiekosten_heizung",
+  "strom_pv.stromkosten_ct_kwh":"stromkosten", "strom_pv.pv_anlage":"pv_anlage",
+  "eigentum.eigentuemer":"eigentuemer", "eigentum.zweiter_eigentuemer":"zweiter_eigentuemer",
+  "eigentum.selbst_bewohnt":"selbst_bewohnt", "eigentum.haushaltseinkommen":"haushaltseinkommen",
+  "eigentum.smartphone":"smartphone"
+};
+
+function prefillVqFields(vq){
+  let anyFilled = false;
+  for (const [path, fieldName] of Object.entries(VQ_FIELD_MAP)){
+    const [group, key] = path.split(".");
+    const value = vq?.[group]?.[key];
+    if (!value) continue;
+    anyFilled = true;
+    if (VQ_RADIO_FIELDS.has(fieldName)){
+      const el = form.querySelector(`input[name="${fieldName}"][value="${CSS.escape(value)}"]`);
+      if (el){ el.checked = true; el.dispatchEvent(new Event("change", {bubbles:true})); }
+    }else{
+      const el = form.querySelector(`[name="${fieldName}"]`);
+      if (el) el.value = value;
+    }
+  }
+  return anyFilled;
+}
+
+async function loadFromPipedrive(dealId){
+  try{
+    const res = await fetch(`${VQ_READ_URL}?dealId=${encodeURIComponent(dealId)}`);
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+
+    LEAD = {
+      dealId: data.dealId,
+      kunde: { name: data.kunde?.name || "", telefon: data.kunde?.telefon || "", email: data.kunde?.email || "", adresse: "" },
+      setter: SETTER_CODE
+    };
+    showRecap();
+    const anyFilled = prefillVqFields(data.vq || {});
+    if (anyFilled){
+      showToast("Bereits vorhandene Angaben aus Pipedrive übernommen.");
+    }
+  }catch(err){
+    console.error(err);
+    noDataEl.hidden = false;
+    noDataEl.querySelector("span:last-child").textContent =
+      "Deal-Daten konnten nicht geladen werden. Bitte über das Lead-Formular starten.";
+  }
+}
+
+if (URL_DEAL_ID){
+  loadFromPipedrive(URL_DEAL_ID);
+}else{
+  try{ LEAD = JSON.parse(sessionStorage.getItem("ee_wp_lead") || "null"); }catch(e){ LEAD = null; }
+  if (!LEAD || !LEAD.dealId){
+    noDataEl.hidden = false;
+  }else{
+    showRecap();
+  }
 }
 
 function val(name){
