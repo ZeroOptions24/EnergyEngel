@@ -163,7 +163,9 @@ p{margin:0}
 .ee-kpi__label{font-size:.8rem;color:var(--ink-2);font-weight:600;overflow-wrap:anywhere;hyphens:auto}
 .ee-kpi__value{overflow-wrap:anywhere;font:800 clamp(1.5rem,1.1rem + .9vw,1.9rem)/1 var(--f-display);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
 .ee-kpi__value small{font:600 .9rem var(--f-body);color:var(--ink-3);margin-left:4px}
-.ee-kpi__meta{font-size:.78rem;color:var(--ink-3);display:flex;align-items:center;gap:6px}
+.ee-kpi__meta{font-size:.78rem;color:var(--ink-3);display:block;line-height:1.35}
+.ee-kpi__bar{display:block;height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:6px}.ee-kpi__bar i{display:block;height:100%;background:var(--accent)}
+.ee-kpi__value small{font-size:.55em;color:var(--ink-3);font-weight:600}
 .ee-kpi__meta .up{color:var(--ok);font-weight:700}
 .ee-kpi--money .ee-kpi__value{color:var(--money)}
 .ee-kpi--good .ee-kpi__value{color:var(--ok)}
@@ -503,6 +505,47 @@ fieldset.is-invalid .ee-opt{border-color:var(--bad)}
 
 
 /* Closer-Rückmeldung */
+.ee-appt__head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.ee-appt__adr{font-size:.84rem;margin-top:2px}
+.ee-appt__chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;flex-shrink:0}
+.ee-chip--closing{background:var(--forest);color:var(--on-forest)}
+.ee-appt__due{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.ee-appt__actions{display:flex;gap:8px;flex-wrap:wrap}
+.ee-appt__more{border-top:1px solid var(--line);padding-top:8px}
+.ee-appt__more summary{cursor:pointer;list-style:none;font-weight:650;font-size:.86rem;color:var(--accent-ink,var(--ink-2));display:flex;justify-content:space-between}
+.ee-appt__more summary::-webkit-details-marker{display:none}
+.ee-appt__more summary::after{content:"+";color:var(--ink-3);font-weight:700}
+.ee-appt__more[open] summary::after{content:"–"}
+.ee-appt.is-done{opacity:.85}
+.ee-slotbar__sum{display:none}
+.ee-chero{gap:14px}
+.ee-chero__num{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.ee-chero__num b{font:800 3.2rem/1 var(--f-display);letter-spacing:-.03em;color:#fff}
+.ee-chero__num span{color:rgba(255,255,255,.75);font-weight:600}
+.ee-chero__bar{display:flex;height:14px;border-radius:99px;background:rgba(255,255,255,.14);overflow:hidden}
+.ee-chero__bar i{display:block;height:100%}
+.ee-chero__bar .is-earned{background:var(--accent-bright)}
+.ee-chero__bar .is-soon{background:repeating-linear-gradient(135deg,rgba(126,214,164,.45) 0 6px,rgba(126,214,164,.2) 6px 12px)}
+.ee-chero__stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.ee-chero__stats>*{display:flex;flex-direction:column;gap:3px;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);color:#fff;text-align:left;min-width:0}
+.ee-chero__stats b{font:800 1.25rem/1.1 var(--f-display)}
+.ee-chero__stats span{font-size:.76rem;color:rgba(255,255,255,.72);display:flex;align-items:center;gap:4px}
+.ee-chero__stats button:hover{background:rgba(255,255,255,.12)}
+.ee-count{display:inline-grid;place-items:center;min-width:26px;height:26px;padding:0 8px;border-radius:99px;background:var(--warn-soft,var(--surface-2));color:var(--warn);font-weight:800;font-size:.85rem}
+.ee-count.is-bad{background:var(--bad-soft,var(--surface-2));color:var(--bad)}
+.ee-todo__row>svg{color:var(--ink-3);flex-shrink:0}
+.ee-rule{display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--ink-3);margin-top:10px}
+.ee-agenda{display:flex;flex-direction:column}
+.ee-agenda__row{display:flex;align-items:center;gap:12px;padding:10px 0;border:0;border-top:1px solid var(--line);background:none;color:inherit;text-align:left;width:100%}
+.ee-agenda__row:first-child{border-top:0;padding-top:0}
+.ee-agenda__row:hover .ee-list__title{color:var(--forest-text)}
+.ee-agenda__day{display:flex;flex-direction:column;align-items:center;width:40px;padding:4px 0;border-radius:9px;background:var(--forest-soft);color:var(--forest-text);flex-shrink:0}
+.ee-agenda__day small{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.ee-agenda__day b{font:800 1.1rem/1 var(--f-display)}
+.ee-agenda__time{font-weight:700;width:44px;flex-shrink:0}
+
+.ee-next{margin-top:6px}
+.ee-next__ico{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:var(--forest-soft);color:var(--forest-text);flex-shrink:0}
 .ee-appt.is-due{border-color:var(--bad);box-shadow:inset 3px 0 0 var(--bad)}
 .ee-fb-due{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:650;color:var(--warn)}
 .ee-fb-due.is-over{color:var(--bad)}
@@ -525,6 +568,8 @@ h2.is-bad{color:var(--bad)}
 /* ===== Runde 6: Startseiten je Rolle ===== */
 .g-hero{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)}
 .g-kpi3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g-kpi4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.g-kpi4 .ee-kpi__value{font-size:1.7rem;white-space:nowrap}
 .g-setter2{grid-template-columns:minmax(0,1fr) minmax(0,2fr);align-items:stretch}
 .ee-setter-kpis{display:grid;grid-template-rows:1fr 1fr;gap:18px}
 .ee-cup__body{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center}
@@ -669,6 +714,10 @@ h2 .ico{vertical-align:-3px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 @media (max-width:700px){
   .g-hero{grid-template-columns:minmax(0,1fr)}
+  .g-kpi4{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .g-kpi4 .ee-kpi{padding:10px 11px}
+  .g-kpi4 .ee-kpi__value{font-size:1.25rem}
+  .g-kpi4 .ee-kpi__meta{font-size:.68rem}
   .g-kpi3{gap:8px}
   .g-kpi3 .ee-kpi{padding:10px 11px}
   .g-kpi3 .ee-kpi__value{font-size:1.25rem}
@@ -813,6 +862,61 @@ h2 .ico{vertical-align:-3px}
   .ee-flow{flex-wrap:wrap}
   .ee-flow__step{flex:1 1 40%}
   .ee-flow__arrow{min-width:40px}
+}
+/* ===== Telefonleitfaden ===== */
+.ee-callbar{position:sticky;top:calc(var(--top-h) + env(safe-area-inset-top,0px));z-index:20;display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:12px 16px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.ee-callbar__who{display:flex;flex-direction:column;min-width:0;flex:1 1 180px}
+.ee-callbar__who b{font:800 1.2rem/1.15 var(--f-display)}
+.ee-callbar__who span{font-size:.8rem;color:var(--ink-3)}
+.ee-callbar__out{display:flex;flex-wrap:wrap;gap:8px}
+.ee-guide__side{position:static!important;max-height:none!important}
+.ee-queue{padding:14px 16px}
+.ee-queue summary{display:flex;justify-content:space-between;align-items:center;cursor:pointer;list-style:none}
+.ee-queue summary::-webkit-details-marker{display:none}
+.ee-queue__list{display:flex;flex-direction:column;gap:4px;margin-top:10px}
+.ee-queue__row{display:flex;justify-content:space-between;align-items:center;gap:8px;text-align:left;background:none;border:1px solid transparent;border-radius:9px;padding:7px 8px;color:inherit}
+.ee-queue__row span:first-child{display:flex;flex-direction:column;min-width:0}
+.ee-queue__row small{color:var(--ink-3);font-size:.76rem}
+.ee-queue__row:hover{background:var(--surface-2)}
+.ee-queue__row.is-current{background:var(--forest-soft);border-color:var(--forest)}
+.ee-queue__row .ee-chip{white-space:normal;height:auto;min-height:22px;padding:2px 9px 2px 7px;font-size:.7rem;line-height:1.3;text-align:right}
+.ee-vq__stats--sm b{font-size:1.1rem!important}
+.ee-vqsec{border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.ee-vqsec summary{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;font-weight:650;cursor:pointer;list-style:none;background:var(--surface)}
+.ee-vqsec summary::-webkit-details-marker{display:none}
+.ee-vqsec summary::after{content:"+";color:var(--ink-3);font-weight:700;margin-left:10px}
+.ee-vqsec[open] summary::after{content:"–"}
+.ee-vqsec[open] summary{border-bottom:1px solid var(--line)}
+.ee-vqsec__count{margin-left:auto;font-size:.8rem;color:var(--ink-3);font-weight:600}
+.ee-vqsec .ee-form{padding:14px}
+@media (max-width:700px){
+  .ee-callbar{position:static;padding:10px 12px;gap:8px}
+  .ee-callbar > .ee-btn{flex:1 1 100%}
+  .ee-callbar__out{width:100%}
+  .ee-callbar__out .ee-btn{flex:1 1 auto}
+}
+@media (max-width:900px){
+  .ee-slotbar__sum{display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;list-style:none;color:var(--accent)}
+  .ee-slotbar__sum::-webkit-details-marker{display:none}
+  .ee-slotbar[open] .ee-slotbar__sum{margin-bottom:12px}
+}
+@media (max-width:760px){
+  .ee-appt__head{flex-direction:column;gap:6px}
+  .ee-appt__chips{justify-content:flex-start}
+  .ee-appt__actions .ee-btn{flex:1;justify-content:center}
+}
+@media (max-width:760px){
+  .ee-chero__num b{font-size:2.6rem}
+  .ee-chero__stats{gap:6px}
+  .ee-chero__stats>*{padding:8px 9px}
+  .ee-chero__stats b{font-size:.95rem;white-space:nowrap}
+  .ee-chero__stats span{font-size:.68rem}
+  .ee-agenda__row .ee-chip{display:none}
+}
+@media (max-width:760px){
+  .ee-todo__row:has(.ee-todo__right){display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:10px;row-gap:6px}
+  .ee-todo__row .ee-todo__right{grid-column:1;grid-row:2}
+  .ee-todo__row>svg{grid-column:2;grid-row:1 / span 2;align-self:center}
 }
 </style>
 </head><body>
@@ -962,12 +1066,12 @@ let LEADS = [
 /* Closer-Kalender: Termine (fest) und freie Slots (vom Closer eingetragen) */
 /* kind: 'erst' = Ersttermin (vom Presetter gelegt), 'closing' = 2. Termin (Verkauf). feedback: Rückmeldung des Closers (Pflicht nach jedem Termin) */
 let APPTS = [
-  { id:'T-500', lead:'L-2419', closer:'leo', kind:'erst',    date:'2026-09-18', start:10, dur:1.5, ort:'Delitzsch', feedback:{ result:'checks', at:'18.09. 12:05' } },
-  { id:'T-501', lead:'L-2419', closer:'leo', kind:'closing', date:'2026-09-22', start:14, dur:1.5, ort:'Delitzsch', feedback:null },
-  { id:'T-502', lead:'L-2427', closer:'leo', kind:'erst',    date:'2026-09-23', start:10, dur:1.5, ort:'Naunhof', feedback:null },
-  { id:'T-503', lead:'L-2418', closer:'leo', kind:'erst',    date:'2026-09-24', start:10, dur:1.5, ort:'Leipzig-Gohlis', feedback:null },
-  { id:'T-504', lead:'L-2444', closer:'leo', kind:'erst',    date:'2026-09-25', start:15, dur:1.5, ort:'Zwenkau', feedback:null },
-  { id:'T-505', lead:'L-2448', closer:'leo', kind:'erst',    date:'2026-09-26', start:11, dur:1.5, ort:'Machern', feedback:null },
+  { id:'T-500', lead:'L-2419', closer:'leo', kind:'erst',    date:'2026-09-18', start:10, dur:1.5, adr:'Eilenburger Str. 14, 04509 Delitzsch', ort:'Delitzsch', feedback:{ result:'checks', at:'18.09. 12:05' } },
+  { id:'T-501', lead:'L-2419', closer:'leo', kind:'closing', date:'2026-09-22', start:14, dur:1.5, adr:'Eilenburger Str. 14, 04509 Delitzsch', ort:'Delitzsch', feedback:null },
+  { id:'T-502', lead:'L-2427', closer:'leo', kind:'erst',    date:'2026-09-23', start:10, dur:1.5, adr:'Lindenstr. 7, 04683 Naunhof', ort:'Naunhof', feedback:null },
+  { id:'T-503', lead:'L-2418', closer:'leo', kind:'erst',    date:'2026-09-24', start:10, dur:1.5, adr:'Landsberger Str. 52, 04157 Leipzig', ort:'Leipzig-Gohlis', feedback:null },
+  { id:'T-504', lead:'L-2444', closer:'leo', kind:'erst',    date:'2026-09-25', start:15, dur:1.5, adr:'Seestr. 3, 04442 Zwenkau', ort:'Zwenkau', feedback:null },
+  { id:'T-505', lead:'L-2448', closer:'leo', kind:'erst',    date:'2026-09-26', start:11, dur:1.5, adr:'Brandiser Str. 21, 04827 Machern', ort:'Machern', feedback:null },
 ];
 const FEEDBACK_FRIST_H = 24; /* Stunden nach Terminende; danach werden die Slots des Closers für neue Leads pausiert */
 const FEEDBACK_OPTIONS = {
@@ -1102,7 +1206,7 @@ const GUIDES = {
 const LEAD_EXTRA = {
   'L-2433':{ attempts:2, nextTry:'Do 24.09. ab 18:00' },
   'L-2431':{ attempts:1, nextTry:'Rückruf heute 18:00' }, 'L-2439':{ attempts:1, nextTry:'Rückruf Fr 25.09. vormittags' },
-  'L-2422':{ attempts:1, nextTry:'Rückruf Do 24.09. 10:00' }, 'L-2435':{ attempts:1, nextTry:'Rückruf Do 24.09. 17:00' },
+  'L-2422':{ attempts:1, nextTry:'Rückruf heute 12:30' }, 'L-2435':{ attempts:1, nextTry:'Rückruf Do 24.09. 17:00' },
   'L-2441':{ reason:'Kein Eigentümer', reasonNote:'Vermieter nicht interessiert.' },
   'L-2446':{ reason:'Zu teuer', reasonNote:'Budget reicht auch mit Förderung nicht.' },
 };
@@ -1132,6 +1236,7 @@ const PROV = {
 const WIDERRUF_TAGE = 14;
 
 /* Tagesziel Setter */
+const CALL_DAY = { goal:30, done:14 }; /* Presetter: Anrufe heute */
 const DAY_GOAL = { goal:5, streak:4, week:[['Mo',6],['Di',5],['Mi',null],['Do',null],['Fr',null],['Sa',null]] };
 
 /* Setter-Rangliste (nur für Setter sichtbar): gelegte Termine aus eigenen Leads */
@@ -1224,7 +1329,7 @@ const ROLE_LABEL = { setter:'Setter', presetter:'Presetter', closer:'Closer', ad
 const S = {
   role:'setter', view:'uebersicht',
   leadFilter:'alle', leadSearch:'', leadSetter:'alle',
-  guideProduct:'wp', guideLead:'L-2437', guideChecks:{},
+  guideProduct:'wp', guideLead:null, guideSlot:null,
   calWeek:0, calDay:2,
   editProfile:false, showIban:false, editGoal:false,
   newSetter:null, contractFilter:'alle', ask:null, board:'cup',
@@ -1393,10 +1498,26 @@ function ageBadge(l){
   const txt = h < 1 ? `seit ${Math.max(1,Math.round(h*60))} Min.` : h < 48 ? `seit ${Math.round(h)} Std.` : `seit ${Math.round(h/24)} Tagen`;
   return toneChip(txt, h < 2 ? 'ok' : h < 24 ? 'warn' : 'bad');
 }
-/* Anrufliste: neu eingereichte Leads zuerst (älteste oben), dann vereinbarte Rückrufe, dann erneute Versuche */
+/* Fälligkeit aus "nextTry" (z. B. "Rückruf heute 18:00", "Do 24.09. ab 18:00", "Fr 25.09. vormittags") */
+function dueAt(l){
+  const t = l.nextTry || ''; if (!t) return null;
+  const d = t.match(/(\d{2})\.(\d{2})\./), h = t.match(/(\d{1,2}):(\d{2})/);
+  const day = d ? new Date(2026, +d[2]-1, +d[1]) : new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate());
+  day.setHours(h ? +h[1] : /vormittag/.test(t) ? 10 : 17, h ? +h[2] : 0); return day;
+}
+const isCallback = l => /^Rückruf/.test(l.nextTry || '');
+const callbackLate = l => isCallback(l) && dueAt(l) < NOW;
+/* Status-Chip für offene Anrufe – überall gleich */
+function tryChip(l, short){
+  if (!l.nextTry) return ageBadge(l);
+  if (callbackLate(l)) return toneChip(`Rückruf überfällig (${l.nextTry.replace(/^Rückruf /,'')})`, 'bad');
+  if (isCallback(l)) return toneChip(short ? l.nextTry.replace(/^Rückruf /,'') : l.nextTry.replace(/^Rückruf /,'Rückruf: '), 'info');
+  return toneChip(`${short ? '' : 'Nächster Versuch: '}${l.nextTry}`, 'warn');
+}
+/* Anrufliste: überfällige Rückrufe und neue Leads zuerst (älteste oben), dann nach Fälligkeit */
 function urgencySort(a, b){
-  const grp = l => !l.attempts && !l.nextTry ? 0 : l.nextTry && /^Rückruf/.test(l.nextTry) ? 1 : 2;
-  return grp(a) - grp(b) || (grp(a) === 2 ? a.attempts - b.attempts : ageH(b) - ageH(a));
+  const grp = l => callbackLate(l) ? 0 : !l.attempts && !l.nextTry ? 1 : 2;
+  return grp(a) - grp(b) || (grp(a) === 1 ? ageH(b) - ageH(a) : dueAt(a) - dueAt(b));
 }
 function nextTryText(n){ return n === 1 ? 'heute ab 17:00' : n === 2 ? 'Do 24.09. ab 18:00' : n < 5 ? 'Fr 25.09. vormittags' : 'letzter Versuch, danach absagen'; }
 
@@ -1448,7 +1569,7 @@ function pipelineBar(leads){
 function nextStep(l){
   const appt = APPTS.filter(a => a.lead === l.id).sort((a,b) => apptStart(b) - apptStart(a))[0];
   if (l.status === 'eingereicht' && !l.attempts && !l.nextTry) return ageBadge(l);
-  if (l.status === 'eingereicht') return l.nextTry && /^Rückruf/.test(l.nextTry) ? toneChip(l.nextTry, 'info') : toneChip(`${l.attempts ? l.attempts + '× nicht erreicht · ' : ''}nächster Versuch ${l.nextTry || 'offen'}`, 'warn');
+  if (l.status === 'eingereicht') return tryChip(l);
   if (l.status === 'termin') return appt ? `<span class="ee-lcard__when">${ico('cal','sm')} ${fmtDay(appt.date)} ${fmtHour(appt.start)}${appt.closer ? ' · ' + esc(person(appt.closer).first) : ''}</span>` : '';
   if (l.status === 'checks') { const c = APPTS.find(a => a.lead === l.id && a.kind === 'closing' && !a.feedback); return c ? `<span class="ee-lcard__when">${ico('cal','sm')} 2. Termin ${fmtDay(c.date)} ${fmtHour(c.start)}</span>` : `<span class="ee-lcard__when">${ico('clock','sm')} in den Checks seit ${esc(l.hist[0][1].split(' ')[0])}</span>`; }
   if (l.status === 'verkauft') return `<span class="ee-lcard__when is-good">${ico('check','sm')} verkauft ${esc(l.hist[0][1].split(' ')[0])} · Auszahlung 15.10.</span>`;
@@ -1537,6 +1658,7 @@ function openReason(id, status){
 function setStatus(id, status, silent, reason, note){
   const l = lead(id); if (!l) return;
   const attempt = status === 'nicht_erreicht'; /* „Nicht erreicht“ = Anrufversuch ohne Erfolg, Lead bleibt in „Lead eingereicht“ */
+  if (S.role === 'presetter' && l.status === 'eingereicht') CALL_DAY.done++;
   if (attempt) { l.attempts++; l.nextTry = nextTryText(l.attempts); status = 'eingereicht'; }
   else if (['termin','checks'].includes(status)) l.nextTry = null;
   l.status = status;
@@ -1652,21 +1774,21 @@ function overSetter(){
 /* ---------- CallQueue: Anrufliste (Presetter) ---------- */
 function callQueue(queue){
   if (!queue.length) return `<div class="ee-empty">Alle Leads sind angerufen.</div>`;
-  return `<div class="ee-calls">${queue.map(l => `<div class="ee-call ${isOverdue(l) ? 'is-over' : ''}">
+  return `<div class="ee-calls">${queue.map(l => `<div class="ee-call ${isOverdue(l) || callbackLate(l) ? 'is-over' : ''}">
       <button class="ee-call__who" data-act="lead" data-id="${l.id}"><b>${esc(l.kunde)}</b><span>${esc(l.ort)} · von ${esc(person(l.setter).first)}</span><span class="mono">${telFull(l)}</span></button>
-      <div class="ee-call__meta">${l.nextTry ? toneChip(/^Rückruf /.test(l.nextTry) ? l.nextTry.replace(/^Rückruf /,'Rückruf: ') : 'Nächster Versuch: ' + l.nextTry, 'info') : ageBadge(l)}<span class="faint">${l.attempts ? `${l.attempts}. Versuch` : 'noch nicht angerufen'}</span></div>
+      <div class="ee-call__meta">${tryChip(l)}<span class="faint">${l.attempts ? `${l.attempts}. Versuch` : 'noch nicht angerufen'}</span></div>
       <div class="ee-call__actions"><button class="ee-btn ee-btn--sm" data-act="set-status" data-id="${l.id}" data-status="nicht_erreicht">Nicht erreicht</button><a class="ee-btn ee-btn--primary ee-btn--sm" href="${telHref(l)}" data-act="call" data-id="${l.id}">${ico('phone','sm')} Anrufen</a></div>
     </div>`).join('')}</div>`;
 }
 function overPresetter(){
   const L = myLeads();
   const queue = L.filter(l => l.status === 'eingereicht').sort(urgencySort);
-  const overdue = queue.filter(isOverdue).length;
+  const overdue = queue.filter(l => isOverdue(l) || callbackLate(l)).length;
   const q = L.filter(l => hadTermin(l.status)).length;
   return pageHead(`Hallo ${person(me()).first}`)
   + `<div class="ee-grid g-main" style="align-items:start">
     <div class="stack" style="gap:18px">
-      <div class="ee-grid g-kpi3">${kpi('Überfällig > 24 Std.', overdue, '', overdue ? 'bad' : 'good')}${kpi('Ø bis Erstanruf', '3,4 Std.', `<span class="is-bad">▲ 1,4 Std.</span> über Ziel (${BENCH.firstCallH} Std.)`, perfTone(BENCH.firstCallMe, BENCH.firstCallH, false))}${kpi('Terminquote', BENCH.presetterTerminMe + ' %', vsTeam(BENCH.presetterTerminMe, BENCH.presetterTermin, ' %'), perfTone(BENCH.presetterTerminMe, BENCH.presetterTermin))}</div>
+      <div class="ee-grid g-kpi4">${kpi('Anrufe heute', `${CALL_DAY.done} <small>von ${CALL_DAY.goal}</small>`, `<span class="ee-kpi__bar"><i style="width:${Math.min(100, CALL_DAY.done / CALL_DAY.goal * 100)}%"></i></span>`, CALL_DAY.done >= CALL_DAY.goal ? 'good' : '')}${kpi('Überfällig', overdue, overdue ? 'Neu > 24 Std. oder Rückruf verpasst' : 'alles im Plan', overdue ? 'bad' : 'good')}${kpi('Ø bis Erstanruf', '3,4 <small>Std.</small>', `<span class="is-bad">▲ 1,4 Std.</span> über Ziel (${BENCH.firstCallH} Std.)`, perfTone(BENCH.firstCallMe, BENCH.firstCallH, false))}${kpi('Terminquote', BENCH.presetterTerminMe + ' %', vsTeam(BENCH.presetterTerminMe, BENCH.presetterTermin, ' %'), perfTone(BENCH.presetterTerminMe, BENCH.presetterTermin))}</div>
       <section class="ee-card ee-card--flush" data-component="CallQueue"><div class="ee-card__head"><h2>Anrufliste</h2><span class="ee-chip ${queue.length ? 'ee-chip--info' : 'ee-chip--pos'}">${queue.length} offen</span></div>${callQueue(queue)}</section>
     </div>
     <div class="stack" style="gap:18px">
@@ -1675,21 +1797,50 @@ function overPresetter(){
       <div class="ee-list">${closerPaused('leo') ? `<div class="ee-alert ee-alert--bad">${ico('lock','sm')} Leo ist pausiert – offene Rückmeldungen</div>` : ''}${freeSlots('leo').slice(0,4).map(s => `<div class="ee-list__row"><div class="ee-list__main"><div class="ee-list__title">${fmtDay(s.date)} · ${fmtHour(s.start)} Uhr</div></div><span class="ee-chip ee-chip--pos">frei</span></div>`).join('')}</div></section>
     </div></div>`;
 }
+/* ---------- CloserMoneyHero: Geld auf einen Blick (Closer-Startseite) ---------- */
+function closerMoneyHero(){
+  const P = PAYOUTS[me()] || [], cur = P[0], rate = PROV.closer.abschluss;
+  const goal = MONEY_GOAL[me()] || 8000, earned = cur ? cur.betrag : 0;
+  const open = myLeads().filter(l => ['termin','checks'].includes(l.status)).length, soon = open * rate;
+  const pE = Math.min(100, earned / goal * 100), pS = Math.min(100 - pE, soon / goal * 100);
+  const toGoal = Math.max(0, Math.ceil((goal - earned) / rate));
+  return `<section class="ee-card ee-card--forest ee-hero ee-chero" data-component="CloserMoneyHero">
+    <div class="ee-card__head"><span class="eyebrow">Dein Geld · September</span><button class="ee-btn ee-btn--sm" data-act="goal-edit">${ico('edit','sm')} Ziel</button></div>
+    ${S.editGoal ? `<form id="goalForm" class="row" style="gap:8px"><label class="sr" for="goalInput">Monatsziel in Euro</label><input class="ee-input num" id="goalInput" type="number" min="100" step="100" value="${goal}" style="max-width:160px"><button class="ee-btn ee-btn--accent ee-btn--sm" type="submit">Speichern</button></form>` : ''}
+    <div class="ee-chero__num"><b class="num">${eur(earned)}</b><span>von ${eur(goal)}</span></div>
+    <div class="ee-chero__bar" role="progressbar" aria-valuenow="${earned}" aria-valuemax="${goal}" aria-label="Monatsziel"><i class="is-earned" style="width:${pE}%"></i><i class="is-soon" style="width:${pS}%"></i></div>
+    <div class="ee-chero__stats">
+      <div><b class="num">${toGoal ? toGoal + (toGoal === 1 ? ' Verkauf' : ' Verkäufe') : '✓'}</b><span>${toGoal ? 'bis zum Ziel' : 'Ziel erreicht'}</span></div>
+      <div><b class="num">+${eur(soon)}</b><span>in Aussicht · ${open} Kunden</span></div>
+      <button data-act="nav" data-view="auszahlungen"><b class="num">${cur ? cur.datum.slice(0,6) : '–'}</b><span>Auszahlung ${ico('right','sm')}</span></button>
+    </div>
+  </section>`;
+}
 function overCloser(){
   const up = APPTS.filter(a => a.closer === me() && apptEnd(a) > NOW).sort((a,b) => apptStart(a) - apptStart(b));
-  const due = pendingFeedback(me());
-  const weekFree = freeSlots(me(), true).filter(s => s.date <= '2026-09-27').length;
-  const L = myLeads(), pay = PAYOUTS[me()][0];
-  return pageHead(`Hallo ${person(me()).first}`, `<button class="ee-btn ee-btn--primary" data-act="nav" data-view="kalender">${ico('plus','sm')} Freie Slots eintragen</button>`)
+  const due = pendingFeedback(me()).sort((a,b) => feedbackDue(a) - feedbackDue(b));
+  const inChecks = LEADS.filter(l => l.closer === me() && l.status === 'checks' && !APPTS.some(a => a.lead === l.id && a.kind === 'closing' && !a.feedback));
+  const nextWeek = SLOTS.filter(s => s.closer === me() && s.date >= '2026-09-28' && s.date <= '2026-10-04').length;
+  const dueChip = a => { const d = feedbackDue(a), h = (d - NOW) / 36e5; return toneChip(h < 0 ? 'überfällig' : `bis ${fmtDue(d)}`, h < 0 ? 'bad' : h < 6 ? 'bad' : 'warn'); };
+  /* Aufgaben: nur was jetzt zu tun ist, dringendstes zuerst */
+  const todo = [
+    ...due.map(a => ({ tone: feedbackDue(a) < NOW || (feedbackDue(a) - NOW) < 216e5 ? 'bad' : 'warn', title:lead(a.lead).kunde, sub:`Ergebnis ${kindLabel(a)} · ${fmtDay(a.date)}`, right:dueChip(a), act:`data-act="feedback" data-id="${a.id}"` })),
+    ...inChecks.map(l => ({ tone:'info', title:l.kunde, sub:`Ergebnis aus den Checks`, right:toneChip('offen','info'), act:`data-act="feedback" data-id="LEAD:${l.id}"` })),
+    ...(nextWeek < 4 ? [{ tone:'warn', title:'Slots nächste Woche', sub: nextWeek ? `erst ${nextWeek} eingetragen` : 'noch keine eingetragen', right:toneChip(`${nextWeek} / 4`, 'warn'), act:'data-act="nav" data-view="kalender"' }] : []),
+  ];
+  const week = up.filter(a => a.date <= '2026-09-27');
+  return pageHead(`Hallo ${person(me()).first}`)
   + (closerPaused(me()) ? pausedBanner() : '')
-  + `<section class="stack">${due.length
-      ? `<h2 class="is-bad">${ico('clock')} ${due.length} Rückmeldung${due.length === 1 ? '' : 'en'} offen</h2><div class="ee-grid g-2">${due.map(apptCard).join('')}</div>`
-      : `<div class="ee-alert ee-alert--ok">${ico('check','sm')} Alle Rückmeldungen erledigt</div>`}</section>
-  <section class="stack"><div class="row row--between"><h2>Nächste Termine</h2><button class="ee-btn ee-btn--ghost ee-btn--sm" data-act="nav" data-view="termine">Alle ${ico('right','sm')}</button></div>
-    <div class="ee-grid g-2">${up.slice(0,2).map(apptCard).join('')}</div></section>
-  <section class="stack"><h2>Dein Monat · Eigenleads</h2>
-    <div class="ee-grid g-closer">${moneyCard()}${cupCard()}</div>
-    <div class="ee-grid g-kpi">${kpi('Verkaufsquote', BENCH.closerQuoteMe + ' %', vsTeam(BENCH.closerQuoteMe, BENCH.closerQuote, ' %'), perfTone(BENCH.closerQuoteMe, BENCH.closerQuote))}${kpi('Verkauft (Sep.)', L.filter(l => l.status === 'verkauft').length)}${kpi('Freie Slots diese Woche', weekFree, '', weekFree < 4 ? 'bad' : 'good')}</div></section>`;
+  + closerMoneyHero()
+  + `<div class="ee-grid g-2" style="align-items:start">
+    <section class="ee-card" data-component="CloserTasks"><div class="ee-card__head"><h2>Zu erledigen</h2>${todo.length ? `<span class="ee-count ${todo.some(t => t.tone === 'bad') ? 'is-bad' : ''}">${todo.length}</span>` : ''}</div>
+      ${todo.length ? `<div class="ee-todo">${todo.map(t => `<button class="ee-todo__row is-${t.tone}" ${t.act}><div class="ee-list__main"><div class="ee-list__title">${esc(t.title)}</div><div class="ee-list__sub">${esc(t.sub)}</div></div><span class="ee-todo__right">${t.right}</span>${ico('right','sm')}</button>`).join('')}</div>
+        ${due.length ? `<p class="ee-rule">${ico('lock','sm')} Ohne Rückmeldung nach 24 Std. keine neuen Leads</p>` : ''}`
+      : `<div class="ee-alert ee-alert--ok">${ico('check','sm')} Alles erledigt</div>`}
+    </section>
+    <section class="ee-card" data-component="CloserWeek"><div class="ee-card__head"><h2>Diese Woche</h2><button class="ee-btn ee-btn--ghost ee-btn--sm" data-act="nav" data-view="termine">Alle ${ico('right','sm')}</button></div>
+      ${week.length ? `<div class="ee-agenda">${week.map(a => { const d = parseKey(a.date); return `<button class="ee-agenda__row" data-act="nav" data-view="termine"><span class="ee-agenda__day"><small>${WD[d.getDay()]}</small><b>${d.getDate()}</b></span><span class="ee-agenda__time num">${fmtHour(a.start)}</span><div class="ee-list__main"><div class="ee-list__title">${esc(lead(a.lead).kunde)}</div><div class="ee-list__sub">${kindLabel(a)} · ${esc(a.ort)}</div></div>${relWhen(a)}</button>`; }).join('')}</div>` : `<div class="ee-empty">Keine Termine mehr diese Woche</div>`}
+    </section></div>`;
 }
 function overAdmin(){
   const openC = CONTRACTS.filter(c => c.status==='open').length;
@@ -1768,39 +1919,76 @@ function lostOverview(leads){
 
 /* =================== LEITFADEN (Presetter) =================== */
 function freeSlots(closer, ignorePause){ if (!ignorePause && closerPaused(closer)) return []; return SLOTS.filter(s => s.closer===closer && (s.date > dkey(NOW) || (s.date===dkey(NOW) && s.start > NOW.getHours()))).sort((a,b) => (a.date+pad(a.start)).localeCompare(b.date+pad(b.start))); }
+/* ---------- Telefonleitfaden (Presetter) ---------- */
+const guideQueue = () => LEADS.filter(l => l.presetter === me() && l.status === 'eingereicht').sort(urgencySort);
+/* zwei Terminvorschläge an unterschiedlichen Tagen */
+function twoSlots(slots){ const a = slots[0], b = slots.find(s => a && s.date !== a.date) || slots[1]; return [a, b]; }
 function viewLeitfaden(){
-  const queue = LEADS.filter(l => l.presetter===me() && l.status === 'eingereicht').sort(urgencySort);
-  const l = lead(S.guideLead) || queue[0];
-  if (l && S.guideLead !== l.id) S.guideLead = l.id;
-  const g = GUIDES[S.guideProduct];
-  const slots = freeSlots('leo');
-  const fill = t => t.replace('{anrede}', l ? l.anrede : 'Frau/Herr …').replace('{me}', person(me()).first).replace('{setter}', l ? person(l.setter).first : 'unser Kollege')
-    .replace('{closer}', 'Leo').replace('{slot1}', slots[0] ? `${fmtDay(slots[0].date)} um ${fmtHour(slots[0].start)}` : '…').replace('{slot2}', slots[1] ? `${fmtDay(slots[1].date)} um ${fmtHour(slots[1].start)}` : '…');
-  const hi = t => esc(fill(t)).replace(/(Frau|Herr) ([A-ZÄÖÜ][\wäöüß]+)/, '<em>$1 $2</em>');
-  const checks = S.guideChecks[S.guideLead] || {};
-  return pageHead('Telefonleitfaden')
-  + `<div class="ee-guide" data-component="CallGuide">
-    <section class="ee-card ee-guide__side">
-      <div class="ee-field"><label for="guideLead">Kunde</label><select class="ee-select" id="guideLead">${queue.map(x => `<option value="${x.id}" ${x.id===S.guideLead?'selected':''}>${esc(x.kunde)}</option>`).join('')}</select></div>
-      ${l ? `<div class="stack" style="gap:8px"><div class="row">${chip(l.status)}${ageBadge(l)}</div>
-        <a class="ee-btn ee-btn--primary" href="${telHref(l)}">${ico('phone','sm')} ${telFull(l)}</a>
-        <dl class="ee-facts" style="grid-template-columns:1fr 1fr"><div><dt>Ort</dt><dd>${esc(l.ort)}</dd></div><div><dt>Versuche</dt><dd>${l.attempts || 'noch keiner'}</dd></div><div style="grid-column:1/-1"><dt>Erfasst von</dt><dd>${esc(person(l.setter).name)} · ${l.datum}</dd></div></dl>
-        ${l.setNote ? `<div class="ee-note"><b>Setter-Notiz:</b> ${esc(l.setNote)}</div>` : ''}</div>` : ''}
-      <hr class="divider"><span class="eyebrow">Ergebnis setzen</span>
-      <div class="ee-grid g-2" style="gap:8px">${[['nicht_erreicht','Nicht erreicht'],['abgesagt','Abgesagt']].map(([s,t]) => `<button class="ee-btn ee-btn--sm" data-act="set-status" data-id="${l?l.id:''}" data-status="${s}">${t}</button>`).join('')}</div>
+  const queue = guideQueue();
+  const l = queue.find(x => x.id === S.guideLead) || queue[0];
+  if (!l) return pageHead('Telefonleitfaden') + `<div class="ee-empty" data-component="EmptyState">${ico('check')}<h2>Alle Anrufe erledigt</h2><p>Neue Leads erscheinen hier automatisch.</p></div>`;
+  S.guideLead = l.id;
+  const g = GUIDES.wp, slots = freeSlots('leo'), [s1, s2] = twoSlots(slots);
+  const fill = t => t.replace('{anrede}', l.anrede).replace('{me}', person(me()).first).replace('{setter}', person(l.setter).first)
+    .replace('{closer}', 'Leo').replace('{slot1}', s1 ? `${fmtDay(s1.date)} um ${fmtHour(s1.start)} Uhr` : '…').replace('{slot2}', s2 ? `${fmtDay(s2.date)} um ${fmtHour(s2.start)} Uhr` : '…');
+  const hi = t => esc(fill(t)).replace(esc(l.anrede), `<em>${esc(l.anrede)}</em>`);
+  const vq = l.vq || {}, p = vqProgress(vq);
+  const byDay = {}; slots.forEach(s => (byDay[s.date] = byDay[s.date] || []).push(s));
+  const sel = SLOTS.find(s => s.id === S.guideSlot);
+  const idx = queue.indexOf(l), next = queue[idx + 1];
+  const secCount = s => { const fs = s.fields.filter(f => !f.showIf || vq[f.showIf[0]] === f.showIf[1]); return `${fs.filter(f => vq[f.n] !== undefined && vq[f.n] !== '').length}/${fs.length}`; };
+  return pageHead('Telefonleitfaden', `<span class="ee-chip ee-chip--info">${idx + 1} von ${queue.length} in der Anrufliste</span>`)
+  + `<section class="ee-callbar" data-component="CallBar">
+      <div class="ee-callbar__who"><b>${esc(l.kunde)}</b><span>${esc(l.ort)} · ${l.attempts ? l.attempts + '. Versuch' : 'Erstanruf'}</span></div>
+      <a class="ee-btn ee-btn--primary" href="${telHref(l)}">${ico('phone','sm')} ${telFull(l)}</a>
+      <div class="ee-callbar__out">
+        <button class="ee-btn ee-btn--sm" data-act="set-status" data-id="${l.id}" data-status="nicht_erreicht">Nicht erreicht</button>
+        <button class="ee-btn ee-btn--sm" data-act="guide-callback" data-id="${l.id}">${ico('clock','sm')} Rückruf vereinbaren</button>
+        <button class="ee-btn ee-btn--sm ee-btn--danger" data-act="set-status" data-id="${l.id}" data-status="abgesagt">Abgesagt</button>
+        ${next ? `<button class="ee-btn ee-btn--ghost ee-btn--sm" data-act="guide-pick" data-id="${next.id}">Nächster ${ico('right','sm')}</button>` : ''}
+      </div>
     </section>
+    <div class="ee-guide" data-component="CallGuide">
+    <aside class="stack ee-guide__side" style="gap:14px">
+      <section class="ee-card" data-component="CustomerInfo">
+        <div class="row">${tryChip(l)}</div>
+        <dl class="ee-facts" style="grid-template-columns:1fr 1fr"><div><dt>Erfasst von</dt><dd>${esc(person(l.setter).first)} · ${l.datum.slice(0,6)}</dd></div><div><dt>Versuche</dt><dd>${l.attempts || 'noch keiner'}</dd></div>${l.adresse ? `<div style="grid-column:1/-1"><dt>Adresse</dt><dd>${esc(l.adresse)}</dd></div>` : ''}</dl>
+        ${l.setNote ? `<div class="ee-note"><b>Von der Tür:</b> ${esc(l.setNote)}</div>` : ''}
+        ${customerBrief(l)}
+      </section>
+      <details class="ee-card ee-queue" ${S.guideQueueOpen ? 'open' : ''} data-component="QueueList"><summary><h3>Anrufliste</h3><span class="ee-chip">${queue.length}</span></summary>
+        <div class="ee-queue__list">${queue.map(x => `<button class="ee-queue__row ${x.id === l.id ? 'is-current' : ''}" data-act="guide-pick" data-id="${x.id}"><span><b>${esc(x.kunde)}</b><small>${esc(x.ort)}</small></span>${tryChip(x, true)}</button>`).join('')}</div>
+      </details>
+    </aside>
     <section class="ee-card ee-guide__main">
-      <div class="stack" style="gap:26px;padding:10px 0 0 14px">
+      <div class="stack" style="gap:26px;padding:4px 0 0 14px">
         <div class="ee-phase" data-step="1"><h3>Begrüßung</h3><p class="ee-script">${hi(g.intro)}</p></div>
-        <div class="ee-phase" data-step="2"><h3>Bedarfsanalyse</h3>
-          <div class="stack" style="gap:8px">${g.questions.map((q,i) => `<label class="ee-check"><input type="checkbox" data-act="guide-check" data-i="${S.guideProduct}-${i}" ${checks[S.guideProduct+'-'+i]?'checked':''}><span>${esc(q)}</span></label>`).join('')}</div>
-          <div class="ee-field"><label for="guideNote">Notiz fürs Presetting (geht an den Closer)</label><textarea class="ee-textarea" id="guideNote" placeholder="z. B. 145 m², 21.000 kWh Gas, Heizkörper …">${esc(l ? l.preNote : '')}</textarea></div></div>
+        <div class="ee-phase" data-step="2"><div class="row row--between"><h3>Vorqualifizierung</h3><div class="ee-vq__stats ee-vq__stats--sm"><div><b class="num" id="pqProgress">${p.done}/${p.total}</b><span>beantwortet</span></div><div><b class="num" id="pqHeat">${heatText(vq)}</b><span>Heizlast (Schätzung)</span></div></div></div>
+          ${p.done ? `<div class="ee-alert ee-alert--ok">${ico('check','sm')} ${p.done} Antworten kommen schon von der Tür – nur Offenes fragen</div>` : ''}
+          <form id="pqForm" class="stack" style="gap:8px" novalidate data-component="VqForm">${VQ_SECTIONS.map((s,i) => `<details class="ee-vqsec" ${i === 0 && !p.done ? 'open' : ''}><summary><span>${s.title}</span><span class="ee-vqsec__count num">${secCount(s)}</span></summary><div class="ee-form">${s.fields.map(f => wizField(f, 'pq')).join('')}</div></details>`).join('')}</form>
+          <div class="ee-field"><label for="guideNote">Notiz für den Closer</label><textarea class="ee-textarea" id="guideNote" placeholder="z. B. Ehefrau entscheidet mit, Heizung tropft, will vor dem Winter umsteigen">${esc(l.preNote || '')}</textarea></div></div>
         <div class="ee-phase" data-step="3"><h3>Einwände</h3>${g.objections.map(([o,a]) => `<details class="ee-objection"><summary>${esc(o)}</summary><p>${esc(a)}</p></details>`).join('')}</div>
-        <div class="ee-phase" data-step="4"><h3>Termin vereinbaren</h3><p class="ee-script">${hi(g.close)}</p>
-          <div class="stack" style="gap:8px"><span class="eyebrow">Freie Slots von Leo (Closer)</span>
-          <div class="row">${slots.slice(0,6).map(s => `<button class="ee-btn ee-btn--sm" data-act="book-slot" data-slot="${s.id}" data-id="${l?l.id:''}">${fmtDay(s.date)} ${fmtHour(s.start)}</button>`).join('') || '<span class="muted">Keine freien Slots.</span>'}</div></div></div>
+        <div class="ee-phase" data-step="4"><h3>Termin legen</h3><p class="ee-script">${hi(g.close)}</p>
+          ${closerPaused('leo') ? `<div class="ee-alert ee-alert--bad">${ico('lock','sm')} Leo ist pausiert – offene Rückmeldungen</div>` : ''}
+          <div data-component="SlotPicker">${Object.entries(byDay).slice(0,5).map(([k, ss]) => `<div class="ee-slotpick__day"><b>${fmtDay(k)}</b><div class="ee-slotpick">${ss.map(s => `<button class="ee-slotpick__btn" data-act="guide-slot" data-slot="${s.id}" aria-pressed="${S.guideSlot === s.id}">${fmtHour(s.start)}</button>`).join('')}</div></div>`).join('') || '<p class="muted">Keine freien Termine.</p>'}</div>
+          <button class="ee-btn ee-btn--primary" data-act="book-slot" data-slot="${sel ? sel.id : ''}" data-id="${l.id}" ${sel ? '' : 'disabled'}>${ico('cal','sm')} ${sel ? `Termin ${fmtDay(sel.date)} ${fmtHour(sel.start)} eintragen` : 'Termin auswählen'}</button></div>
       </div>
     </section></div>`;
+}
+/* Nach einer Aktion im Leitfaden automatisch zum nächsten Kunden */
+function guideAdvance(fromId){
+  const nxt = guideQueue().find(x => x.id !== fromId); /* immer der dringendste offene Lead */
+  S.guideSlot = null;
+  if (nxt) { S.guideLead = nxt.id; toast(`Nächster Anruf: ${nxt.kunde}`, 'phone'); }
+}
+function openCallback(id){
+  const l = lead(id);
+  const days = [...Array(10)].map((_,i) => new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate() + i)).filter(x => x.getDay() !== 0);
+  openDrawer(drawerHead('Rückruf vereinbaren', esc(l.kunde)) + `<div class="ee-drawer__body"><form id="callbackForm" class="stack" data-id="${id}" data-component="CallbackForm">
+    <div class="ee-form"><div class="ee-field"><label for="cbDate">Tag</label><select class="ee-select" id="cbDate">${days.map(x => `<option value="${dkey(x)}">${dkey(x) === dkey(NOW) ? 'heute' : fmtDay(dkey(x))}</option>`).join('')}</select></div>
+    <div class="ee-field"><label for="cbTime">Uhrzeit</label><select class="ee-select" id="cbTime">${[8,9,10,11,12,13,14,15,16,17,18,19].map(h => `<option ${h === 18 ? 'selected' : ''}>${pad(h)}:00</option>`).join('')}</select></div></div>
+    <div class="ee-field"><label for="cbNote">Notiz (optional)</label><input class="ee-input" id="cbNote" placeholder="z. B. Ehemann ist dann zu Hause"></div>
+    <button class="ee-btn ee-btn--primary" type="submit">${ico('check','sm')} Rückruf speichern</button></form></div>`);
 }
 /* =================== KALENDER (Closer) =================== */
 const mobileCal = () => matchMedia('(max-width: 900px)').matches;
@@ -1837,7 +2025,7 @@ function viewKalender(){
   }
   const dateOpts = [...Array(21)].map((_,i) => { const d = new Date(2026,8,23+i); return d.getDay()===0 ? '' : `<option value="${dkey(d)}">${fmtDay(dkey(d))}</option>`; }).join('');
   return pageHead('Kalender', nav)
-  + `<section class="ee-card ee-slotbar" data-component="SlotForm">
+  + `<details class="ee-card ee-slotbar" data-component="SlotForm" ${mobileCal() ? '' : 'open'}><summary class="ee-slotbar__sum">${ico('plus','sm')} Freie Slots eintragen</summary>
       <form id="slotForm" class="ee-slotbar__form">
         <div class="ee-field"><label for="slotDate">Tag</label><select class="ee-select" id="slotDate">${dateOpts}</select></div>
         <div class="ee-field"><label for="slotFrom">Von</label><select class="ee-select" id="slotFrom">${HOURS.map(h => `<option value="${h}" ${h===10?'selected':''}>${fmtHour(h)}</option>`).join('')}</select></div>
@@ -1846,7 +2034,7 @@ function viewKalender(){
         <button class="ee-btn ee-btn--primary" type="submit">${ico('plus','sm')} Slots eintragen</button>
       </form>
       <div class="ee-slotbar__stats"><div><b class="num ${SLOTS.filter(s => s.closer===me() && inWeek(s)).length < 4 ? 'is-bad' : 'is-good'}">${SLOTS.filter(s => s.closer===me() && inWeek(s)).length}</b><span>freie Slots</span></div><div><b class="num">${APPTS.filter(a => a.closer===me() && inWeek(a)).length}</b><span>Termine</span></div></div>
-    </section>
+    </details>
     ${grid}`;
 }
 /* ---------- Closer-Rückmeldung (Pflicht nach jedem Termin mit Dashboard-Leads) ---------- */
@@ -1874,21 +2062,32 @@ function customerBrief(l){
   return `<div class="ee-brief" data-component="CustomerBrief">${ent ? `<div class="row">${ent}</div>` : ''}${f.length ? `<dl class="ee-brief__grid">${f.map(([k,val]) => `<div><dt>${k}</dt><dd>${esc(val)}</dd></div>`).join('')}</dl>` : ''}</div>`;
 }
 
-/* ---------- AppointmentCard ---------- */
-function apptCard(a){
+/* ---------- AppointmentCard: kompakt, Steckbrief aufklappbar ---------- */
+function relWhen(a){
+  const st = apptStart(a), h = (st - NOW) / 36e5;
+  if (h < 0 || h > 72) return '';
+  const tag = dkey(st) === dkey(NOW) ? 'heute' : dkey(st) === dkey(new Date(NOW.getTime() + 864e5)) ? 'morgen' : '';
+  return toneChip(h < 3 ? `in ${Math.max(1, Math.round(h * 60))} Min.` : tag ? tag : `in ${Math.round(h / 24)} Tagen`, 'info');
+}
+function apptCard(a, open){
   const l = lead(a.lead), d = parseKey(a.date), need = needsFeedback(a);
   const fb = a.feedback ? (FEEDBACK_OPTIONS[a.kind].find(o => o[0] === a.feedback.result) || [0, a.feedback.result]) : null;
-  const overdue = need && feedbackDue(a) < NOW;
-  return `<article class="ee-appt ${need ? 'is-due' : ''}" data-component="AppointmentCard">
+  const overdue = need && feedbackDue(a) < NOW, adr = a.adr || l.adresse || a.ort;
+  const future = apptEnd(a) > NOW;
+  return `<article class="ee-appt ${need ? 'is-due' : ''} ${fb ? 'is-done' : ''}" data-component="AppointmentCard">
     <div class="ee-datebox"><span>${WD[d.getDay()]}</span><b>${d.getDate()}</b><small>${fmtHour(a.start)}</small></div>
     <div class="stack" style="gap:10px;min-width:0">
-      <div class="row row--between"><div><h3>${esc(l.kunde)}</h3><div class="faint" style="font-size:.84rem">${ico('pin','sm')} ${esc(l.adresse || a.ort)}</div></div>${chip(l.status)}</div>
-      ${customerBrief(l)}
-      <dl class="ee-facts"><div><dt>Telefon</dt><dd class="mono">${telFull(l)}</dd></div><div><dt>Setter / Presetter</dt><dd>${esc(person(l.setter).first)} / ${esc(person(l.presetter).first)}</dd></div><div><dt>Deine Provision</dt><dd>${provCell(l)}</dd></div></dl>
-      ${l.setNote ? `<div class="ee-note"><b>Setting:</b> ${esc(l.setNote)}</div>` : ''}
-      ${l.preNote ? `<div class="ee-note"><b>Presetting:</b> ${esc(l.preNote)}</div>` : ''}
-      ${need ? `<div class="row row--between"><span class="ee-fb-due ${overdue ? 'is-over' : ''}">${ico('clock','sm')} Rückmeldung ${overdue ? 'überfällig seit' : 'bis'} ${fmtDue(feedbackDue(a))}</span><button class="ee-btn ee-btn--primary ee-btn--sm" data-act="feedback" data-id="${a.id}">${ico('check','sm')} Rückmeldung geben</button></div>`
+      <div class="ee-appt__head"><div style="min-width:0"><h3>${esc(l.kunde)}</h3><div class="faint ee-appt__adr">${ico('pin','sm')} ${esc(adr)}</div></div>
+        <div class="ee-appt__chips"><span class="ee-chip ${a.kind === 'closing' ? 'ee-chip--closing' : ''}">${kindLabel(a)}</span>${future ? relWhen(a) : ''}</div></div>
+      ${need ? `<div class="ee-appt__due"><span class="ee-fb-due ${overdue ? 'is-over' : ''}">${ico('clock','sm')} Rückmeldung ${overdue ? 'überfällig seit' : 'bis'} ${fmtDue(feedbackDue(a))}</span><button class="ee-btn ee-btn--primary ee-btn--sm" data-act="feedback" data-id="${a.id}">${ico('check','sm')} Rückmeldung geben</button></div>`
         : fb ? `<div class="ee-fb-done">${ico('check','sm')} ${esc(fb[1])} · ${esc(a.feedback.at)}</div>` : ''}
+      ${future ? `<div class="ee-appt__actions"><a class="ee-btn ee-btn--sm" href="${telHref(l)}">${ico('phone','sm')} Anrufen</a><a class="ee-btn ee-btn--sm" href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(adr)}" target="_blank" rel="noopener">${ico('pin','sm')} Route</a></div>` : ''}
+      ${fb ? '' : `<details class="ee-appt__more" ${open ? 'open' : ''}><summary>Steckbrief &amp; Notizen</summary><div class="stack" style="gap:10px;padding-top:10px">
+        ${customerBrief(l)}
+        <dl class="ee-facts"><div><dt>Telefon</dt><dd class="mono">${telFull(l)}</dd></div><div><dt>Setter / Presetter</dt><dd>${esc(person(l.setter).first)} / ${esc(person(l.presetter).first)}</dd></div><div><dt>Deine Provision</dt><dd>${provCell(l)}</dd></div></dl>
+        ${l.setNote ? `<div class="ee-note"><b>Setting:</b> ${esc(l.setNote)}</div>` : ''}
+        ${l.preNote ? `<div class="ee-note"><b>Presetting:</b> ${esc(l.preNote)}</div>` : ''}
+      </div></details>`}
     </div></article>`;
 }
 function openFeedback(id){
@@ -1935,10 +2134,10 @@ function viewTermine(){
   const inChecks = LEADS.filter(l => l.closer === me() && l.status === 'checks' && !APPTS.some(a => a.lead === l.id && a.kind === 'closing' && !a.feedback));
   return pageHead('Termine · Eigenleads')
   + (closerPaused(me()) ? pausedBanner() : '')
-  + (due.length ? `<div class="stack"><h2 class="is-bad">Rückmeldung offen (${due.length})</h2><div class="ee-grid g-2">${due.map(apptCard).join('')}</div></div>` : '')
+  + (due.length ? `<div class="stack"><h2 class="is-bad">Rückmeldung offen (${due.length})</h2><div class="ee-grid g-2">${due.map(a => apptCard(a)).join('')}</div></div>` : '')
   + (inChecks.length ? `<section class="ee-card ee-card--flush" data-component="ChecksList"><div class="ee-card__head"><h2>In den Checks (${inChecks.length})</h2></div><div class="ee-table-wrap"><table class="ee-table ee-table--stack"><tbody>${inChecks.map(l => `<tr><td><div class="who">${esc(l.kunde)}</div><div class="sub">${esc(l.ort)} · seit ${esc(l.hist[0][1].split(' ')[0])}</div></td><td class="r" data-span><button class="ee-btn ee-btn--sm" data-act="feedback" data-id="LEAD:${l.id}">${ico('check','sm')} Ergebnis eintragen</button></td></tr>`).join('')}</tbody></table></div></section>` : '')
-  + `<div class="stack"><h2>Anstehend (${up.length})</h2><div class="ee-grid g-2">${up.map(apptCard).join('')}</div></div>`
-  + (done.length ? `<div class="stack"><h2>Erledigt</h2><div class="ee-grid g-2">${done.map(apptCard).join('')}</div></div>` : '');
+  + `<div class="stack"><h2>Anstehend (${up.length})</h2><div class="ee-grid g-2">${up.map((a,i) => apptCard(a, i === 0)).join('')}</div></div>`
+  + (done.length ? `<div class="stack"><h2>Erledigt</h2><div class="ee-grid g-2">${done.map(a => apptCard(a)).join('')}</div></div>` : '');
 }
 
 /* =================== AUSZAHLUNGEN =================== */
@@ -1956,7 +2155,7 @@ function viewAuszahlungen(){
   const vorl = cur.posten.filter(x => String(x[4]).startsWith('vorlaeufig')).reduce((s,x) => s+x[3], 0);
   const pr = PROFILES[me()];
   return pageHead('Auszahlungen')
-  + `<div class="ee-grid g-kpi">${kpi('Aktueller Monat', eur(cur.betrag), PAYOUT_STATUS[cur.status].label, true)}${kpi('Davon vorläufig', eur(vorl), '', 'money')}${kpi('Ausgezahlt 2026', eur(paid), `${P.filter(p => p.status==='ausgezahlt').length} Abrechnungen`, 'money')}${kpi('Nächste Auszahlung', cur.datum, `auf <span class="mono">${maskIban(pr.iban)}</span>`)}</div>
+  + `<div class="ee-grid g-kpi">${kpi('Aktueller Monat', eur(cur.betrag), PAYOUT_STATUS[cur.status].label, true)}${vorl ? kpi('Davon vorläufig', eur(vorl), 'bis Storno-Frist', 'money') : ''}${kpi('Ausgezahlt 2026', eur(paid), `${P.filter(p => p.status==='ausgezahlt').length} Abrechnungen`, 'money')}${kpi('Nächste Auszahlung', cur.datum, `auf <span class="mono">${maskIban(pr.iban)}</span>`)}</div>
   <section class="ee-card ee-card--flush" data-component="PayoutTable"><div class="ee-card__head"><h2>${cur.periode} · Positionen</h2>${toneChip(PAYOUT_STATUS[cur.status].label, PAYOUT_STATUS[cur.status].tone)}</div>
     <div class="ee-table-wrap"><table class="ee-table ee-table--stack"><thead><tr><th>Datum</th><th>Kunde / Anlass</th><th>Status</th><th class="r">Betrag</th></tr></thead><tbody>
     ${cur.posten.map(([d,k,a,b,st]) => `<tr><td class="sub num" data-hide-sm>${d}</td><td><div class="who">${esc(k)}</div><div class="sub">${esc(a)}</div></td><td>${postenState(st)}</td><td class="r num"><b class="${b<0?'is-neg':'is-money'}">${eur(b)}</b></td></tr>`).join('')}
@@ -2260,8 +2459,8 @@ function heatEstimate(vq){
   return Math.round(a * wpm2 / 100) / 10;
 }
 const heatText = vq => { const h = heatEstimate(vq); return h ? `≈ ${h.toLocaleString('de-DE')} kW` : '–'; };
-function vqProgress(){
-  const vq = S.wiz.vq; let total = 0, done = 0;
+function vqProgress(vq = S.wiz.vq){
+  let total = 0, done = 0;
   VQ_SECTIONS.forEach(s => s.fields.forEach(f => {
     if (f.showIf && vq[f.showIf[0]] !== f.showIf[1]) return;
     total++; if (vq[f.n] !== undefined && vq[f.n] !== '') done++;
@@ -2270,9 +2469,12 @@ function vqProgress(){
 }
 
 /* ---------- Feld-Bausteine ---------- */
+/* Speicherort je Formular: 'd' = Lead-Erfassung, 'vq' = Vorqualifizierung an der Tür, 'pq' = Vorqualifizierung im Telefonleitfaden (direkt am Lead) */
+const pqStore = () => { const l = lead(S.guideLead); return l ? (l.vq = l.vq || {}) : {}; };
+const storeFor = scope => scope === 'vq' ? S.wiz.vq : scope === 'pq' ? pqStore() : S.wiz.data;
 function wizField(f, scope){
-  const store = scope === 'vq' ? S.wiz.vq : S.wiz.data;
-  const v = store[f.n], err = S.wiz.errors[f.n];
+  const store = storeFor(scope);
+  const v = store[f.n], err = scope === 'pq' ? null : S.wiz.errors[f.n];
   const id = `${scope}-${f.n}`;
   const tags = (f.req ? '<span class="ee-ftag ee-ftag--req">Pflicht</span>' : '')
     + (f.heat ? '<span class="ee-ftag ee-ftag--heat">Heizlast</span>' : '')
@@ -2501,12 +2703,13 @@ document.addEventListener('click', e => {
 });
 /* Eingaben im Formular in den Zustand schreiben – ohne Neurendern (Fokus bleibt) */
 function wizStore(el){
-  const store = el.dataset.scope === 'vq' ? S.wiz.vq : S.wiz.data;
+  const store = storeFor(el.dataset.scope);
   if (el.type === 'checkbox') store[el.name] = [...document.querySelectorAll(`input[name="${el.name}"][data-scope="${el.dataset.scope}"]:checked`)].map(x => x.value);
   else store[el.name] = el.value;
   if (S.wiz.errors[el.name]) { delete S.wiz.errors[el.name]; el.classList.remove('is-invalid'); const box = el.closest('[data-field]'); box && box.classList.remove('is-invalid'); box && box.querySelector('.ee-hint--err')?.remove(); }
   (el.closest('form') || document).querySelectorAll('[data-show-if]').forEach(c => { const [k, v] = c.dataset.showIf.split('='); c.hidden = store[k] !== v; });
   if (el.dataset.scope === 'vq') { const p = vqProgress(); const a = $('#vqProgress'), b = $('#vqHeat'); if (a) a.textContent = `${p.done}/${p.total}`; if (b) b.textContent = heatText(S.wiz.vq); }
+  if (el.dataset.scope === 'pq') { const p = vqProgress(store); const a = $('#pqProgress'), b = $('#pqHeat'); if (a) a.textContent = `${p.done}/${p.total}`; if (b) b.textContent = heatText(store); }
 }
 document.addEventListener('input', e => { if (e.target.dataset && e.target.dataset.scope) wizStore(e.target); });
 document.addEventListener('change', e => { if (e.target.dataset && e.target.dataset.scope) wizStore(e.target); });
@@ -2537,6 +2740,7 @@ document.addEventListener('click', e => {
       if (!d.id) return;
       if (['abgesagt','verloren'].includes(d.status)) { openReason(d.id, d.status); break; }
       setStatus(d.id, d.status);
+      if (S.view === 'leitfaden' && d.status === 'nicht_erreicht') guideAdvance(d.id);
       if ($('#drawer').classList.contains('is-open')) openLead(d.id);
       render(); break;
     }
@@ -2545,12 +2749,15 @@ document.addEventListener('click', e => {
     case 'nav-guide': { const l = lead(d.id); S.guideLead = d.id; S.guideProduct = l.produkt; go('leitfaden'); break; }
     case 'feedback': openFeedback(d.id); break;
     case 'goal-edit': S.editGoal = !S.editGoal; render(); if (S.editGoal) setTimeout(() => $('#goalInput')?.focus(), 0); break;
-    case 'guide-check': { const m = (S.guideChecks[S.guideLead] = S.guideChecks[S.guideLead] || {}); m[d.i] = t.checked; return; }
+    case 'guide-pick': S.guideLead = d.id; S.guideSlot = null; render(); window.scrollTo({ top:0 }); break;
+    case 'guide-slot': S.guideSlot = d.slot; render(); break;
+    case 'guide-callback': openCallback(d.id); break;
     case 'book-slot': {
       const s = SLOTS.find(x => x.id === d.slot), l = lead(d.id); if (!s || !l) return;
       const note = $('#guideNote'); if (note && note.value.trim()) l.preNote = note.value.trim();
       bookSlot(l, s, true);
       toast(`Termin gebucht: ${fmtDay(s.date)} ${fmtHour(s.start)} · ${person(s.closer).first} und ${person(l.setter).first} informiert`);
+      if (S.view === 'leitfaden') guideAdvance(l.id);
       render(); break;
     }
     case 'cal-add': {
@@ -2608,6 +2815,7 @@ document.addEventListener('keydown', e => {
 
 /* Eingaben ohne Neurendern der ganzen Seite (Fokus bleibt) */
 document.addEventListener('input', e => {
+  if (e.target.id === 'guideNote') { const l = lead(S.guideLead); if (l) l.preNote = e.target.value; }
   if (e.target.id === 'leadSearch') { S.leadSearch = e.target.value; $('#leadTableWrap').innerHTML = leadBody(); }
 });
 document.addEventListener('change', e => {
@@ -2670,10 +2878,20 @@ document.addEventListener('submit', e => {
       if (r.value === 'verloren' && !o.reason) { const s = f.querySelector('#fbReason'); s.classList.add('is-invalid'); s.focus(); toast('Bitte einen Grund wählen', 'info'); return; }
       applyFeedback(ap, r.value, o); closeOverlays(); render(); break;
     }
+    case 'callbackForm': {
+      const l = lead(f.dataset.id), when = `${dkey(parseKey(v('cbDate'))) === dkey(NOW) ? 'heute' : fmtDay(v('cbDate'))} ${v('cbTime')}`, note = v('cbNote').trim();
+      if (S.role === 'presetter') CALL_DAY.done++; l.nextTry = `Rückruf ${when}`; l.hist.unshift([`Rückruf vereinbart: ${when}${note ? ' – ' + note : ''}`, nowStamp()]);
+      if (note) l.preNote = [l.preNote, note].filter(Boolean).join(' · ');
+      pushNotif(l.setter, `${l.kunde}: Rückruf vereinbart (${when})`, 'eingereicht');
+      toast(`Rückruf gespeichert: ${when}`, 'clock'); closeOverlays();
+      if (S.view === 'leitfaden') guideAdvance(l.id);
+      render(); break;
+    }
     case 'reasonForm': {
       const r = f.querySelector('input[name="reason"]:checked'); if (!r) return;
       const id = f.dataset.id;
       setStatus(id, f.dataset.status, false, r.value, v('reasonNote').trim());
+      if (S.view === 'leitfaden') guideAdvance(id);
       closeOverlays(); render(); break;
     }
     case 'askForm': {
